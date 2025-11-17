@@ -1,6 +1,6 @@
 ---
 title: "The Role of Prior Tails in Prediction"
-date: 2025-10-14
+date: 2025-11-17
 tags: ["posterior predictive", "priors", "predictive risk"]
 draft: false
 ---

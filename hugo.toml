@@ -1,6 +1,6 @@
 baseURL = "https://jbolik.github.io/"
 canonifyURLs = false
-title = "Statistics of Prediction"
+title = "Jannis Bolik's Stat Blog"
 languageCode = "en-us"
 theme = "PaperMod"
 enableRobotsTXT = true
@@ -11,7 +11,7 @@ enableRobotsTXT = true
 [params]
   env = "production"
   description = "Statistics, probability, and ML notes."
-  author = "You"
+  author = "Jannis Bolik"
   defaultTheme = "light"        # dark/light
   disableThemeToggle = true
   ShowReadingTime = true
@@ -19,7 +19,6 @@ enableRobotsTXT = true
   ShowPostNavLinks = true
   ShowToc = true
   TocOpen = true
-  homeInfoParams = { Title = "Welcome to Statistics of Prediction", Content = "All About the Theory of Prediction" }
   mainSections = ["posts"]     # ensure posts appear on /
 
 [params.assets]
