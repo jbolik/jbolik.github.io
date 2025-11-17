@@ -1,0 +1,4 @@
+<div class="p-4 rounded-xl" style="border:1px solid var(--theme)">
+  <strong>Theorem{{ with .Get "n" }} {{ . }}{{ end }}{{ with .Get "title" }} ({{ . }}){{ end }}.</strong>
+  <div>{{ .Inner | markdownify }}</div>
+</div>

@@ -1,0 +1,42 @@
+baseURL = "http://localhost:1313/"
+canonifyURLs = false
+title = "Statistics of Prediction"
+languageCode = "en-us"
+theme = "PaperMod"
+enableRobotsTXT = true
+
+[pagination]
+  pagerSize = 10
+
+[params]
+  env = "production"
+  description = "Statistics, probability, and ML notes."
+  author = "You"
+  defaultTheme = "light"        # dark/light
+  disableThemeToggle = true
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowToc = true
+  TocOpen = true
+  homeInfoParams = { Title = "Welcome to Statistics of Prediction", Content = "All About the Theory of Prediction" }
+  mainSections = ["posts"]     # ensure posts appear on /
+
+[params.assets]
+  css = ["css/custom.css"]
+
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true              # allow raw HTML (needed for KaTeX+Giscus)
+  [markup.highlight]
+    noClasses = false          # better theming
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]  # JSON enables search (Pagefind later)
+
+[permalinks]
+  posts = "/:year/:month/:slug/"
+
+[minify]
+  minifyOutput = true
