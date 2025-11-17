@@ -1,4 +1,4 @@
-baseURL = "http://localhost:1313/"
+baseURL = "https://jbolik.github.io/"
 canonifyURLs = false
 title = "Statistics of Prediction"
 languageCode = "en-us"
