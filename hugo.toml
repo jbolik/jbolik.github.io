@@ -1,6 +1,6 @@
 baseURL = "https://jbolik.github.io/"
 canonifyURLs = false
-title = "Jannis Bolik's Stat Blog"
+title = "Jannis Bolik's Stats Blog"
 languageCode = "en-us"
 theme = "PaperMod"
 enableRobotsTXT = true
