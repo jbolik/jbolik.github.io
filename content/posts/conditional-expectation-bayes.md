@@ -12,7 +12,7 @@ The basic definition of conditional probability was established by Bayes as $P(A
 
 Now, every Bayesian statistician will tell you that we can just apply conditional probability to probability density functions as $p(A=a \mid B=b) = p(A=a, B=b) / p(B=b)$. From a measure-theoretic perspective, probability densities are Radon-Nikodym derivatives, which are only defined up to a set of measure zero. From this perspective, if we were to define the conditional density just for one specific value of $B$, it would not be unique, since we can arbitrarily change the Radon-Nikodym derivative *at any measure zero point*. In Bayesian statistics we typically avoid this problem by limiting ourselves to probability measures $\mu_X$ that have a probability function $F(x) := P(X \leq x)$ that is differentiable $\mu_x$-almost everywhere, e.g. $\mathcal{N}(\mu, \sigma^2)$. This requires a canoncial base measure and topology on the sample space, usually given by the Lebesgue measure and Euclidean topology. Defining the probability density as the derivative of $F(x)$, *we can no longer change it at any point*, but only at the specific points where $F(x)$ is non-differentiable. The probability density function can then be uniquely defined almost everywhere as the derivative $F(x)$:
 $$p(X=x) := \frac{d}{dx} F(x) := \lim_{t \rightarrow 0} \frac{P(X \leq x+t) - P(X \leq x)}{t}$$
-This raises the question: Can we use limits to justify applying the conditional probability rule to densities? Unfortunately, the **Borel-Kolmogorov paradox** provides a negative answer. Consider $X, Y \sim U(0, 1)$ and the ratio $R = Y / X$. We want to define the conditional probability $P(X \leq x \mid Y = 0)$. Since the event $Y=0$ has probability zero, we must define it as a limit of conditioning on a small neighborhood. However, the shape of that neighborhood matters.
+This raises the question: Can we use limits to justify applying the conditional probability rule to densities? Unfortunately, Borel's paradox, also known as the Borel-Kolmogorov paradox, provides a negative answer. Consider $X, Y \sim U(0, 1)$ and the ratio $R = Y / X$. We want to define the conditional probability $P(X \leq x \mid Y = 0)$. Since the event $Y=0$ has probability zero, we must define it as a limit of conditioning on a small neighborhood. However, the shape of that neighborhood matters.
 
 If we approach $Y=0$ via a horizontal strip ($Y \leq \epsilon$) versus a wedge ($R \leq \epsilon$), we get different answers:
 $$\lim_{\epsilon \rightarrow 0} P(X \leq x \mid Y \leq \epsilon) = x \quad \text{(Uniform)}$$
@@ -32,7 +32,7 @@ The prime example is **Aitchison's Theorem**, which establishes the optimality o
 
 {{< remark >}}
 The KL-divergence between two measures $P$ and $Q$ is defined as $D_{KL}(P \| Q) = \int \log\left(\frac{dP}{dQ}\right) dP$.
-Unlike probability densities, which change depending on whether you measure in meters or feet (the Jacobian), the Radon-Nikodym derivative $\frac{dP}{dQ}$ is a unitless ratio. Therefore, results based on KL-divergence do not require a canonical base measure like Lebesgue measure; they hold for any reference measure.
+Unlike probability densities, which change depending on the choice of reference measure (by the Jacobian), the Radon-Nikodym derivative $\frac{dP}{dQ}$ is a unitless ratio. Therefore, results based on KL-divergence do not require a canonical base measure like Lebesgue measure; they hold for any reference measure.
 {{< /remark >}}
 
 {{< theorem n="1" >}}
@@ -51,9 +51,15 @@ A *Standard Borel Space* is a measurable space that is isomorphic to a "nice" su
 > **Disintegration Theorem (Simplified):** Let $(X, \mathcal{A})$ and $(Y, \mathcal{B})$ be Standard Borel Spaces, and let $\mu$ be a probability measure on their product $X \times Y$. Let $\pi: X \times Y \to Y$ be the projection map, and let $\nu$ be the marginal measure on $Y$ (the "evidence").
 > Then, there exists a family of probability measures $\{\mu_y\}_{y \in Y}$ on $X$ (the "posteriors") such that for every measurable set $E \subset X \times Y$:
 > $$\mu(E) = \int_Y \mu_y(\{x : (x,y) \in E\}) \, d\nu(y)$$
-> These conditional measures $\mu_y$ are *unique $\nu$-almost everywhere*.
+> Uniqueness: Any two valid disintegration $\mu^1_y$ and $\mu^2_y$ *agree $\nu$-almost everywhere*.
 {{< /theorem >}}
 
-This confirms that pre-data, Bayesian statistics is on solid ground. We do not need to assume densities exist or that functions are smooth. We get a mathematically rigorous posterior $\mu_y$ for $\nu$-almost all datasets. The trouble only begins when we stop averaging and ask: "Is the posterior valid for *this specific* dataset $y$ that I just observed?"
+This confirms that pre-data, Bayesian statistics is on solid ground. We do not need to assume densities exist or that functions are smooth. We can work with posterior $\mu_y$ in a mathematically rigorous way, as long as we integrate over datasets. The trouble only begins when we stop averaging and ask: "Is the posterior valid for *this specific* dataset $y$ that I just observed?"
 
-### Post-data: Implicitly Modeling Observation Noise
+### Post-data: Modeling Measurement Error
+Usually Bayesian statisticians do not explicitely model the measurement noise. Assume $X$ is a Standard Borel Space. If we would include a measurement error that models the distribution of the true value $x$ a function of the observed value $x'$, so $x \sim f(x')$, with $f: X \rightarrow {\mu \in \mathcal{P}(X): \mu << \nu}$, the posterior would be
+$$\mathbb{E}_{x \sim f(x')}\left[p(\theta \mid x)\right]$$
+Here $\nu$ is the marginal distribution on $x$ from disintegrating $p(x, \theta)$ into conditional measures $p(\theta \mid x)$ and a marginal measure $\nu(x)$. Similar to the pre-data setting, this posterior is now well-defined in a measure-theoretic sense, since we integrating over $x$. It might be more intuitive to model the distribution of $x'$ as a function of $x$, but the disintegration theorem will not uniquely give us a $x$ as a function of $x'$ for all values of $x$, but only almost all, which is not sufficient post-data.
+
+### Post-data: No Measurement Error
+If we are assuming no measurement error, Borel's paradox shows that it matters how we take limits. In particular, we can formally treat this as modeling the measurement error in a certain way and then shrinking the variance to 0. This is particularly natural on Euclidean space, where there is a canonical way to shrink a measure towards 0. Hypothesis: The standard conditional density is linked to independence of measurement errors.
