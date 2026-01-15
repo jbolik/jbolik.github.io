@@ -1,32 +1,21 @@
 ---
-title: "Borel's Paradox and Bayesian Statistics"
-date: 2025-12-18
+title: "A Measure-Theoretic View of the Bayesian Posterior"
+date: 2026-01-14
 tags: ["Measure Theory", "Conditional Expectation", "Disintegration Theorem"]
 draft: false
 ---
 
-In measure-theoretic probability theory, conditional probabilities and expectations are not uniquely defined when conditioning on zero-probability events. This is known as Borel's paradox. Yet, in Bayesian statistics we condition on zero-probability events all the time. How does that fit together?
+In measure-theoretic probability theory, conditional probabilities and expectations are not uniquely defined when conditioning on zero-probability events. This is known as Borel's paradox. Further, from a measure-theoretic view, the likelihood may change arbitrarily on any measure zero subset. Yet, in Bayesian statistics we condition on zero-probability events all the time. How does that fit together?
 
-## Conditional Probability and Borel's Paradox
+{{< remark >}}
 The basic definition of conditional probability was established by Bayes as $P(A \mid B) = P(A \cap B) / P(B)$. This is usually considered as an axiom in probability theory. However, the situation becomes a lot more controversial once we move to probability measures that are not discrete. Most commonly, we consider probability measures $\mu_A$ and $\mu_B$ which are absolutely continuous with respect to Lebesgue measure, $\mu_A \ll \lambda(\mathbb{R})$ and $\mu_B \ll \lambda(\mathbb{R})$, like the Gaussian distribution $\mathcal{N}(\mu, \sigma^2)$. Such measures assign zero probability to every singleton $\{x\}$ in the sample space $\mathbb{R}$. Since we cannot divide by 0, the axiomatic definition of conditional probability does not apply when conditioning on a singleton. 
+{{< /remark >}}
 
-Now, every Bayesian statistician will tell you that we can just apply conditional probability to probability density functions as $p(A=a \mid B=b) = p(A=a, B=b) / p(B=b)$. From a measure-theoretic perspective, probability densities are Radon-Nikodym derivatives, which are only defined up to a set of measure zero. From this perspective, if we were to define the conditional density just for one specific value of $B$, it would not be unique, since we can arbitrarily change the Radon-Nikodym derivative *at any measure zero point*. In Bayesian statistics we typically avoid this problem by limiting ourselves to probability measures $\mu_X$ that have a probability function $F(x) := P(X \leq x)$ that is differentiable $\mu_x$-almost everywhere, e.g. $\mathcal{N}(\mu, \sigma^2)$. This requires a canoncial base measure and topology on the sample space, usually given by the Lebesgue measure and Euclidean topology. Defining the probability density as the derivative of $F(x)$, *we can no longer change it at any point*, but only at the specific points where $F(x)$ is non-differentiable. The probability density function can then be uniquely defined almost everywhere as the derivative $F(x)$:
-$$p(X=x) := \frac{d}{dx} F(x) := \lim_{t \rightarrow 0} \frac{P(X \leq x+t) - P(X \leq x)}{t}$$
-This raises the question: Can we use limits to justify applying the conditional probability rule to densities? Unfortunately, Borel's paradox, also known as the Borel-Kolmogorov paradox, provides a negative answer. Consider $X, Y \sim U(0, 1)$ and the ratio $R = Y / X$. We want to define the conditional probability $P(X \leq x \mid Y = 0)$. Since the event $Y=0$ has probability zero, we must define it as a limit of conditioning on a small neighborhood. However, the shape of that neighborhood matters.
+## The Bayesian Model
+In Bayesian statistics, we have two spaces, the parameter space $(\Theta, \mathcal{A})$ and the observation space $(\mathcal{X}, \mathcal{B})$. We define a joint probability measure on $(\Theta \times \mathcal{X}, \mathcal{A} \times \mathcal{B})$ by defining a probability measure on $(\Theta, \mathcal{A})$, the "prior", and a probability measure on $(\mathcal{X}, \mathcal{B})$ for each value of $\theta \in \Theta$, the "likelihood". Further, the likelihood needs to be a Markov kernel, meaning that additionally for all $B \in \mathcal{B}$, the function $\theta \rightarrow P(B \mid \theta)$ needs to be $\mathcal{A}$-measurable. From a measure-theoretic perspective, Bayesian statistics is all about decomposting this joint density the other way, into a probability measure on $(\mathcal{X}, \mathcal{B})$, and a probability measure on $(\Theta, \mathcal{A})$ for every $x \in \mathcal{X}$.
 
-If we approach $Y=0$ via a horizontal strip ($Y \leq \epsilon$) versus a wedge ($R \leq \epsilon$), we get different answers:
-$$\lim_{\epsilon \rightarrow 0} P(X \leq x \mid Y \leq \epsilon) = x \quad \text{(Uniform)}$$
-$$\lim_{\epsilon \rightarrow 0} P(X \leq x \mid R \leq \epsilon) = x^2 \quad \text{(Beta(2,1))}$$
-These limits imply different probability densities ($1$ vs $2x$). Crucially, only the first limit matches the result of the standard formula $p(x \mid y) = p(x, y) / p(y)$. This reveals that the standard formula is not coordinate-neutral; it implicitly assumes limits taken along the coordinate axes ($Y \pm \epsilon$), privileging that specific parametrization over others.
-
-## Two Levels of Assumptions in Bayesian Statistics
-So does this mean Bayesian statistics is mathematical nonsense? No. There are parts of Bayesian statistics where Borel's paradox can be circumvented using the disintegration theorem under relatively mild assumptions. However, large parts of Bayesian statistics, like any methods that directly analyze the posterior for a given set of observations, require much stronger assumptions to be justified, which are rarely made explicit by practitioners.
-
-### Pre-data: The Disintegration Theorem
-
-The part of Bayesian statistics that requires only moderate assumptions is when we treat the observations not as fixed constants, but as random variables generated by our model. In this setting, we evaluate the validity of our methods *in expectation* over all possible datasets.
-
-Crucially, because we are working with expectations (integrals) rather than pointwise values, we can rely on tools from measure theory that are invariant to our choice of coordinate system or base measure.
+## Pre-data: The Disintegration Theorem
+The part of Bayesian statistics that causes little measure-theoretic headaches is when we treat the observations not as fixed constants, but as random variables generated by our model. In this setting, we evaluate the validity of our methods *in expectation* over all possible datasets.
 
 The prime example is **Aitchison's Theorem**, which establishes the optimality of the Bayesian posterior predictive distribution. We can state this purely in terms of the **Kullback-Leibler (KL) Divergence**, which measures the information loss between two probability measures.
 
@@ -37,29 +26,44 @@ Unlike probability densities, which change depending on the choice of reference 
 
 {{< theorem n="1" >}}
 > **Aitchison's Theorem (1975):** Let $P_\theta$ be a family of models indexed by $\theta \sim \pi$. The Bayesian predictive distribution $P_{Bayes}(\cdot \mid x_{1:n})$ is the unique minimizer of the expected KL-divergence from the true data-generating distribution:
-> $$P_{Bayes} = \argmin_{Q} \mathbb{E}_{\theta \sim \pi} \left[ \mathbb{E}_{X_{1:n} \sim P_\theta} \left[ D_{KL}(P_\theta(\cdot) \| Q(\cdot)) \right] \right]$$
+> $$P_{Bayes} = \argmin_{Q} \E_{\theta \sim \pi} \left[ \E_{X_{1:n} \sim P_\theta} \left[ D_{KL}(P_\theta(\cdot) \| Q(\cdot)) \right] \right]$$
 > where the inner KL-divergence is measured on the future observation $X_{n+1}$.
 {{< /theorem >}}
 
-This result guarantees that, on average, the Bayesian update yields the best possible prediction of future data, regardless of the topology or geometry of the sample space. But how can the posterior predictive $P_{Bayes}$ be uniquely defined in the presence of Borel's paradox? The **Disintegration Theorem** solves this issue, and we do not even need any differentiability assumptions on $F(x)$. This theorem allows us to "slice" a joint probability measure into a family of conditional measures. To ensure this is well-behaved, we only need to assume our spaces are *Standard Borel Spaces*.
+This result guarantees that, on average, the Bayesian update yields the best possible prediction of future data. But how can the posterior predictive $P_{Bayes}$ be defined? The **Disintegration Theorem** solves this issue. This theorem allows us to "slice" a joint probability measure into a family of conditional measures. To ensure this is well-behaved, we only need to assume our spaces are *Standard Borel Spaces*.
 
 {{< remark >}}
 A *Standard Borel Space* is a measurable space that is isomorphic to a "nice" subset of the real numbers (specifically, a Polish space). Practically, almost every space used in statistics — $\mathbb{R}^n$, manifolds, discrete sets, and function spaces — is a Standard Borel Space. It is the "safe space" of probability theory where pathological paradoxes are ruled out.
 {{< /remark >}}
 
 {{< theorem n="2" >}}
-> **Disintegration Theorem (Simplified):** Let $(X, \mathcal{A})$ and $(Y, \mathcal{B})$ be Standard Borel Spaces, and let $\mu$ be a probability measure on their product $X \times Y$. Let $\pi: X \times Y \to Y$ be the projection map, and let $\nu$ be the marginal measure on $Y$ (the "evidence").
-> Then, there exists a family of probability measures $\{\mu_y\}_{y \in Y}$ on $X$ (the "posteriors") such that for every measurable set $E \subset X \times Y$:
-> $$\mu(E) = \int_Y \mu_y(\{x : (x,y) \in E\}) \, d\nu(y)$$
-> Uniqueness: Any two valid disintegration $\mu^1_y$ and $\mu^2_y$ *agree $\nu$-almost everywhere*.
+> **Disintegration Theorem (Simplified):** Let $(\Theta, \mathcal{A})$ and $(\mathcal{X}, \mathcal{B})$ be Standard Borel Spaces, and let $\mu$ be a probability measure on their product $(\Theta \times \mathcal{X}, \mathcal{A} \times \mathcal{B})$. Let $\pi: \Theta \times \mathcal{X} \to \mathcal{X}$ be the projection map, and let $\nu$ be the marginal measure on $\mathcal{X}$ (the "evidence").
+> Then, there exists a family of probability measures $\mu_{x \in \mathcal{X}}$ on $\Theta$ (the "posteriors") such that for every $E \in \mathcal{A} \times \mathcal{B}$:
+> $$\mu(E) = \int_\mathcal{X} \mu_x(\{\theta : (\theta, x) \in E\}) d\nu(x)$$
+> Uniqueness: For any two valid disintegration $\mu^1, \mu^2$ and all $x \in \mathcal{X}$,  $\mu^1_x$ and $\mu^2_x$ *agree $\nu$-almost everywhere*.
 {{< /theorem >}}
 
-This confirms that pre-data, Bayesian statistics is on solid ground. We do not need to assume densities exist or that functions are smooth. We can work with posterior $\mu_y$ in a mathematically rigorous way, as long as we integrate over datasets. The trouble only begins when we stop averaging and ask: "Is the posterior valid for *this specific* dataset $y$ that I just observed?"
+This confirms that pre-data, Bayesian statistics is on solid ground. We do not need to assume densities exist or that functions are smooth. We can work with posterior $\mu_x$ in a mathematically rigorous way, as long as we integrate over datasets. The trouble only begins when we stop averaging and ask: "Is the posterior valid for *this specific* dataset $x$ that I just observed?"
+
+## Post-Data: Borel's Paradox
+Bayes' rule cannot be applied directly to a specific value $x \in \mathcal{X}$ if that is a probability 0 event. Now, every Bayesian statistician will tell you that we can just apply conditional probability to probability density functions as $p(A=a \mid B=b) = p(A=a, B=b) / p(B=b)$.
+
+This raises the question: Can we use limits to justify applying the conditional probability rule to densities? In general, Borel's paradox, also known as the Borel-Kolmogorov paradox, provides a negative answer. Consider $X, Y \sim U(0, 1)$ and the ratio $R = Y / X$. We want to define the conditional probability $P(X \leq x \mid Y = 0)$. Since the event $Y=0$ has probability zero, we must define it as a limit of conditioning on a small neighborhood. However, the shape of that neighborhood matters.
+
+If we approach $Y=0$ via a horizontal strip ($Y \leq \epsilon$) versus a wedge ($R \leq \epsilon$), we get different answers:
+$$\lim_{\epsilon \rightarrow 0} P(X \leq x \mid Y \leq \epsilon) = x \quad \text{(Uniform)}$$
+$$\lim_{\epsilon \rightarrow 0} P(X \leq x \mid R \leq \epsilon) = x^2 \quad \text{(Beta(2,1))}$$
+These limits imply different probability densities ($1$ vs $2x$). Only the first limit matches the result of the standard formula $p(x \mid y) = p(x, y) / p(y)$. 
+
+This raises another question: Can we justify a canonical choice for how we shrink the neighborhood towards the measure zero subset $\Theta \times \{x\}$? The answer is positive; the natural factorization of the space into $\Theta$ and $\mathcal{X}$ combined with the fact that we only condition on sets of the form $\Theta \times \{x\}$ makes it natural to consider approximation $\Theta \times N(x)$ where $N(x) \subset \mathcal{X} \rightarrow \{x\}$.
+
+## Post-Data: Handling Measure Zero Non-Uniqueness
+From a measure-theoretic perspective, probability densities are Radon-Nikodym derivatives, which are only defined up to a set of measure zero. From this perspective, if we were to define the conditional density just for one specific value of $B$, it would not be unique, since we can arbitrarily change the Radon-Nikodym derivative *at any measure zero point*. 
+
+In Bayesian statistics we typically avoid this problem by limiting ourselves to probability measures $\mu_X$ that have a probability function $F(x) := P(X \leq x)$ that is differentiable $\mu_x$-almost everywhere, e.g. $\mathcal{N}(\mu, \sigma^2)$. This requires a canoncial base measure and topology on the sample space, usually given by the Lebesgue measure and Euclidean topology. Defining the probability density as the derivative of $F(x)$, *we can no longer change it at any point*, but only at the specific points where $F(x)$ is non-differentiable. The probability density function can then be uniquely defined almost everywhere as the derivative $F(x)$:
+$$p(X=x) := \frac{d}{dx} F(x) := \lim_{t \rightarrow 0} \frac{P(X \leq x+t) - P(X \leq x)}{t}$$
+Similarly, given a chosen base measure and topology on $\Theta$, we can often require differentiability of $\theta \rightarrow P(\Theta \leq \theta \mid x)$ to get unique posterior densities $p(\theta \mid x)$. Further, we can require continuity of $p(\theta \mid x)$ in $\theta$ for a given $x$ to get a single unique disintegration for many standard models with continuous likelihoods and priors. 
 
 
-### Post-data: Homoscedatic Sensing Error Assumptions
-If we want to be able to make statements for a specific observation, we need to make assumptions about the error shape of data collection. When working with continuous data, we can virtually never observe an arbitrary real number, but are limited to a certain precision, say $\pm 0.01$. This can be seen as a rounding error interval, or a confidence interval in the case of stochstic measurement noise. The assumption we are making to justify the "density Bayes rule" $p(\theta \mid x) = p(x \mid \theta) p(\theta) / p(x)$ is that for each component $x_i$ of our observation vector $x$, the width of the error interval $dx_i$ is approximately the same for any value of $x$. The "density Bayes rule" is what we get if we take the width of these error intervals to 0.
+## References
 
-Example: Imagine our $x$ contains the position of ships on a small piece of ocean, measured using two different methods: a sattelite image and a radar. In the satellite image, we will have the same error in the $x$ and $y$ direction, determined by the resultion of the image. The radar however measures the angle and distance of objects, so the precision will vary in the $(x, y)$ coordinate system. Instead, a polar coordinate system $(r, \phi)$ around the position of the radar gives approximately uniform error intervals in $r$ and $\phi$ respectively. So the appropriate definintion of the posterior density depends on how the data was collected.
-
-A more problematic example are Bayesian linear models with an interaction term, say we measure $x$ and $y$ with homoscedatic noise and then use the features $x$, $y$, and $xy$.
