@@ -10,11 +10,23 @@ When defining a parametric statistical model $(\mathcal{X}, \mathscr{X}, \\{P_\t
 This post has three parts: We will first recap the asymptotic behavior in the standard setting where a *true parameter* exists (also known as the well-specified setting), for both maximum-likelihood and Bayesian approaches. Then we will discuss the difference between allowing a *true probability density* $p_0(x)$ and a general *true probability measure* $P_0$. Finally, we will discuss the asymptotic behavior under a *true probability measure* $P_0$. 
 
 {{< remark >}}
-While we try to make as few assumptions as possible on the data-generating process $P_0$ since we usually have no control over it, we do place several regularity conditions on our statistical model when discussing asymptotic behavior in the first and third section. The second section is applicable to any statistical model with a dominating measure. I am planning to write another blog post about the more general setting where we don't necessarily have asymptotic normality in the future.
+While we try to make as few assumptions as possible on the data-generating process $P_0$ since we usually have no control over it, we do place several regularity conditions on our statistical model when discussing asymptotic behavior in the first and third section. The second section is applicable to any statistical model with a dominating $\sigma$-finite measure. I am planning to write another blog post about the more general setting where we don't necessarily have asymptotic normality in the future.
 {{< /remark >}}
 
 ## Asymptotics in the Well-Specified Setting
-This section (except Prediction) is based on Lasse Vuursteen's lecture notes on Statistical Inference. Assuming $P_0 \in \{P_\theta : \theta \in \Theta\}$, under the regularity conditions detailed below, and $X_1, \dots, X_n \stackrel{iid}{\sim} P_{\theta_0}$, the MLE admits a linear expansion driven by the score function, and by the Central Limit Theorem, we achieve asymptotic normality:
+### Differentiability in Quadratic Mean
+The fundamental minimal assumption that powers a lot of theory in parametric statistics is *differentiability in quadratic mean*, which is defined as the existence of a dominating $\sigma$-finite measure $\mu$ and a function $S\_{\theta\_0}(x)$ such that:
+$$\int \left( \sqrt{p_{\theta_0+h}(x)} - \sqrt{p_{\theta_0}(x)} - \frac{1}{2}h^\top S_{\theta_0}(x)\sqrt{p_{\theta_0}(x)} \right)^2 d\mu(x) = o(\|h\|^2)$$
+where densities are with respect to $\mu$. $S\_{\theta\_0}(x)$ is called the score function. If this assumption holds for one dominating $\sigma$-finite measure, it holds for any other dominating $\sigma$-finite measure, with the same score function. Hence the score and the Fisher information matrix which is defined as
+$$I(\theta_0) := \int S_{\theta_0}(x) S_{\theta_0}(x)^T dP_{\theta_0}(x)$$
+are intrinsic properties of the model.
+
+This assumption is already enough to prove basic asymptotic normality: If the parameter space is an open subset of $\R^n$, and the DQM assumption holds, then for any bounded deterministic sequence $h\_n \in \R^n$:
+$$\ell_n\left(\theta_0 + \frac{h_n}{\sqrt{n}}\right) - \ell_n(\theta_0) = \frac{h_n}{\sqrt{n}}\sum_{i=1}^n S_{\theta_0}(X_i) - \frac{1}{2} h_n^T I(\theta_0) h_n \rightarrow 0$$
+in probability under $P\_{\theta\_0}$, where $\ell_n(\theta) := \log p(X_1, \dots, X_n \mid \theta)$.
+
+### Asymptotic Normality of MLE and Bayes
+This and the following section are based on Lasse Vuursteen's lecture notes on Statistical Inference. Assuming $P_0 \in \{P_\theta : \theta \in \Theta\}$, under the regularity conditions detailed below, and $X_1, \dots, X_n \stackrel{iid}{\sim} P_{\theta_0}$, the MLE admits a linear expansion driven by the score function, and by the Central Limit Theorem, we achieve asymptotic normality:
 
 $$
 \sqrt{n}(\hat{\theta}_n - \theta_0) \xrightarrow{d} \mathcal{N}_d(0, I(\theta_0)^{-1})
@@ -38,9 +50,9 @@ Regularity conditions for asymptotic normality of the MLE:
 
 1. **Interior Point:** The true parameter $\theta_0$ is an interior point of an open parameter space $\Theta \subseteq \mathbb{R}^d$.
 
-2. **Consistency:** We assume that the estimator is consistent, meaning $\hat{\theta}_n - \theta_0 = o_p(1)$ under $P\_{\theta_0}$.
+2. **Differentiability in Quadratic Mean (DQM):** The model is differentiable in quadratic mean at $\theta_0$ with score $S_{\theta_0} \in L^2(P_{\theta_0})^d$, and $\det(I(\theta_0)) > 0$.
 
-3. **Differentiability in Quadratic Mean (DQM):** The model is differentiable in quadratic mean at $\theta_0$ with score $S_{\theta_0} \in L^2(P_{\theta_0})^d$, and the Fisher information matrix $I(\theta_0) = \mathbb{E}_{\theta_0}[S_{\theta_0} S_{\theta_0}^\top]$ is nonsingular.
+3. **Consistency:** We assume that the estimator is consistent, meaning $\hat{\theta}_n - \theta_0 = o_p(1)$ under $P\_{\theta_0}$.
 
 4. **Lipschitz Envelope Condition:** The log-likelihood function does not fluctuate too wildly in the neighborhood of the truth. Specifically, there exists a measurable envelope function $M: \mathcal{X} \to [0, \infty)$ with finite variance ($P_{\theta_0} M(X_1)^2 < \infty$) such that for every $\theta_1, \theta_2$ in a neighborhood of $\theta_0$:
 
@@ -52,34 +64,35 @@ Regularity conditions for asymptotic normality of the MLE:
 {{< remark >}}
 Regularity conditions for the Bernstein–von Mises Theorem:
 
-1. **Interior Point:** See MLE conditions.
+1. **Interior Point:** The true parameter $\theta_0$ is an interior point of an open parameter space $\Theta \subseteq \mathbb{R}^d$.
 
-2. **Differentiability in Quadratic Mean (DQM):** See MLE conditions.
+2. **Differentiability in Quadratic Mean (DQM):** The model is differentiable in quadratic mean at $\theta_0$ with $\det(I(\theta_0)) > 0$
 
 3. **Existence of Consistent Tests:** There exists a compact neighborhood $\Theta_0 \subset \Theta$ of $\theta_0$ and a sequence of tests $\delta_n$ such that:
    $$
    P_{\theta_0}\delta_n \to 0, \quad \sup_{\theta \notin \Theta_0} P_\theta(1 - \delta_n) \to 0
    $$
+The supremum condition can be replaced with an integral condition, which is equivalent to uniform integrability in parameter space as discussed by Strasser (1985), section 65. 
 
 4. **Prior:** The prior measure $\Pi$ has a density $\pi$ that is bounded, and continuous and strictly positive in a neighborhood of $\theta_0$.
 {{< /remark >}}
 
-### Inference
+### Confidence and Credible Intervals
 Importantly, one can use the asymptotic normality to show that the Bayesian credible intervals asymptotically have the correct Frequentist coverage. Let $L_n := L_n(X^{(n)})$ and $U_n := U_n(X^{(n)})$ be such that $[L_n, U_n]$ is a symmetric $(1 - \alpha)$ posterior credible interval, e.g.
 $$
 \Pi(\theta < L_n \mid X^{(n)}) = \Pi(\theta > U_n \mid X^{(n)}) = \alpha/2.
 $$
-Then
+Assuming that the regularity conditions for aymptotic normality of the MLE and the Bernstein-von Mises theorem hold, we then have:
 $$
 P_{\theta_0}(\theta_0 \in [L_n, U_n]) \to 1 - \alpha \text{ as } n \rightarrow \infty.
 $$
 This is an important property that justifies the wide-spread use of credible intervals, as they allow us to incorporate prior knowledge which washes out correctly in the limit.
 
 ### Prediction
-In prediction tasks, we are interested in evaluating how well our model anticipates a new, unseen observation $X\_{n+1} \sim P\_{\theta\_0}$ given our observed sample $X^{(n)} = (X\_1, \dots, X\_n)$. If a dominating $\sigma$-finite measure exists (like the counting measure for countable spaces or Lebesgue measure), a highly intuitive and rigorous choice for scoring a predictive distribution $p\_{\text{pred}}(\cdot \mid X^{(n)})$ is the **expected log-likelihood** (or expected log-predictive density) on new data:
+In prediction tasks, we are interested in evaluating how well our model anticipates a new, unseen observation $X\_{n+1} \sim P\_{\theta\_0}$ given our observed sample $X^{(n)} = (X\_1, \dots, X\_n)$. If a dominating $\sigma$-finite measure exists (like the counting measure for countable spaces or Lebesgue measure), a highly intuitive and rigorous choice for scoring a predictive distribution $p\_{\text{pred}}(\cdot \mid X^{(n)})$ is the *expected log-likelihood* (or expected log-predictive density) on new data:
 
 $$
-\text{ELL} = \mathbb{E}_{X_{n+1} \sim P_{\theta_0}} \left[ \log p_{\text{pred}}\left(X_{n+1} \mid X^{(n)}\right) \right]
+\text{ELL} = \mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p_{\text{pred}}\left(X_{n+1} \mid X^{(n)}\right) \right]
 $$
 
 The expected log-likelihood rewards a model for assigning high probability mass or density to the actual outcomes. 
@@ -92,58 +105,34 @@ D_{\text{KL}}(P_{\theta_0} \| P_{\text{pred}}) = -H(P_{\theta_0}) - \text{ELL}
 $$
 {{< /remark >}}
 
-For simplicity, instead of DQM, we will assume the traditional Fisher regularity conditions for the likelihood in this section (parameter-independent support, second-order continuous differentiability, domination of first and second derivatives, finite and non-singular variance of log-likelihood). 
-
-#### Asymptotic Risk of the Plug-in Estimator
-Let's evaluate the predictive performance of the plug-in MLE estimator, $p(x\_{n+1} \mid \hat{\theta}\_n)$, following Cencov (1981). We define its expected log-likelihood on new data as $\ell(\hat{\theta}\_n) = \mathbb{E}\_{X\_{n+1}}[\log p(X\_{n+1} \mid \hat{\theta}\_n)]$. Then, we can perform a second-order Taylor expansion of this expected log-likelihood around the true parameter $\theta\_0$:
-
-$$
-\ell(\hat{\theta}_n) \approx \ell(\theta_0) + \nabla \ell(\theta_0)^\top (\hat{\theta}_n - \theta_0) + \frac{1}{2}(\hat{\theta}_n - \theta_0)^\top \nabla^2 \ell(\theta_0) (\hat{\theta}_n - \theta_0)
-$$
-
-The first derivative is the expected score, which is zero: $\nabla \ell(\theta\_0) = \mathbb{E}[\nabla \log p(X\_{n+1} \mid \theta\_0)] = 0$. The Hessian evaluated at the truth is exactly the negative Fisher Information matrix: $\nabla^2 \ell(\theta\_0) = \mathbb{E}[\nabla^2 \log p(X\_{n+1} \mid \theta\_0)] = -I(\theta\_0)$. Substituting these into the expansion yields:
-
-$$
-\ell(\hat{\theta}_n) \approx \ell(\theta_0) - \frac{1}{2}(\hat{\theta}_n - \theta_0)^\top I(\theta_0) (\hat{\theta}_n - \theta_0)
-$$
-
-To find the overall expected predictive performance, we take the expectation with respect to the training sample $X^{(n)}$. Applying the cyclical property of the trace operator ($\text{Tr}(AB) = \text{Tr}(BA)$) and assuming uniform integrability, we leverage the asymptotic normality $\sqrt{n}(\hat{\theta}\_n - \theta\_0) \xrightarrow{d} \mathcal{N}\_d(0, I(\theta\_0)^{-1})$ to get:
-
-$$
-\begin{align*}
-\mathbb{E}_{X^{(n)}}[\ell(\hat{\theta}_n)] &\approx \ell(\theta_0) - \frac{1}{2} \mathbb{E}_{X^{(n)}} \left[ \text{Tr} \left( (\hat{\theta}_n - \theta_0)^\top I(\theta_0) (\hat{\theta}_n - \theta_0) \right) \right] \\
-&= \ell(\theta_0) - \frac{1}{2} \text{Tr} \left( I(\theta_0) \mathbb{E}_{X^{(n)}} \left[ (\hat{\theta}_n - \theta_0)(\hat{\theta}_n - \theta_0)^\top \right] \right) \\
-&\approx \ell(\theta_0) - \frac{1}{2} \text{Tr} \left( I(\theta_0) \frac{1}{n} I(\theta_0)^{-1} \right) \\
-&= \ell(\theta_0) - \frac{d}{2n}
-\end{align*}
-$$
-
-Thus, the out-of-sample expected log-likelihood of the plug-in estimator suffers an asymptotic penalty of $d/(2n)$ relative to the true data-generating process. Cencov further proves that this rate is optimal.
+#### Asymptotic Optimality of the Plug-in Estimator
+Let's evaluate the predictive performance of the plug-in MLE estimator, $p(x\_{n+1} \mid \hat{\theta}\_n)$. We want to evaluate its expected log-likelihood on new data. Therefore, we need convergence in $L_1$ here rather than just convergence in probability, a nuance that is handled rigorously by few authors. One of them is Cencov (1981, Theorem 27.3), who achieves this through fairly strong assumptions on the model. Let $(\mathcal{X}, \mathscr{X})$ be a standard Borel space. Assuming a number of conditions on the likelihood's derivatives (Definition 27.3), that the parameter space is compact, and that the KL divergence between any two members of the family is uninformly bounded, he is able to show that if $\hat{\theta}_n$ is a maximum-likelihood estimator there exists a $c > 0$ such that:
+$$\mathbb{E}_{X_1, \dots, X_{n} \sim P_{\theta_0}}\left[D_{KL}(P_{\theta_0} || P_{\hat{\theta}_n})\right] \leq \frac{d}{2n} + c * n^{-3/2}$$
+Or equivalently:
+$$\mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p\left(X_{n+1} \mid \hat{\theta}_n\right) \right] \leq H_0  + \frac{d}{2n} + c * n^{-3/2}$$
+where 
+$$H_0 := \mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p\left(X_{n+1} \mid \theta_0\right) \right]$$
+He further shows under the same assumptions that this is the best possible asymptotic rate that can be achieved.
 
 {{< remark >}}
 This exact mathematical mechanism is the theoretical foundation for the Akaike Information Criterion (AIC). AIC estimates this out-of-sample expected log-likelihood by taking the in-sample maximized log-likelihood and penalizing it by the dimension $d$.
 {{< /remark >}}
 
-#### Asymptotic Risk of the Bayesian Predictive Distribution
+#### Asymptotic Rate of the Bayesian Predictive Distribution
 The Bayesian predictive distribution is formed by marginalizing over the posterior:
 
 $$
 p_{\text{Bayes}}(x_{n+1} \mid X^{(n)}) = \int p(x_{n+1} \mid \theta) \Pi(d\theta \mid X^{(n)})
 $$
 
-Because the Bernstein-von Mises theorem guarantees that the posterior concentrates tightly around $\hat{\theta}\_n$ with variance $\frac{1}{n}I(\theta\_0)^{-1}$, the Bayesian predictive distribution achieves an equivalent asymptotic log-likelihood penalty. As established by Clarke and Barron (1990), under the regularity conditions satisfying BvM, the Bayesian predictive expected log-likelihood drops off at the exact same optimal rate:
-
-$$
-\mathbb{E}_{X^{(n)}}[\text{ELL}_{\text{Bayes}}] = \ell(\theta_0) - \frac{d}{2n} + o\left(\frac{1}{n}\right)
-$$
-
-This demonstrates that in the well-specified asymptotic regime, Bayesian prediction naturally regulates predictive complexity, yielding the optimal $d/(2n)$ rate.
-
+Because the Bernstein-von Mises theorem guarantees that the posterior concentrates tightly around $\hat{\theta}\_n$ with variance $\frac{1}{n}I(\theta\_0)^{-1}$, the Bayesian predictive distribution achieves an equivalent asymptotic log-likelihood penalty. As established by Clarke and Barron (1990), under the regularity conditions satisfying BvM, and assuming a strengthened DQM condition
+$$\int \left( \log(p_{\theta_0+h}(x)) - \log(p_{\theta_0}(x)) - h^\top S_{\theta_0}(x) \right)^2 d\mu(x) = o(\|h\|^2) \text{ ,}$$
+that the score is in $L_2$, and twice continuous differentiability of the KL divergence in $\theta$, the Bayesian predictive expected log-likelihood drops off at the exact same $d/(2n)$ rate.
 
 ## Fitting a Model to a Measure
 For parametric statistics in the misspecified setting it is common to still assume that there exists some measure $\nu$ that dominates not only all distributions in our model, but also the true distribution. This allows us to talk about a *true probability density* $p_0(x)$. While there exist more general notions of densities than the Radon-Nikodym derivative (e.g. in Schwartz Distribution Theory), they do not allow us to do the main operation for which we wanted to have a density in the first place: Evaluate the logarithm of the density. This allows us to define the Kullback-Leibler (KL) divergence
 $$D_{KL}(p_0 || p_\theta) := \int p_0(x) \log \frac{p_0(x)}{p_\theta(x)} d\nu(x)$$
-Statisticians love the KL divergence because it evaluates to the same value for any choice of dominating measure $\nu$, and is non-negative, with zero divergence only if $p_0 = p_\theta$. If $\mathcal{X}$ is countable we can always choose the counting measure as $\nu$ and there is no problem. Otherwise, we unfortunately need to break up for two main reasons:
+Statisticians love the KL divergence because it evaluates to the same value for any choice of dominating $\sigma$-finite measure $\nu$, and is non-negative, with zero divergence only if $p_0 = p_\theta$. If $\mathcal{X}$ is countable we can always choose the counting measure as $\nu$ and there is no problem. Otherwise, we unfortunately need to break up for two main reasons:
 1. **Lebesgue Decomposition:** The Lebesgue decomposition tells us that any regular Borel probability measure $P$ and $\sigma$-finitee base measure $\nu$, $P$ can be decomposed as the sum $P_{ac} + P_{sc} + P_d$ where $P_{ac}$ is absolutely continuous with respect to $\nu$, $P_{sc}$ is singular continuous and $P_d$ is discrete. Under any reasonable prior distribution on $P$, it seems like a probability 0 event that both $P_{sc}$ and $P_d$ are zero.
 2. **Discreteness of Reality:** If anything, a reasonable assumption would be that $P_0$ is purely discrete rather than absolutely continuous. Our observations will be represented in finite precision rather than as real numbers. Furthermore, insights from Physics like Planck's constant tell us that reality might be best understood as fundamentally discrete.
 
@@ -181,9 +170,7 @@ The only way to fit mixture models into the cross-entropy-based theory without a
 ## Inference: Asymptotics Under True Measures
 
 ### Maximum-Likelihood Inference
-To rigorously establish the asymptotic behavior of the MLE under this misspecified reality, we can no longer rely on DQM. DQM guarantees local geometric smoothness under the model measure $P_{\theta^\ast}$, but it tells us nothing about how the empirical process behaves under the actual true measure $P_0$.
-
-Instead, we must treat the MLE strictly as an M-estimator. Drawing from modern empirical process theory (e.g., van der Vaart, 1998), we shift our focus from the geometry of the densities to the functional properties of the score $S_\theta(x) = \nabla_\theta \log p(x \mid \theta)$. Assuming the MLE is consistent ($\hat{\theta}_n \xrightarrow{p} \theta^\ast$), we require the score to satisfy a modified Lipschitz envelope condition:
+We now treat the MLE strictly as an M-estimator. Drawing from modern empirical process theory (e.g., van der Vaart, 1998), we shift our focus from the geometry of the densities to the functional properties of the score $S_\theta(x) = \nabla_\theta \log p(x \mid \theta)$. Assuming the MLE is consistent ($\hat{\theta}_n \xrightarrow{p} \theta^\ast$), we require the score to satisfy a modified Lipschitz envelope condition:
 
 $$
 \|S_{\theta_1}(X) - S_{\theta_2}(X)\| \leq \dot{M}(X)\|\theta_1 - \theta_2\| \quad \text{where } P_0 \dot{M}(X)^2 < \infty
