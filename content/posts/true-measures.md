@@ -119,7 +119,7 @@ This exact mathematical mechanism is the theoretical foundation for the Akaike I
 {{< /remark >}}
 
 {{< remark >}}
-Generally it is hard to control the expectation contribution of the tails for the MLE approach. To soften Cencov's uniform bound, one option is to adopt an approach where we put a bound on the ELL that only holds with high probability instead of always. Then the uniform bound only needs to hold in a high probability neighborhood, which we get from asymptotic normality. The alternative is to chose a model (or a different loss) such that the log-likelihood / loss is upper-bounded by some function (e.g. a polynomial) in terms of distance to $\theta_0$, and at the same time show that the probability of the MLE $\hat{\theta}_n$ being that far away from $\theta_0$ shrinks faster (e.g. exponentially).
+Generally it is hard to control the expectation contribution of the tails for the MLE approach. To soften Cencov's uniform bound, one option is to adopt an approach where we put a bound on the ELL that only holds with high probability instead of always. Then the uniform bound only needs to hold in a high probability neighborhood, which we get from asymptotic normality. The alternative is to chose a model (or a different loss) such that the KL divergence / loss is upper-bounded by some function (e.g. a polynomial) in terms of distance to $\theta_0$, and at the same time show that the probability of the MLE $\hat{\theta}_n$ being that far away from $\theta_0$ shrinks faster (e.g. exponentially).
 {{< /remark >}}
 
 #### Asymptotic Rate of the Bayesian Predictive Distribution
