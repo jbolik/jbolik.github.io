@@ -109,13 +109,17 @@ $$
 Let's evaluate the predictive performance of the plug-in MLE estimator, $p(x\_{n+1} \mid \hat{\theta}\_n)$. We want to evaluate its expected log-likelihood on new data. Therefore, we need convergence in $L_1$ here rather than just convergence in probability, a nuance that is handled rigorously by few authors. One of them is Cencov (1981, Theorem 27.3), who achieves this through fairly strong assumptions on the model. Let $(\mathcal{X}, \mathscr{X})$ be a standard Borel space. Assuming a number of conditions on the likelihood's derivatives (Definition 27.3), that the parameter space is compact, and that the KL divergence between any two members of the family is uninformly bounded, he is able to show that if $\hat{\theta}_n$ is a maximum-likelihood estimator there exists a $c > 0$ such that:
 $$\mathbb{E}_{X_1, \dots, X_{n} \sim P_{\theta_0}}\left[D_{KL}(P_{\theta_0} || P_{\hat{\theta}_n})\right] \leq \frac{d}{2n} + c * n^{-3/2}$$
 Or equivalently:
-$$\mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p\left(X_{n+1} \mid \hat{\theta}_n\right) \right] \leq H_0  + \frac{d}{2n} + c * n^{-3/2}$$
+$$-\mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p\left(X_{n+1} \mid \hat{\theta}_n\right) \right] \leq H_0  + \frac{d}{2n} + c * n^{-3/2}$$
 where 
 $$H_0 := \mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p\left(X_{n+1} \mid \theta_0\right) \right]$$
 He further shows under the same assumptions that this is the best possible asymptotic rate that can be achieved.
 
 {{< remark >}}
 This exact mathematical mechanism is the theoretical foundation for the Akaike Information Criterion (AIC). AIC estimates this out-of-sample expected log-likelihood by taking the in-sample maximized log-likelihood and penalizing it by the dimension $d$.
+{{< /remark >}}
+
+{{< remark >}}
+Generally it is hard to control the expectation contribution of the tails for the MLE approach. To soften Cencov's uniform bound, one option is to adopt an approach where we put a bound on the ELL that only holds with high probability instead of always. Then the uniform bound only needs to hold in a high probability neighborhood, which we get from asymptotic normality. The alternative is to chose a model (or a different loss) such that the log-likelihood / loss is upper-bounded by some function (e.g. a polynomial) in terms of distance to $\theta_0$, and at the same time show that the probability of the MLE $\hat{\theta}_n$ being that far away from $\theta_0$ shrinks faster (e.g. exponentially).
 {{< /remark >}}
 
 #### Asymptotic Rate of the Bayesian Predictive Distribution
@@ -125,9 +129,7 @@ $$
 p_{\text{Bayes}}(x_{n+1} \mid X^{(n)}) = \int p(x_{n+1} \mid \theta) \Pi(d\theta \mid X^{(n)})
 $$
 
-Because the Bernstein-von Mises theorem guarantees that the posterior concentrates tightly around $\hat{\theta}\_n$ with variance $\frac{1}{n}I(\theta\_0)^{-1}$, the Bayesian predictive distribution achieves an equivalent asymptotic log-likelihood penalty. As established by Clarke and Barron (1990), under the regularity conditions satisfying BvM, and assuming a strengthened DQM condition
-$$\int \left( \log(p_{\theta_0+h}(x)) - \log(p_{\theta_0}(x)) - h^\top S_{\theta_0}(x) \right)^2 d\mu(x) = o(\|h\|^2) \text{ ,}$$
-that the score is in $L_2$, and twice continuous differentiability of the KL divergence in $\theta$, the Bayesian predictive expected log-likelihood drops off at the exact same $d/(2n)$ rate.
+If we actually integrate over the posterior (rather than approximating it with samples), like when using conjugate priors, this makes it very easy for us to give guarantees in $L_1$, because just the integral of the likelihood over the neighborhood of $\theta_0$ already gives us enough expected log-likelihood to show that we can attain the same $d/(2n)$ rate. This allows us to ignore the tails. Formally speaking, Clarke and Barron (1990, Theorem 2.3) show that all we need is twice continuous differntiability of the KL divergence at $\theta_0$ with a positive definite Hessian, and a positive and continuous prior density at $\theta_0$.
 
 ## Fitting a Model to a Measure
 For parametric statistics in the misspecified setting it is common to still assume that there exists some measure $\nu$ that dominates not only all distributions in our model, but also the true distribution. This allows us to talk about a *true probability density* $p_0(x)$. While there exist more general notions of densities than the Radon-Nikodym derivative (e.g. in Schwartz Distribution Theory), they do not allow us to do the main operation for which we wanted to have a density in the first place: Evaluate the logarithm of the density. This allows us to define the Kullback-Leibler (KL) divergence
