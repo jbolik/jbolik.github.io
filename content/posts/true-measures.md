@@ -109,7 +109,7 @@ $$
 Let's evaluate the predictive performance of the plug-in MLE estimator, $p(x\_{n+1} \mid \hat{\theta}\_n)$. We want to evaluate its expected log-likelihood on new data. Therefore, we need convergence in $L_1$ here rather than just convergence in probability, a nuance that is handled rigorously by few authors. One of them is Cencov (1981, Theorem 27.3), who achieves this through fairly strong assumptions on the model. Let $(\mathcal{X}, \mathscr{X})$ be a standard Borel space. Assuming a number of conditions on the likelihood's derivatives (Definition 27.3), that the parameter space is compact, and that the KL divergence between any two members of the family is uninformly bounded, he is able to show that if $\hat{\theta}_n$ is a maximum-likelihood estimator there exists a $c > 0$ such that:
 $$\mathbb{E}_{X_1, \dots, X_{n} \sim P_{\theta_0}}\left[D_{KL}(P_{\theta_0} || P_{\hat{\theta}_n})\right] \leq \frac{d}{2n} + c * n^{-3/2}$$
 Or equivalently:
-$$-\mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p\left(X_{n+1} \mid \hat{\theta}_n\right) \right] \leq H_0  + \frac{d}{2n} + c * n^{-3/2}$$
+$$\mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p\left(X_{n+1} \mid \hat{\theta}_n\right) \right] \geq H_0  - \frac{d}{2n} - c * n^{-3/2}$$
 where 
 $$H_0 := \mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p\left(X_{n+1} \mid \theta_0\right) \right]$$
 He further shows under the same assumptions that this is the best possible asymptotic rate that can be achieved.
@@ -129,7 +129,7 @@ $$
 p_{\text{Bayes}}(x_{n+1} \mid X^{(n)}) = \int p(x_{n+1} \mid \theta) \Pi(d\theta \mid X^{(n)})
 $$
 
-If we actually integrate over the posterior (rather than approximating it with samples), like when using conjugate priors, this makes it very easy for us to give guarantees in $L_1$, because just the integral of the likelihood over the neighborhood of $\theta_0$ already gives us enough expected log-likelihood to show that we can attain the same $d/(2n)$ rate. This allows us to ignore the tails. Formally speaking, Clarke and Barron (1990, Theorem 2.3) show that all we need is twice continuous differntiability of the KL divergence at $\theta_0$ with a positive definite Hessian, and a positive and continuous prior density at $\theta_0$.
+If we actually integrate over the posterior (rather than approximating it with samples), like when using conjugate priors, this makes it very easy for us to give guarantees in $L_1$, because just the integral of the likelihood over the neighborhood of $\theta_0$ already gives us enough expected log-likelihood to show that we can attain the same $d/(2n)$ rate. This allows us to ignore the tails. Formally speaking, Clarke and Barron (1990, Theorem 2.3) show that all we need is twice continuous differentiability of the KL divergence at $\theta_0$ with a positive definite Hessian, and a positive and continuous prior density at $\theta_0$.
 
 ## Fitting a Model to a Measure
 For parametric statistics in the misspecified setting it is common to still assume that there exists some measure $\nu$ that dominates not only all distributions in our model, but also the true distribution. This allows us to talk about a *true probability density* $p_0(x)$. While there exist more general notions of densities than the Radon-Nikodym derivative (e.g. in Schwartz Distribution Theory), they do not allow us to do the main operation for which we wanted to have a density in the first place: Evaluate the logarithm of the density. This allows us to define the Kullback-Leibler (KL) divergence
