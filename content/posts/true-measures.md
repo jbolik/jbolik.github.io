@@ -13,6 +13,10 @@ This post has three parts: We will first recap the asymptotic behavior in the st
 While we try to make as few assumptions as possible on the data-generating process $P_0$ since we usually have no control over it, we do place several regularity conditions on our statistical model when discussing asymptotic behavior in the first and third section. The second section is applicable to any statistical model with a dominating $\sigma$-finite measure. I am planning to write another blog post about the more general setting where we don't necessarily have asymptotic normality in the future.
 {{< /remark >}}
 
+{{< remark >}}
+While we generalize to arbitrary measures, this blog post focusses on the independently identically distributed setting $X_1, \dots, X_n {\sim} P_0$, for both hypothesis testing and prediction. This already gives us a good intuition about the asymptotic behavior of the different statistical philosophies, but is not directly applicable to more general settings, especially if the independence assumption is violated.
+{{< /remark >}}
+
 ## Asymptotics in the Well-Specified Setting
 ### Differentiability in Quadratic Mean
 The fundamental minimal assumption that powers a lot of theory in parametric statistics is *differentiability in quadratic mean*, which is defined as the existence of a dominating $\sigma$-finite measure $\mu$ and a function $S\_{\theta\_0}(x)$ such that:
@@ -202,7 +206,9 @@ $$\sqrt{n}(\hat{\theta}_n - \theta^*) \xrightarrow{TV} \mathcal{N}\left(0, V_{\t
 in $P_0$-probability. This mismatch shows that Bayesian credible intervals are no longer asymptotically well-callibrated in the misspecififed setting. Since we are essentially always in the misspecified setting in practice, this leads to applied Bayesian statisticians frequently drawing misleading conclusions from their credible intervals, and unlike in the Frequentist case, there is no clean solution. However, there are some recent ideas around using posthoc posterior recallibrations as well as generalized Bayes approaches.
 
 ### Prediction
+#### Plug-In Estimator
 *Coming soon*
+#### Bayesian Predictive Distribution
 
 ## References
 
