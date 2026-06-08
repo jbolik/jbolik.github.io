@@ -1,6 +1,6 @@
 ---
 title: "Asymptotics Under True Measures"
-date: 2026-05-20
+date: 2026-06-07
 tags: ["MLE", "asymptotics", "BvM"]
 draft: false
 ---
@@ -26,7 +26,7 @@ $$\ell_n\left(\theta_0 + \frac{h_n}{\sqrt{n}}\right) - \ell_n(\theta_0) = \frac{
 in probability under $P\_{\theta\_0}$, where $\ell_n(\theta) := \log p(X_1, \dots, X_n \mid \theta)$.
 
 ### Asymptotic Normality of MLE and Bayes
-This and the following section are based on Lasse Vuursteen's lecture notes on Statistical Inference. Assuming $P_0 \in \{P_\theta : \theta \in \Theta\}$, under the regularity conditions detailed below, and $X_1, \dots, X_n \stackrel{iid}{\sim} P_{\theta_0}$, the MLE admits a linear expansion driven by the score function, and by the Central Limit Theorem, we achieve asymptotic normality:
+This and the following section are based on Lasse Vuursteen's lecture notes on Statistical Inference. Assuming $P_0 \in \\{P_\theta : \theta \in \Theta\\}$, under the regularity conditions detailed below, and $X_1, \dots, X_n \stackrel{iid}{\sim} P_{\theta_0}$, the MLE admits a linear expansion driven by the score function, and by the Central Limit Theorem, we achieve asymptotic normality:
 
 $$
 \sqrt{n}(\hat{\theta}_n - \theta_0) \xrightarrow{d} \mathcal{N}_d(0, I(\theta_0)^{-1})
@@ -57,7 +57,7 @@ Regularity conditions for asymptotic normality of the MLE:
 4. **Lipschitz Envelope Condition:** The log-likelihood function does not fluctuate too wildly in the neighborhood of the truth. Specifically, there exists a measurable envelope function $M: \mathcal{X} \to [0, \infty)$ with finite variance ($P_{\theta_0} M(X_1)^2 < \infty$) such that for every $\theta_1, \theta_2$ in a neighborhood of $\theta_0$:
 
    $$
-   |\log p(X_1 \mid \theta_1) - \log p(X_1 \mid \theta_2)| \leq M(X_1)\|\theta_1 - \theta_2\|
+   |\log p(X_1 \mid \theta_1) - \log p(X_1 \mid \theta_2)| \leq M(X_1)\|\theta_1 - \theta_2\| \quad (P_{\theta_0}\text{-a.s.})
    $$
 {{< /remark >}}
 
@@ -72,7 +72,6 @@ Regularity conditions for the Bernstein–von Mises Theorem:
    $$
    P_{\theta_0}\delta_n \to 0, \quad \sup_{\theta \notin \Theta_0} P_\theta(1 - \delta_n) \to 0
    $$
-The supremum condition can be replaced with an integral condition, which is equivalent to uniform integrability in parameter space as discussed by Strasser (1985), section 65. 
 
 4. **Prior:** The prior measure $\Pi$ has a density $\pi$ that is bounded, and continuous and strictly positive in a neighborhood of $\theta_0$.
 {{< /remark >}}
@@ -135,7 +134,7 @@ If we actually integrate over the posterior (rather than approximating it with s
 For parametric statistics in the misspecified setting it is common to still assume that there exists some measure $\nu$ that dominates not only all distributions in our model, but also the true distribution. This allows us to talk about a *true probability density* $p_0(x)$. While there exist more general notions of densities than the Radon-Nikodym derivative (e.g. in Schwartz Distribution Theory), they do not allow us to do the main operation for which we wanted to have a density in the first place: Evaluate the logarithm of the density. This allows us to define the Kullback-Leibler (KL) divergence
 $$D_{KL}(p_0 || p_\theta) := \int p_0(x) \log \frac{p_0(x)}{p_\theta(x)} d\nu(x)$$
 Statisticians love the KL divergence because it evaluates to the same value for any choice of dominating $\sigma$-finite measure $\nu$, and is non-negative, with zero divergence only if $p_0 = p_\theta$. If $\mathcal{X}$ is countable we can always choose the counting measure as $\nu$ and there is no problem. Otherwise, we unfortunately need to break up for two main reasons:
-1. **Lebesgue Decomposition:** The Lebesgue decomposition tells us that any regular Borel probability measure $P$ and $\sigma$-finitee base measure $\nu$, $P$ can be decomposed as the sum $P_{ac} + P_{sc} + P_d$ where $P_{ac}$ is absolutely continuous with respect to $\nu$, $P_{sc}$ is singular continuous and $P_d$ is discrete. Under any reasonable prior distribution on $P$, it seems like a probability 0 event that both $P_{sc}$ and $P_d$ are zero.
+1. **Lebesgue Decomposition:** The Lebesgue decomposition tells us that any regular Borel probability measure $P$ and $\sigma$-finite base measure $\nu$, $P$ can be decomposed as the sum $P_{ac} + P_{sc} + P_d$ where $P_{ac}$ is absolutely continuous with respect to $\nu$, $P_{sc}$ is singular continuous and $P_d$ is discrete. Under any reasonable prior distribution on $P$, it seems like a probability 0 event that both $P_{sc}$ and $P_d$ are zero.
 2. **Discreteness of Reality:** If anything, a reasonable assumption would be that $P_0$ is purely discrete rather than absolutely continuous. Our observations will be represented in finite precision rather than as real numbers. Furthermore, insights from Physics like Planck's constant tell us that reality might be best understood as fundamentally discrete.
 
 Fortunately, we can recover the established results for the KL divergence using the much more generally applicable cross-entropy for most models.  Cross-entropy cleanly separates the *generator* of the data from the *evaluator* of the data. The true measure $P_0$ acts purely as an integration measure, while the model $p_\theta(x)$ acts purely as an integrand. This allows us to mathematically formalize the idea of "fitting a model" even if reality is a Cantor distribution or discrete. We only need to assume the existence of a *true probability measure*.
@@ -156,7 +155,7 @@ $$CE(P_0 || p_\theta) - CE(P_0 || p_{\theta^*})$$
 if the cross-entropy is lower-bounded $\exists c \in \R: \forall \theta \in \Theta: CE(P_0 || \theta) > c$. In that case we completely recover the theory for misspecified models developed using the KL divergence, even if $\mathcal{X}$ is not countable. But how strong is this assumption?
 
 ### Lower-Boundedness of Cross-Entropy
-A simple sufficient condition for the cross-entropy to be lower-bounded is that the probability density is upper-bounded, for example $\Theta := \mathbb{R}$ and $P_\theta := \mathcal{N}(\theta, 1)$. However, bounded density is not a necessary condition. Let $\theta = (\mu, \sigma^2)$ and $\Theta := \R \times \R_{>0}$. For a full Gaussian model $\mathcal{N}(0, \sigma^2)$, the cross-entropy approaches $+\infty$ as $\sigma^2 \to 0$ for any true measure $P_0 \neq \delta_0$, remaining strictly lower-bounded because the $\mathcal{O}(1/\sigma^2)$ polynomial penalty for mass away from zero completely dominates the $\mathcal{O}(\log \sigma)$ divergence of the peak density. Clearly, the tail behavior has a big impact here. Consider a Student's t-distribution $t_\nu(0, \sigma^2)$ for some fixed $\nu > 0$. The penalty for mass away from $\mu$ only grows logarithmically. Consequently, as $\sigma^2 \to 0$, the cross-entropy for the t-distribution is only lower-bounded if $P_0$ does not concentrate too much mass in a single point. Specifically, the cross-entropy can diverge to $-\infty$ if and only if there exists an $x \in \mathcal{X}$ such that  $P_0(\{0\}) \leq \frac{\nu}{\nu+1}$. Since we usually use $\nu \geq 1$ in practice the necessary regularity assumptions on $P_0$ for lower-boundedness are still fairly mild.
+A simple sufficient condition for the cross-entropy to be lower-bounded is that the probability density is upper-bounded, for example $\Theta := \mathbb{R}$ and $P_\theta := \mathcal{N}(\theta, 1)$. However, a bounded density is not a necessary condition. Let $\theta = (\mu, \sigma^2)$ and $\Theta := \R \times \R_{>0}$. For a full Gaussian model $\mathcal{N}(0, \sigma^2)$, the cross-entropy approaches $+\infty$ as $\sigma^2 \to 0$ for any true measure $P_0 \neq \delta_0$, remaining strictly lower-bounded because the $\mathcal{O}(1/\sigma^2)$ polynomial penalty for mass away from zero completely dominates the $\mathcal{O}(\log \sigma)$ divergence of the peak density. Clearly, the tail behavior has a big impact here. Consider a Student's t-distribution $t_\nu(0, \sigma^2)$ for some fixed $\nu > 0$. The penalty for mass away from $\mu$ only grows logarithmically. Consequently, as $\sigma^2 \to 0$, the cross-entropy for the t-distribution is only lower-bounded if $P_0$ does not concentrate too much mass in a single point. Specifically, the cross-entropy can diverge to $-\infty$ if and only if there exists an $x \in \mathcal{X}$ such that  $P_0(\{0\}) \leq \frac{\nu}{\nu+1}$. Since we usually use $\nu \geq 1$ in practice the necessary regularity assumptions on $P_0$ for lower-boundedness are still fairly mild.
 
 However, the situation changes dramatically when moving from single-component distributions to mixture models. Consider a mixture of two Gaussians. In a single Gaussian, concentrating the variance to perfectly fit a point mass incurs a catastrophic exponential penalty everywhere else. However, in a mixture model $w\mathcal{N}(\mu_1, \sigma_1^2) + (1-w)\mathcal{N}(\mu_2, \sigma_2^2)$, this tradeoff is bypassed. If $P_0$ contains even a single point mass at $x_0$ with probability $p > 0$, the first component can center on it ($\mu_1 = x_0$) and collapse its variance ($\sigma_1^2 \to 0$), yielding an infinite logarithmic reward. Meanwhile, the second component can remain broad to cover the rest of the probability mass, ensuring the density elsewhere never drops below a finite threshold. Because the penalty for mass away from $x_0$ is now bounded by the presence of the second component, the infinite reward from the first component dominates, driving the overall cross-entropy to $-\infty$. Thus, for a Gaussian mixture model, a single point mass in $P_0$ is sufficient to destroy the lower bound. As discussed in the previous section, it is quite strong to assume that the discrete component of $P_0$ is zero. 
 
@@ -169,36 +168,40 @@ However, the situation changes dramatically when moving from single-component di
 
 The only way to fit mixture models into the cross-entropy-based theory without assuming $\nexists x \in \mathcal{X}: P_0(\\{x\\}) > 0$ is to constrain their parameter space, lower-bounding the minimum variance of each component away from zero.
 
-## Inference: Asymptotics Under True Measures
+## Asymptotics Under True Measures
 
-### Maximum-Likelihood Inference
-We now treat the MLE strictly as an M-estimator. Drawing from modern empirical process theory (e.g., van der Vaart, 1998), we shift our focus from the geometry of the densities to the functional properties of the score $S_\theta(x) = \nabla_\theta \log p(x \mid \theta)$. Assuming the MLE is consistent ($\hat{\theta}_n \xrightarrow{p} \theta^\ast$), we require the score to satisfy a modified Lipschitz envelope condition:
+### Confidence and Credible Intervals
+The asymptotic behaviour of confidence and credible intervals was extensively studied by Kleijn and van der Vaart (2012). They explicitely assume that $P_0$ is dominated by the same measure as $\\{P_\theta : \theta \in \Theta\\}$. We will apply our discussion in the previous section to generalize their results to arbitrary measures $P_0$. 
 
-$$
-\|S_{\theta_1}(X) - S_{\theta_2}(X)\| \leq \dot{M}(X)\|\theta_1 - \theta_2\| \quad \text{where } P_0 \dot{M}(X)^2 < \infty
-$$
+Firstly, we need to assume that the cross-entropy $CE(P_0 || p_\theta)$ is lower-bounded and that a unique minimizer $p_{\theta^\ast}$ exists. We then need a number of regularity conditions on how the log-likelihood behaves around $\theta^\ast$:
+1. **Differentiability of Log-Likelihood:** The function $\theta \rightarrow \log p_\theta(X)$ is differentiable at $\theta^*$ in $P_0$-probability with derivative $\dot{\ell\_{\theta^\ast}}(X)$.
+2. **Lipschitz Envelope Condition:** See regularity conditions for asymptotic normality of the MLE, but replacing $P_{\theta_0}$ with $P_0$ and considering a neighborhood of $\theta^\ast$
+3. **Second-Order Taylor Expansion:** There exists a positive definite matrix $V_{\theta^\ast}$ such that
+$$-\mathbb{E}_{P_0}\left[\log \frac{p_\theta}{p_{\theta^*}}\right] = \frac{1}{2} (\theta - \theta^*)^T V_{\theta^*} (\theta - \theta^*) + o(\|\theta - \theta^*\|^2)$$
+as $\theta \rightarrow \theta^*$.
 
-When this holds, the random fluctuations of the empirical score behave nicely, but our uncertainty fundamentally changes. Let $J(\theta^\ast)$ be the expected negative Hessian of the log-likelihood (the curvature) evaluated under $P\_{\theta_0}$, and let $K(\theta^\ast) = \E_{X \sim P_0}[S_{\theta^\ast}(X) S_{\theta^\ast}(X)^\top]$ be the covariance of the score.
+#### Maximum-Likelihood Inference
+Assuming the maximum-likelihood estimator is consistent $\hat{\theta}\_n \xrightarrow{P\_0} \theta^\ast$ and its log-likelihood converges sufficiently fast to the true optimum in probability
+$$\mathbb{E}_{X_1, \dots, X_n \sim P_0}[\log p_{\hat{\theta}_n}] \geq \sup_\theta \mathbb{E}_{X_1, \dots, X_n \sim P_0}[\log p_{\theta}] + o_{P_0}(1/n),$$
+we have
+$$\sqrt{n}(\hat{\theta}_n - \theta^*) \xrightarrow{TV} \mathcal{N}\left(0, V_{\theta^*}^{-1} \mathbb{E}_{X \sim P_0}\left[\ell_{\theta^\ast}(X) \ell_{\theta^\ast}(X)^T\right] V_{\theta^*}^{-1}\right)$$
+in $P\_0$-probability. While we cannot get confidence intervals for the true data-generating process in the misspecified setting, we could in theory still get valid confidence intervals for the best approximation $\theta^\ast$, if we can approximate $V\_{\theta^\ast}$ and $\mathbb{E}\_{X \sim P\_0}\left[\ell\_{\theta^\ast}(X) \ell\_{\theta^\ast}(X)^T\right]$ well enough. In the well-specified setting this expectation is equal to $V_{\theta^\ast}$, simplifying the asymptotic covariance to just $V_{\theta^*}^{-1}$. However, applied statisticians rarely account for this discrepancy, frequently leading to misleading conclusions when parametric tests are used.
 
-Under the idealized assumption of correct specification, a mathematical coincidence known as the Information Matrix Equality ensures $J(\theta_0) = K(\theta_0)$. But under an arbitrary true measure $P_0$, the model is misspecified and $J(\theta^\ast) \neq K(\theta^\ast)$. The asymptotic variance of the MLE expands into the robust sandwich covariance matrix:
-
-$$
-\sqrt{n}(\hat{\theta}_n - \theta^\ast) \xrightarrow{d} \mathcal{N}_k(0, J(\theta^\ast)^{-1} K(\theta^\ast) J(\theta^\ast)^{-1})
-$$
-
-A crucial philosophical and practical caveat applies here: Are confidence intervals constructed using this sandwich matrix valid? Yes, but they are valid confidence intervals for the *pseudo-true parameter* $\theta^\ast$, not for a non-existent "true" data-generating parameter. Because the model is misspecified, the sandwich matrix perfectly quantifies the sampling uncertainty of the model's *best possible approximation* of reality. If we were to draw new data from the unknown true measure $P_0$ and refit our wrong model, these robust intervals accurately describe how much our estimated parameters would bounce around.
-
-### Bayesian Inference
-
+#### Bayesian Inference
 In Bayesian statistics, we are immediately faced with a major philosophical hurdle: By restricting our prior distribution $p(\theta)$ entirely to the parameter space $\Theta$, we are stating with absolute certainty that the true data-generating measure lies within our model family. Because the model is misspecified, we have essentially assigned a prior probability of exactly zero to reality. In a strict subjectivist sense, this violates Cromwell's rule: no amount of data can ever convince the posterior to converge to the absolute truth if the truth was ruled out a priori.
 
 To resolve this, we must radically reinterpret Bayesian inference under misspecification. The prior $p(\theta)$ can no longer be viewed as a belief about the true data-generating process. Instead, it represents our prior belief over the space of candidate approximations. The posterior, in turn, merely updates our beliefs about which of these flawed approximations best minimizes the cross-entropy with the unknown truth.
 
-But is this a valid interpretation in the sense that the prior "washes out" asymptotically and the Bayesian credible intervals have valid Frequentist coverage asymptotically? This holds true if a true parameter $\theta_0$ exists. However, it is false for general $P_0$, as established by Kleijn and van der Vaart (2012). The posterior distribution asymptotically still converges in total variation to a normal distribution, but one governed only by the Hessian:
+But is this a valid interpretation in the sense that the prior "washes out" asymptotically and the Bayesian credible intervals have valid Frequentist coverage asymptotically? This holds true if a true parameter $\theta_0$ exists. However, it is false for general $P_0$.
 
-$$p(\theta \mid \mathbf{y}_{1:n}) \approx \mathcal{N}\left(\hat{\theta}_n, \frac{1}{n} J(\theta^\ast)^{-1}\right)$$
+To analyze Bayesian credible intervals, we still require the same assumptions on the log-likelihood behaves around $\theta^\ast$ and a lower-bounded cross-entropy, but instead of putting additional assumptions on $\hat{\theta}_n$, we put additional assumptions on the prior and the posterior it induces. Similar to the well-specified Bernstein-von Mises Theorem, we assume that the prior has a density that is bounded, continuous and strictly positive in a neighborhood of $\theta^*$. As a replacement for the existence of consistent tests in our well-specified BvM theorem, we assume that for every sequence of constants $M\_n \rightarrow \infty$, we have:
+$$\mathbb{E}_{X^{(n)} \sim P_0^{(n)}} \mathbb{E}_{\vartheta \sim \Pi_n(\cdot | X^{(n)})} 1\{\|\vartheta - \theta^*\| > M_n / \sqrt{n}\} \rightarrow 0$$
+As Kleijn and van der Vaart detail in their paper, this condition can again be implied  by the existence of tests that fulfill certain criteria. Then we have
+$$\sqrt{n}(\hat{\theta}_n - \theta^*) \xrightarrow{TV} \mathcal{N}\left(0, V_{\theta^*}^{-1}\right)$$
+in $P_0$-probability. This mismatch shows that Bayesian credible intervals are no longer asymptotically well-callibrated in the misspecififed setting. Since we are essentially always in the misspecified setting in practice, this leads to applied Bayesian statisticians frequently drawing misleading conclusions from their credible intervals, and unlike in the Frequentist case, there is no clean solution. However, there are some recent ideas around using posthoc posterior recallibrations as well as generalized Bayes approaches.
 
-Notice the missing sandwich! The standard Bayesian posterior naturally estimates the inverse Hessian $J(\theta^\ast)^{-1}$, completely ignoring the true score variance $K(\theta^\ast)$. Because the posterior does not "know" the model is misspecified, standard Bayesian credible intervals can become highly miscalibrated—often dangerously overconfident—regarding the pseudo-true parameter $\theta^\ast$ when the model is wrong.
+### Prediction
+*Coming soon*
 
 ## References
 
