@@ -216,8 +216,9 @@ in $P_0$-probability. This mismatch shows that Bayesian credible intervals are n
 ### Prediction
 #### Plug-In Estimator
 *Coming soon*
+
 #### Bayesian Predictive Distribution
-Clarke and Barron (1990) also directly address the misspecified setting. While they do not explicitely assume that $P_0$ shares the same dominating measure with $\\{P_\theta : \theta \in \Theta\\}$, we still need the cross-entropy to be lower-bounded, because their bounds become vacuous otherwise. However, if we do make this assumption, the theory translates to the misspecified setting perfectly: Just like in the well-specified case, all we need is twice continuous differentiablity of the KL divergence at $\theta^\ast$ (unique minimizer of KL divergence) with a positive definite Hessian, and a positive and continuous prior density at $\theta^\ast$. Then, we attain the same $d/(2n)$ rate, just to the risk of $p\_{\theta^\ast}$ rather than 0.
+Clarke and Barron (1990) also directly address the misspecified setting. While they do not explicitely assume that $P_0$ shares the same dominating measure with $\\{P_\theta : \theta \in \Theta\\}$, we still need the cross-entropy to be lower-bounded, because their bounds become vacuous otherwise. Furthermore, we need a unique minizer $\theta^\ast$. One example where this is not given is when using a Gaussian model with a Cauchy $P_0$, since the cross-entropy will always be infinite. If we do make these assumptions, the theory largely translates to the misspecified setting: Instead of twice continuous differentiablity of the KL divergence $D_{KL}(P\_{\theta\_0} || P\_\theta)$ at $\theta_0$ we need twice continuous differentiability of $CE(P\_0 || P\_\theta)$ at $\theta^\ast$, with a positive definite Hessian. Furthermore, we still need a positive and continuous prior density at $\theta^\ast$. Then, we attain the same $d/(2n)$ rate, just to the risk of $p\_{\theta^\ast}$ rather than 0.
 
 
 ## References
