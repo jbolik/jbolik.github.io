@@ -17,6 +17,10 @@ While we try to make as few assumptions as possible on the data-generating proce
 While we generalize to arbitrary measures, this blog post focusses on the independently identically distributed setting $X_1, \dots, X_n {\sim} P_0$, for both hypothesis testing and prediction. This already gives us a good intuition about the asymptotic behavior of the different statistical philosophies, but is not directly applicable to more general settings, especially if the independence assumption is violated.
 {{< /remark >}}
 
+{{< remark >}}
+We will assume that $\Theta$ is a Borel subset of $\mathbb{R}^d$. If we are doing Bayesian statistics or are outside the well-specified setting, we further need to assume that $(\mathcal{X}, \mathscr{X})$ is a standard Borel space.
+{{< /remark >}}
+
 ## Asymptotics in the Well-Specified Setting
 ### Differentiability in Quadratic Mean
 The fundamental minimal assumption that powers a lot of theory in parametric statistics is *differentiability in quadratic mean*, which is defined as the existence of a dominating $\sigma$-finite measure $\mu$ and a function $S\_{\theta\_0}(x)$ such that:
@@ -151,6 +155,10 @@ Fortunately, we can recover the established results for the KL divergence using 
 | *Optimal MLE Objective* | Minimize | Minimize | 
 | *Minimum* | 0 | Can be negative | 
 | $\nu$*-Invariance* | Completely invariant | Value depends on $\nu$, but argmin ($\theta^\ast$) is invariant | 
+
+{{< remark >}}
+If $P_0$ has a dicrete component, it evaluates the density $p_\theta$ at individual points. Since Radon-Nikodym derivatives are only unique almost everywhere, we additionally want to assume that the dominating measure $\mu$ assigns positive probability mass to all non-empty open sets and that Radon-Nikodym derivatives are continuous. If such a Radon-Nikodym derivative exists, it is unique, making the cross-entropy well-defined. However, it limits which model classes $\\{P_\theta : \theta \in \Theta\\}$ can be considered, since not all admit such continuous Radon-Nikodym derivatives.
+{{< /remark >}}
 
 When doing parametric statistics in the misspecified setting, we cannot reach zero KL divergence anyway, so the main quantity of interest is typically
 $$D_{KL}(p_0 || p_\theta) - D_{KL}(p_0 || p_{\theta^*})$$
