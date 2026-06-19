@@ -1,6 +1,6 @@
 ---
 title: "Asymptotics Under True Measures"
-date: 2026-06-07
+date: 2026-06-19
 tags: ["MLE", "asymptotics", "BvM"]
 draft: false
 ---
@@ -18,7 +18,7 @@ While we generalize to arbitrary measures, this blog post focusses on the indepe
 {{< /remark >}}
 
 {{< remark >}}
-We will assume that $\Theta$ is a Borel subset of $\mathbb{R}^d$. If we are doing Bayesian statistics or are outside the well-specified setting, we further need to assume that $(\mathcal{X}, \mathscr{X})$ is a standard Borel space.
+We will assume that $\Theta$ is a Borel subset of $\mathbb{R}^d$. We further need to assume that $(\mathcal{X}, \mathscr{X})$ is a standard Borel space for everything except credible intervals in the well-specified setting.
 {{< /remark >}}
 
 ## Asymptotics in the Well-Specified Setting
@@ -113,7 +113,7 @@ $$
 {{< /remark >}}
 
 #### Asymptotic Optimality of the Plug-in Estimator
-Let's evaluate the predictive performance of the plug-in MLE estimator, $p(x\_{n+1} \mid \hat{\theta}\_n)$. We want to evaluate its expected log-likelihood on new data. Therefore, we need convergence in $L_1$ here rather than just convergence in probability, a nuance that is handled rigorously by few authors. One of them is Cencov (1981, Theorem 27.3), who achieves this through fairly strong assumptions on the model. Let $(\mathcal{X}, \mathscr{X})$ be a standard Borel space. Assuming a number of conditions on the likelihood's derivatives (Definition 27.3), that the parameter space is compact, and that the KL divergence between any two members of the family is uninformly bounded, he is able to show that if $\hat{\theta}_n$ is a maximum-likelihood estimator there exists a $c > 0$ such that:
+Let's evaluate the predictive performance of the plug-in MLE estimator, $p(x\_{n+1} \mid \hat{\theta}\_n)$. We want to evaluate its expected log-likelihood on new data. Therefore, we need convergence in $L_1$ here rather than just convergence in probability, a nuance that is handled rigorously by few authors. One of them is Cencov (1981, Theorem 27.3), who achieves this through fairly strong assumptions on the model. Assuming a number of conditions on the likelihood's derivatives (Definition 27.3), that the parameter space is compact, and that the KL divergence between any two members of the family is uninformly bounded, he is able to show that if $\hat{\theta}_n$ is a maximum-likelihood estimator there exists a $c > 0$ such that:
 $$\mathbb{E}_{X_1, \dots, X_{n} \sim P_{\theta_0}}\left[D_{KL}(P_{\theta_0} || P_{\hat{\theta}_n})\right] \leq \frac{d}{2n} + c * n^{-3/2}$$
 Or equivalently:
 $$\mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p\left(X_{n+1} \mid \hat{\theta}_n\right) \right] \geq H_0  - \frac{d}{2n} - c * n^{-3/2}$$
@@ -181,49 +181,96 @@ However, the situation changes dramatically when moving from single-component di
 The only way to fit mixture models into the cross-entropy-based theory without assuming $\nexists x \in \mathcal{X}: P_0(\\{x\\}) > 0$ is to constrain their parameter space, lower-bounding the minimum variance of each component away from zero. Apart from $P_0$ containing discrete point-masses, other true measures $P_0$ can also break the lower-boundedness assumption. Even an absolutely continuous measure can break the assumption if the density increases faster to a singularity than the tails penalize it.
 
 ## Asymptotics Under True Measures
+### Convergence in Distribution or Probability
+We follow Kleijn and van der Vaart (2012). They explicitely assume that $P_0$ is dominated by the same measure as $\\{P_\theta : \theta \in \Theta\\}$. We will apply our discussion in the previous section to generalize their results to arbitrary measures $P_0$. 
 
-### Confidence and Credible Intervals
-The asymptotic behaviour of confidence and credible intervals was extensively studied by Kleijn and van der Vaart (2012). They explicitely assume that $P_0$ is dominated by the same measure as $\\{P_\theta : \theta \in \Theta\\}$. We will apply our discussion in the previous section to generalize their results to arbitrary measures $P_0$. 
-
-Firstly, we need to assume that the cross-entropy $CE(P_0 || p_\theta)$ is lower-bounded and that a unique minimizer $p_{\theta^\ast}$ exists. We then need a number of regularity conditions on how the log-likelihood behaves around $\theta^\ast$:
+Firstly, we need to assume that the cross-entropy $CE(P_0 || p_\theta)$ is lower-bounded and that a unique minimizer $p_{\theta^\ast}$ exists with finite cross-entropy in its neighborhood. We then need a number of regularity conditions on how the log-likelihood behaves around $\theta^\ast$:
 1. **Differentiability of Log-Likelihood:** The function $\theta \rightarrow \log p_\theta(X)$ is differentiable at $\theta^*$ in $P_0$-probability with derivative $\dot{\ell\_{\theta^\ast}}(X)$.
 2. **Lipschitz Envelope Condition:** See regularity conditions for asymptotic normality of the MLE, but replacing $P_{\theta_0}$ with $P_0$ and considering a neighborhood of $\theta^\ast$
 3. **Second-Order Taylor Expansion:** There exists a positive definite matrix $V_{\theta^\ast}$ such that
 $$-\mathbb{E}_{P_0}\left[\log \frac{p_\theta}{p_{\theta^*}}\right] = \frac{1}{2} (\theta - \theta^*)^T V_{\theta^*} (\theta - \theta^*) + o(\|\theta - \theta^*\|^2)$$
-as $\theta \rightarrow \theta^*$.
 
-#### Maximum-Likelihood Inference
+as $\theta \rightarrow \theta^*$. Under these conditions, we can characterize the asymptotic convergence in both Frequentsist and Bayesian frameworks:
+
+#### Maximum-Likelihood Estimator
 Assuming the maximum-likelihood estimator is consistent $\hat{\theta}\_n \xrightarrow{P\_0} \theta^\ast$ and its log-likelihood converges sufficiently fast to the true optimum in probability
 $$\mathbb{E}_{X_1, \dots, X_n \sim P_0}[\log p_{\hat{\theta}_n}] \geq \sup_\theta \mathbb{E}_{X_1, \dots, X_n \sim P_0}[\log p_{\theta}] + o_{P_0}(1/n),$$
-we have
-$$\sqrt{n}(\hat{\theta}_n - \theta^*) \xrightarrow{d} \mathcal{N}\left(0, V_{\theta^*}^{-1} \mathbb{E}_{X \sim P_0}\left[\ell_{\theta^\ast}(X) \ell_{\theta^\ast}(X)^T\right] V_{\theta^*}^{-1}\right)$$
+and $\mathbb{E}\_{X \sim P\_0}[\\|\ell_{\theta^\ast}(X)\\|^2] < \infty$ we have
+$$\sqrt{n}(\hat{\theta}_n - \theta^*) \xrightarrow{d} \mathcal{N}\left(0, V_{\theta^*}^{-1} J_{\theta^\ast} V_{\theta^*}^{-1}\right)$$
+where $J\_{\theta^\ast} := \mathbb{E}\_{X \sim P\_0}\left[\ell\_{\theta^\ast}(X) \ell\_{\theta^\ast}(X)^T\right]$.
 
-While we cannot get confidence intervals for the true data-generating process in the misspecified setting, we could in theory still get valid confidence intervals for the best approximation $\theta^\ast$, if we can approximate $V\_{\theta^\ast}$ and $\mathbb{E}\_{X \sim P\_0}\left[\ell\_{\theta^\ast}(X) \ell\_{\theta^\ast}(X)^T\right]$ well enough. In the well-specified setting this expectation is equal to $V_{\theta^\ast}$, simplifying the asymptotic covariance to just $V_{\theta^*}^{-1}$. However, applied statisticians rarely account for this discrepancy, frequently leading to misleading conclusions when parametric tests are used.
+#### Bayesian Posterior
+Similar to the well-specified Bernstein-von Mises Theorem, we assume that the prior has a density that is bounded, continuous and strictly positive in a neighborhood of $\theta^*$. As a replacement for the existence of consistent tests in our well-specified BvM theorem, we assume that for every sequence of constants $M\_n \rightarrow \infty$ we have low posterior mass in the tails:
+$$\mathbb{E}_{X^{(n)} \sim P_0^{(n)}} \mathbb{E}_{\vartheta \sim \Pi_n(\cdot | X^{(n)})} 1\{\|\vartheta - \theta^*\| > M_n / \sqrt{n}\} \rightarrow 0$$
+As Kleijn and van der Vaart detail in their paper, this condition can again be implied  by the existence of tests that fulfill certain criteria. Then we have
+$$
+d_{\text{TV}}\left(\Pi(\vartheta \in \cdot \mid X_1, \dots, X_n), \mathcal{N}_d\left(\hat{\theta}_n, \frac{1}{n}V_{\theta^*}^{-1}\right)\right) \xrightarrow{P_0} 0.
+$$
+
+### Confidence and Credible Intervals
+#### Maximum-Likelihood Inference
+While we cannot get confidence intervals for the true data-generating process in the misspecified setting, we could in theory still get valid confidence intervals for the best approximation $\theta^\ast$, if we can approximate $V\_{\theta^\ast}$ and $J\_{\theta^\ast}$ well enough. In the well-specified setting this expectation is equal to $V_{\theta^\ast}$, simplifying the asymptotic covariance to just $V_{\theta^*}^{-1}$. However, applied statisticians rarely account for this discrepancy, frequently leading to misleading conclusions when parametric tests are used.
 
 #### Bayesian Inference
 In Bayesian statistics, we are immediately faced with a major philosophical hurdle: By restricting our prior distribution $p(\theta)$ entirely to the parameter space $\Theta$, we are stating with absolute certainty that the true data-generating measure lies within our model family. Because the model is misspecified, we have essentially assigned a prior probability of exactly zero to reality. In a strict subjectivist sense, this violates Cromwell's rule: no amount of data can ever convince the posterior to converge to the absolute truth if the truth was ruled out a priori.
 
 To resolve this, we must radically reinterpret Bayesian inference under misspecification. The prior $p(\theta)$ can no longer be viewed as a belief about the true data-generating process. Instead, it represents our prior belief over the space of candidate approximations. The posterior, in turn, merely updates our beliefs about which of these flawed approximations best minimizes the cross-entropy with the unknown truth.
 
-But is this a valid interpretation in the sense that the prior "washes out" asymptotically and the Bayesian credible intervals have valid Frequentist coverage asymptotically? This holds true if a true parameter $\theta_0$ exists. However, it is false for general $P_0$.
+But is this a valid interpretation in the sense that the prior "washes out" asymptotically and the Bayesian credible intervals have valid Frequentist coverage asymptotically? This holds true if a true parameter $\theta_0$ exists. However, it is false for general $P_0$, because the asymptotic covariance is $V\_{\theta^\ast}^{-1}$ rather than $V_{\theta^\ast}^{-1} J\_{\theta^\ast} V\_{\theta^\ast}^{-1}$, which would give correct coverage.
 
-To analyze Bayesian credible intervals, we still require the same assumptions on the log-likelihood behaves around $\theta^\ast$ and a lower-bounded cross-entropy, but instead of putting additional assumptions on $\hat{\theta}_n$, we put additional assumptions on the prior and the posterior it induces. Similar to the well-specified Bernstein-von Mises Theorem, we assume that the prior has a density that is bounded, continuous and strictly positive in a neighborhood of $\theta^*$. As a replacement for the existence of consistent tests in our well-specified BvM theorem, we assume that for every sequence of constants $M\_n \rightarrow \infty$, we have:
-$$\mathbb{E}_{X^{(n)} \sim P_0^{(n)}} \mathbb{E}_{\vartheta \sim \Pi_n(\cdot | X^{(n)})} 1\{\|\vartheta - \theta^*\| > M_n / \sqrt{n}\} \rightarrow 0$$
-As Kleijn and van der Vaart detail in their paper, this condition can again be implied  by the existence of tests that fulfill certain criteria. Then we have
-$$\sqrt{n}(\hat{\theta}_n - \theta^*) \xrightarrow{TV} \mathcal{N}\left(0, V_{\theta^*}^{-1}\right)$$
-in $P_0$-probability. This mismatch shows that Bayesian credible intervals are no longer asymptotically well-callibrated in the misspecififed setting. Since we are essentially always in the misspecified setting in practice, this leads to applied Bayesian statisticians frequently drawing misleading conclusions from their credible intervals, and unlike in the Frequentist case, there is no clean solution. However, there are some recent ideas around using posthoc posterior recallibrations as well as generalized Bayes approaches.
+Since we are virtually always in the misspecified setting in practice, this leads to applied Bayesian statisticians frequently drawing misleading conclusions from their credible intervals, and unlike in the Frequentist case, there is no clean solution. However, there are some recent ideas around using posthoc posterior recallibrations as well as generalized Bayes approaches.
 
 ### Prediction
-#### Plug-In Estimator
-*Coming soon*
+#### Maximum-Likelihood Estimation
+Given that our second-order Taylor expansion exists, we have
+$$\Delta(\theta) := CE(P_0 || p_\theta) - CE(P_0 || p_{\theta^*}) = -\mathbb{E}_{P_0}\left[\log \frac{p_\theta}{p_{\theta^*}}\right]$$
+$$=\frac{1}{2} (\theta - \theta^*)^T V_{\theta^*} (\theta - \theta^*) + o(\|\theta - \theta^*\|^2)$$
+Or equivalently, there exists an $r(\theta)$ with $r(\theta) \rightarrow 0$ as $\theta \rightarrow \theta^\ast$ such that:
+$$\Delta(\theta) = \frac{1}{2} (\theta - \theta^*)^T V_{\theta^*} (\theta - \theta^*) + r(\theta) \|\theta - \theta^*\|^2$$
+
+Let $T\_n := \sqrt{n}(\hat{\theta}\_n - \theta^\ast)$. Under the previously dicussed assumptions, we have
+$$T_n \xrightarrow{d} Z \sim \mathcal{N}\left(0, V_{\theta^*}^{-1} J_{\theta^\ast} V_{\theta^*}^{-1}\right)$$
+Now
+$$n \Delta(\hat{\theta}_n) = \frac{1}{2} T_n^T V_{\theta^*} T_n + r(\hat{\theta}_n) \|T_n\|^2$$
+By Prohorov, $\\{T\_n: n \in \mathcal{N}\\}$ is uniformly tight. Assuming consistency, meaning $\hat{\theta}\_n \xrightarrow{P\_0} \theta^\ast$, we have $r(\theta\_n) \xrightarrow{P\_0} 0$ since $r$ is continuous at $\theta^\ast$. Hence $r(\theta\_n) = o\_{P\_0}(1)$ and $T_n = O\_{P\_0}(1)$, implying $\\|T_n\\|^2 = O\_{P\_0}(1)$. Overall, this gives:
+$$n \Delta(\hat{\theta}_n) = \frac{1}{2} T_n^T V_{\theta^*} T_n + o_{P_0}(1)$$
+By the Continuous Mapping Theorem and Slutsky's Lemma this gives:
+$$n \Delta(\hat{\theta}_n) \xrightarrow{d} \frac{1}{2} Z^T V_{\theta^*} Z$$
+Now we can apply a Fatou argument. Define $Y_n := n \Delta(\hat{\theta}\_n)$, which is non-negative since $\theta^\ast$ is the global minimizer. For any $M > 0$ Portmonteau gives:
+$$\mathbb{E}[\min(Y_n, M)] \leq \mathbb{E}[Y_n]$$
+Taking a $\liminf$ (which is just a regular limit for the bounded expectation on the left) gives:
+$$\mathbb{E}[\min(Y, M)] \leq \liminf_{n \rightarrow \infty} \mathbb{E}[Y_n]$$
+Now taking $M \rightarrow \infty$ we can apply the monotonous convergence theorem to get
+$$\mathbb{E}[Y] \leq \liminf_{n \rightarrow \infty} \mathbb{E}[Y_n]$$
+Applying classical trace permutation methods, we have:
+$$\mathbb{E}[Y] = \mathbb{E}\left[\frac{1}{2} Z^T V_{\theta^*} Z\right] = \frac{1}{2}\mathrm{Tr}(J_{\theta^*} V_{\theta^*}^{-1})$$
+So overall, we have:
+$$\liminf_{n \rightarrow \infty} n (CE(P_0 || p_{\hat{\theta}_n}) - CE(P_0 || p_{\theta^*})) \geq \frac{1}{2} \mathrm{Tr}(J_{\theta^*} V_{\theta^*}^{-1})$$
+
+This means that the commonly cited $\frac{1}{2n} \mathrm{Tr}(J\_{\theta^\ast} V\_{\theta^\ast}^{-1})$ rate is the best case for maximum likelihood prediction, rather than something we are guaranteed to attain. To actually achieve this asymptotic rate, we would need *uniform integrability* of the sequence $\\{(T\_n, P\_0^n): n \in \mathcal{N}\\}$. Basically, we need $P_0$ to play nice with our model, which usually requires us to make additional assumptions on how $P_0$ interacts with our model globally, instead of just in a neighborhood of $\theta^\ast$. There is one exception where no additional assumptions are needed: The Gaussian location model $\mathcal{N}(\mu, \Sigma)$ with fixed covariance $\Sigma$.  Since the log-likelihood is perfectly quadratic, the Taylor expansion has no remainder, greatly simplifying the problem.
+
+{{< remark >}}
+*Uniform Integrability (UI) Definitions:*
+Let $h$ be a measurable function from $\mathbb{R}$ to $\mathbb{R}$ where $h(0) = 0$, with a family of functions $f_t$ and a family of measures $\\{\mu_t\\}_{t \in T}$. Based on Chandra (2015, Theorem 3.1), the uniform integrability of $h$ relative to $\{\mu_t\}$ can be equivalently defined in the following two ways: 
+1. The Direct Indicator Method
+$$\inf_{a \ge 0} \sup_{t \in T} \int |h(f_t)| I(|f_t| > a) d\mu_t = 0$$
+2. The de La Vallée Poussin Analogue: There exists a measurable function $H: \mathbb{R} \to \mathbb{R}^+$ such that $\frac{H(x)}{|h(x)|} \to \infty$ as $x \to \infty$, and:
+$$\sup_{t \in T} \int H(|f_t|) d\mu_t < \infty$$
+<!-- Note: If the first condition holds with continuous, convex, or non-decreasing $h$, the function $H$ can be chosen to have the same property. -->
+{{< /remark >}}
+
 
 #### Bayesian Predictive Distribution
-Clarke and Barron (1990) also directly address the misspecified setting. While they do not explicitely assume that $P_0$ shares the same dominating measure with $\\{P_\theta : \theta \in \Theta\\}$, we still need the cross-entropy to be lower-bounded, because their bounds become vacuous otherwise. Furthermore, we need a unique minizer $\theta^\ast$. One example where this is not given is when using a Gaussian model with a Cauchy $P_0$, since the cross-entropy will always be infinite. If we do make these assumptions, the theory largely translates to the misspecified setting: Instead of twice continuous differentiablity of the KL divergence $D_{KL}(P\_{\theta\_0} || P\_\theta)$ at $\theta_0$ we need twice continuous differentiability of $CE(P\_0 || P\_\theta)$ at $\theta^\ast$, with a positive definite Hessian. Furthermore, we still need a positive and continuous prior density at $\theta^\ast$. Then, we attain the same $d/(2n)$ rate, just to the risk of $p\_{\theta^\ast}$ rather than 0.
-
+For the Bayesian predictive distribution Clarke and Barron (1990) had a key insight: Since we are integrating over the posterior before making a prediction rather than assessing the predictive performance of the point estimator $\hat{\theta}_n$ posthoc, the order of expectations in reversed. If we can show that the neighborhood of $\theta^\ast$ is already guaranteeing a good enough prediction, this is very powerful.
+Indeed, under the same assumptions of the misspecified BvM theorem, they show
+$$\limsup_{n \rightarrow \infty} n (CE(P_0 || p_{\hat{\theta}_n}) - CE(P_0 || p_{\theta^*})) \leq \frac{d}{2}$$
 
 ## References
 
 **Cencov, N. N.** (1981). *Statistical Decision Rules and Optimal Inference*. **American Mathematical Society**.
+
+**Chandra, T. K.** (2015).
+*de La Vallée Poussin’s theorem, uniform integrability, tightness and moments*. **Statistics \& Probability Letters**.
 
 **Clarke, B. S., & Barron, A. R.** (1990). *Information-Theoretic Asymptotics of Bayes Methods*. **IEEE Transactions on Information Theory**, 36(3), 453-471.
 
