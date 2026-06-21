@@ -1,6 +1,6 @@
 ---
 title: "Asymptotics Under True Measures"
-date: 2026-06-19
+date: 2026-06-21
 tags: ["MLE", "asymptotics", "BvM"]
 draft: false
 ---
@@ -98,36 +98,54 @@ This is an important property that justifies the wide-spread use of credible int
 ### Prediction
 In prediction tasks, we are interested in evaluating how well our model anticipates a new, unseen observation $X\_{n+1} \sim P\_{\theta\_0}$ given our observed sample $X^{(n)} = (X\_1, \dots, X\_n)$. If a dominating $\sigma$-finite measure exists (like the counting measure for countable spaces or Lebesgue measure), a highly intuitive and rigorous choice for scoring a predictive distribution $p\_{\text{pred}}(\cdot \mid X^{(n)})$ is the *expected log-likelihood* (or expected log-predictive density) on new data:
 
-$$
-\text{ELL} = \mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p_{\text{pred}}\left(X_{n+1} \mid X^{(n)}\right) \right]
-$$
+$$\text{ELL}_n := \mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p_{\text{pred}}\left(X_{n+1} \mid X^{(n)}\right) \right]$$
+<!-- $$=-\mathbb{E}_{X_1, \dots, X_n \sim P_{\theta_0}} \left[CE\left(P_{\theta_0} \| p_{\text{pred}}\right) \right]$$ -->
 
 The expected log-likelihood rewards a model for assigning high probability mass or density to the actual outcomes. 
 
 {{< remark >}}
-Minimizing the expected log-likelihood is equivalent to minimizing the KL divergence, because the entropy of the true data-generating distribution, $H(P\_{\theta\_0}) = -\mathbb{E}\_{X\_{n+1}}[\log p\_{\theta\_0}(X\_{n+1})]$, is an irreducible constant:
+Maximizing the ELL is equivalent to minimizing the expected KL divergence, because the entropy of the true data-generating distribution, $H(P\_{\theta\_0}) = -\mathbb{E}\_{X\_{n+1}}[\log p\_{\theta\_0}(X\_{n+1})]$, is an irreducible constant:
 
 $$
-D_{\text{KL}}(P_{\theta_0} \| P_{\text{pred}}) = -H(P_{\theta_0}) - \text{ELL}
+\mathbb{E}_{X_1, \dots, X_n \sim P_{\theta_0}}[D_{\text{KL}}(P_{\theta_0} \| P_{\text{pred}}(X_1, \dots, X_n))] = -H(P_{\theta_0}) - \text{ELL}_n
 $$
 {{< /remark >}}
+
+Additionally, we will consider the cumulative expected log-likelihood:
+$$\text{CELL}_n := \sum_{i=1}^n \text{ELL}_i$$
 
 #### Asymptotic Optimality of the Plug-in Estimator
 Let's evaluate the predictive performance of the plug-in MLE estimator, $p(x\_{n+1} \mid \hat{\theta}\_n)$. We want to evaluate its expected log-likelihood on new data. Therefore, we need convergence in $L_1$ here rather than just convergence in probability, a nuance that is handled rigorously by few authors. One of them is Cencov (1981, Theorem 27.3), who achieves this through fairly strong assumptions on the model. Assuming a number of conditions on the likelihood's derivatives (Definition 27.3), that the parameter space is compact, and that the KL divergence between any two members of the family is uninformly bounded, he is able to show that if $\hat{\theta}_n$ is a maximum-likelihood estimator there exists a $c > 0$ such that:
 $$\mathbb{E}_{X_1, \dots, X_{n} \sim P_{\theta_0}}\left[D_{KL}(P_{\theta_0} || P_{\hat{\theta}_n})\right] \leq \frac{d}{2n} + c * n^{-3/2}$$
-Or equivalently:
+Or equivalently we can formulate it in terms of ELL:
 $$\mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p\left(X_{n+1} \mid \hat{\theta}_n\right) \right] \geq H_0  - \frac{d}{2n} - c * n^{-3/2}$$
 where 
-$$H_0 := \mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p\left(X_{n+1} \mid \theta_0\right) \right]$$
-He further shows under the same assumptions that this is the best possible asymptotic rate that can be achieved.
+$$H_0 := \mathbb{E}_{X \sim P_{\theta_0}} \left[ \log p\left(X \mid \theta_0\right) \right]$$
+He further shows under the same assumptions that this is the best possible asymptotic rate that can be achieved. In terms of cumulative expected log-likelihood we have
+In terms of cumulative expected log-likelihood we have
+
+$$\mathrm{CELL}_n=\sum_{i=1}^n \mathrm{ELL}_i\geq nH_0-\frac{d}{2}\sum_{i=1}^n \frac{1}{i}-c\sum_{i=1}^n i^{-3/2}.$$
+
+Since $\sum_{i=1}^n i^{-1} = \log n + O(1)$ and $\sum_{i=1}^n i^{-3/2} = O(1)$, this implies
+
+$$\mathrm{CELL}_n\geq nH_0 - \frac{d}{2}\log n - O(1).$$
+
+<!-- Equivalently, the cumulative expected excess KL divergence satisfies
+
+$$\sum_{i=1}^n\mathbb{E}_{X^{(i)} \sim P_{\theta_0}}\left[D_{\mathrm{KL}}(P_{\theta_0}\|P_{\hat{\theta}_i})\right]\leq\frac{d}{2}\log n + O(1).$$
+
+Thus, while the one-step predictive regret of the plug-in MLE is of order $1/n$, its cumulative regret over $n$ predictions is only logarithmic in $n$. -->
+
 
 {{< remark >}}
 This exact mathematical mechanism is the theoretical foundation for the Akaike Information Criterion (AIC). AIC estimates this out-of-sample expected log-likelihood by taking the in-sample maximized log-likelihood and penalizing it by the dimension $d$.
 {{< /remark >}}
 
 {{< remark >}}
-Generally it is hard to control the expectation contribution of the tails for the MLE approach. To soften Cencov's uniform bound, one option is to adopt an approach where we put a bound on the ELL that only holds with high probability instead of always. Then the uniform bound only needs to hold in a high probability neighborhood, which we get from asymptotic normality. The alternative is to chose a model (or a different loss) such that the KL divergence / loss is upper-bounded by some function (e.g. a polynomial) in terms of distance to $\theta_0$, and at the same time show that the probability of the MLE $\hat{\theta}_n$ being that far away from $\theta_0$ shrinks faster (e.g. exponentially).
+Generally it is hard to control the expectation contribution of the tails for the MLE approach. However, we can still prove $d/(2n)$ as the best case rate with only local assumptions, as discussed for general measures in a later section.
 {{< /remark >}}
+
+
 
 #### Asymptotic Rate of the Bayesian Predictive Distribution
 The Bayesian predictive distribution is formed by marginalizing over the posterior:
@@ -136,7 +154,7 @@ $$
 p_{\text{Bayes}}(x_{n+1} \mid X^{(n)}) = \int p(x_{n+1} \mid \theta) \Pi(d\theta \mid X^{(n)})
 $$
 
-If we actually integrate over the posterior (rather than approximating it with samples), like when using conjugate priors, this makes it very easy for us to give guarantees in $L_1$, because just the integral of the likelihood over the neighborhood of $\theta_0$ already gives us enough expected log-likelihood to show that we can attain the same $d/(2n)$ rate. This allows us to ignore the tails. Formally speaking, Clarke and Barron (1990, Theorem 2.3) show that all we need is twice continuous differentiability of the KL divergence at $\theta_0$ with a positive definite Hessian, and a positive and continuous prior density at $\theta_0$.
+If we actually integrate over the posterior (rather than approximating it with samples), like when using conjugate priors, this makes it very easy for us to give guarantees in $L_1$ for the CELL. The integral of the likelihood over the neighborhood of $\theta_0$ already gives us enough expected log-likelihood to show that we can attain at least the same $\frac{d}{2} \log(n)$ rate. This allows us to give a guarantee while ignore the tails. Formally speaking, Clarke and Barron (1990, Theorem 2.3) show that all we need is twice continuous differentiability of the KL divergence at $\theta_0$ with a positive definite Hessian, and a positive and continuous prior density at $\theta_0$. However, it is much harder to give guarantees for the ELL.
 
 ## Fitting a Model to a Measure
 For parametric statistics in the misspecified setting it is common to still assume that there exists some measure $\nu$ that dominates not only all distributions in our model, but also the true distribution. This allows us to talk about a *true probability density* $p_0(x)$. While there exist more general notions of densities than the Radon-Nikodym derivative (e.g. in Schwartz Distribution Theory), they do not allow us to do the main operation for which we wanted to have a density in the first place: Evaluate the logarithm of the density. This allows us to define the Kullback-Leibler (KL) divergence
@@ -193,11 +211,9 @@ $$-\mathbb{E}_{P_0}\left[\log \frac{p_\theta}{p_{\theta^*}}\right] = \frac{1}{2}
 as $\theta \rightarrow \theta^*$. Under these conditions, we can characterize the asymptotic convergence in both Frequentsist and Bayesian frameworks:
 
 #### Maximum-Likelihood Estimator
-Assuming the maximum-likelihood estimator is consistent $\hat{\theta}\_n \xrightarrow{P\_0} \theta^\ast$ and its log-likelihood converges sufficiently fast to the true optimum in probability
-$$\mathbb{E}_{X_1, \dots, X_n \sim P_0}[\log p_{\hat{\theta}_n}] \geq \sup_\theta \mathbb{E}_{X_1, \dots, X_n \sim P_0}[\log p_{\theta}] + o_{P_0}(1/n),$$
-and $\mathbb{E}\_{X \sim P\_0}[\\|\ell_{\theta^\ast}(X)\\|^2] < \infty$ we have
+Assuming the maximum-likelihood estimator is consistent $\hat{\theta}\_n \xrightarrow{P\_0} \theta^\ast$ and $\mathbb{E}\_{X \sim P\_0}[\\|\dot{\ell_{\theta^\ast}}(X)\\|^2] < \infty$ we have
 $$\sqrt{n}(\hat{\theta}_n - \theta^*) \xrightarrow{d} \mathcal{N}\left(0, V_{\theta^*}^{-1} J_{\theta^\ast} V_{\theta^*}^{-1}\right)$$
-where $J\_{\theta^\ast} := \mathbb{E}\_{X \sim P\_0}\left[\ell\_{\theta^\ast}(X) \ell\_{\theta^\ast}(X)^T\right]$.
+where $J\_{\theta^\ast} := \mathbb{E}\_{X \sim P\_0}\left[\dot{\ell\_{\theta^\ast}}(X) \dot{\ell\_{\theta^\ast}}(X)^T\right]$.
 
 #### Bayesian Posterior
 Similar to the well-specified Bernstein-von Mises Theorem, we assume that the prior has a density that is bounded, continuous and strictly positive in a neighborhood of $\theta^*$. As a replacement for the existence of consistent tests in our well-specified BvM theorem, we assume that for every sequence of constants $M\_n \rightarrow \infty$ we have low posterior mass in the tails:
@@ -209,7 +225,104 @@ $$
 
 ### Confidence and Credible Intervals
 #### Maximum-Likelihood Inference
-While we cannot get confidence intervals for the true data-generating process in the misspecified setting, we could in theory still get valid confidence intervals for the best approximation $\theta^\ast$, if we can approximate $V\_{\theta^\ast}$ and $J\_{\theta^\ast}$ well enough. In the well-specified setting this expectation is equal to $V_{\theta^\ast}$, simplifying the asymptotic covariance to just $V_{\theta^*}^{-1}$. However, applied statisticians rarely account for this discrepancy, frequently leading to misleading conclusions when parametric tests are used.
+The asymptotic normality result above gives the limiting distribution in terms of the unknown matrices $V_{\theta^\ast}$ and $J_{\theta^\ast}$. To turn this into a usable confidence interval, we need to show that the empirical plug-in estimators of these matrices are consistent.
+
+The population Taylor expansion is sufficient for the limiting distribution, but the empirical Hessian estimator requires a stronger, sample-level smoothness assumption. In particular, we assume that $\log p_\theta(X)$ is twice continuously differentiable in $\theta$, $P_0$-almost surely in a neighborhood of $\theta^\ast$, and that the Hessian has an integrable local envelope under $P_0$.
+
+Let
+$$H_\theta(x) := -\nabla_\theta^2 \log p_\theta(x)$$
+
+We estimate $V_{\theta^\ast}$ and $J_{\theta^\ast}$ by
+$$\hat V_n = \frac{1}{n}\sum_{i=1}^n H_{\hat{\theta}_n}(X_i)$$
+and
+$$\hat J_n = \frac{1}{n}\sum_{i=1}^n \dot{\ell}_{\hat{\theta}_n}(X_i)\dot{\ell}_{\hat{\theta}_n}(X_i)^T$$
+
+Optionally, one can replace $\hat J_n$ by the centered version
+$$\hat J_n^c = \frac{1}{n}\sum_{i=1}^n (\dot{\ell}_{\hat{\theta}_n}(X_i)-m_n)(\dot{\ell}_{\hat{\theta}_n}(X_i)-m_n)^T$$
+where
+$$m_n := \frac{1}{n}\sum_{i=1}^n \dot{\ell}_{\hat{\theta}_n}(X_i)$$
+
+Assume, in addition to the assumptions from the previous subsection, that there exists a compact neighborhood $U$ of $\theta^\ast$ such that $\hat{\theta}_n\in U$ with probability tending to one and:
+
+1. The Hessian is locally continuous, $P_0$-almost surely:
+
+$$\theta \mapsto H_\theta(X) \text{ is continuous on } U \text{ for } P_0\text{-a.e. } X$$
+
+2. The Hessian has an integrable local envelope:
+
+$$\mathbb{E}_{P_0}\left[\sup_{\theta\in U}\|H_\theta(X)\|\right]<\infty$$
+
+3. The score is locally continuous, $P_0$-almost surely:
+
+$$\theta \mapsto \dot{\ell}_\theta(X) \text{ is continuous on } U \text{ for } P_0\text{-a.e. } X$$
+
+4. The score has a locally square-integrable envelope:
+
+$$\mathbb{E}_{P_0}\left[\sup_{\theta\in U}\|\dot{\ell}_\theta(X)\|^2\right]<\infty$$
+
+These assumptions imply the local uniform laws of large numbers
+$$\sup_{\theta\in U}\left\|\frac{1}{n}\sum_{i=1}^n H_\theta(X_i)-\mathbb{E}_{P_0}[H_\theta(X)]\right\|\xrightarrow{P_0}0$$
+and
+$$\sup_{\theta\in U}\left\|\frac{1}{n}\sum_{i=1}^n \dot{\ell}_\theta(X_i)\dot{\ell}_\theta(X_i)^T-\mathbb{E}_{P_0}[\dot{\ell}_\theta(X)\dot{\ell}_\theta(X)^T]\right\|\xrightarrow{P_0}0.$$
+
+We now prove consistency of $\hat V_n$. Decompose
+$$\hat V_n - V_{\theta^\ast} = A_n + B_n,$$
+where
+$$A_n = \frac{1}{n}\sum_{i=1}^n H_{\hat{\theta}_n}(X_i)-\mathbb{E}_{P_0}[H_{\hat{\theta}_n}(X)]$$
+and
+$$B_n = \mathbb{E}_{P_0}[H_{\hat{\theta}_n}(X)]-\mathbb{E}_{P_0}[H_{\theta^\ast}(X)]$$
+
+On the event $\hat{\theta}_n\in U$,
+$$\|A_n\|\leq \sup_{\theta\in U}\left\|\frac{1}{n}\sum_{i=1}^n H_\theta(X_i)-\mathbb{E}_{P_0}[H_\theta(X)]\right\|$$
+
+The local uniform law of large numbers therefore gives
+$$A_n\xrightarrow{P_0}0$$
+
+Since $\hat{\theta}\_n\xrightarrow{P\_0}\theta^\ast$, the almost-sure continuity of $H_\theta(X)$ and the integrable envelope imply, by dominated convergence,
+
+$$\mathbb{E}_{P_0}[H_{\hat{\theta}_n}(X)]-\mathbb{E}_{P_0}[H_{\theta^\ast}(X)]\xrightarrow{P_0}0$$
+
+Hence
+$$\hat V_n\xrightarrow{P_0}V_{\theta^\ast}$$
+
+The proof for $\hat J_n$ is identical after replacing $H_\theta(X)$ by $\dot{\ell}\_\theta(X)\dot{\ell}\_\theta(X)^T$. The local square-integrable score envelope implies
+$$\sup_{\theta\in U}\|\dot{\ell}_\theta(X)\dot{\ell}_\theta(X)^T\|\leq \sup_{\theta\in U}\|\dot{\ell}_\theta(X)\|^2$$
+
+so the required envelope is integrable. Thus
+$$\hat J_n\xrightarrow{P_0}J_{\theta^\ast}$$
+If $V_{\theta^\ast}$ is nonsingular, matrix inversion is continuous at $V_{\theta^\ast}$. Therefore,
+$$\hat V_n^{-1}\xrightarrow{P_0}V_{\theta^\ast}^{-1}$$
+
+By the Continuous Mapping Theorem,
+$$\hat{\Sigma}_n = \hat V_n^{-1}\hat J_n\hat V_n^{-1}\xrightarrow{P_0}V_{\theta^\ast}^{-1}J_{\theta^\ast}V_{\theta^\ast}^{-1}.$$
+
+Now fix a scalar component $\theta_j^\ast$ and suppose that the corresponding asymptotic variance is positive:
+$$\Sigma_{jj} > 0$$
+
+The asymptotic normality result gives
+$$\sqrt{n}(\hat{\theta}_{n,j}-\theta_j^\ast)\xrightarrow{d}\mathcal{N}(0,\Sigma_{jj}).$$
+
+Since
+$$\hat{\Sigma}_{n,jj}\xrightarrow{P_0}\Sigma_{jj},$$
+Slutsky's theorem gives the studentized convergence
+$$\frac{\sqrt{n}(\hat{\theta}_{n,j}-\theta_j^\ast)}{\sqrt{\hat{\Sigma}_{n,jj}}}\xrightarrow{d}\mathcal{N}(0,1)$$
+
+Therefore by Portmanteau,
+$$P_0\left(-z_{1-\alpha/2}\leq \frac{\sqrt{n}(\hat{\theta}_{n,j}-\theta_j^\ast)}{\sqrt{\hat{\Sigma}_{n,jj}}}\leq z_{1-\alpha/2}\right)\to 1-\alpha$$
+
+Thus the sandwich confidence interval
+$$\hat{\theta}_{n,j}\pm z_{1-\alpha/2}\sqrt{\frac{\hat{\Sigma}_{n,jj}}{n}}$$
+has asymptotic coverage $1-\alpha$ for the pseudo-true parameter component $\theta_j^\ast$.
+
+More generally, for a linear hypothesis $H\_0:R\theta^\ast=r$ define
+$$W_n=n(R\hat{\theta}_n-r)^T(R\hat{\Sigma}_nR^T)^{-1}(R\hat{\theta}_n-r)$$
+
+If $R\Sigma R^T$ is nonsingular, then under $H_0$,
+$$W_n\xrightarrow{d}\chi_q^2$$
+where $q$ is the rank of $R$. Hence the corresponding sandwich Wald test has asymptotic size $\alpha$ when the rejection region is
+$$W_n>\chi^2_{q,1-\alpha}$$
+
+This proves that the empirical sandwich estimator gives asymptotically correct confidence intervals and Wald tests for $\theta^\ast$. No density for $P_0$ is required; all assumptions are imposed directly on the model score and Hessian as random functions under the true measure $P_0$.
 
 #### Bayesian Inference
 In Bayesian statistics, we are immediately faced with a major philosophical hurdle: By restricting our prior distribution $p(\theta)$ entirely to the parameter space $\Theta$, we are stating with absolute certainty that the true data-generating measure lies within our model family. Because the model is misspecified, we have essentially assigned a prior probability of exactly zero to reality. In a strict subjectivist sense, this violates Cromwell's rule: no amount of data can ever convince the posterior to converge to the absolute truth if the truth was ruled out a priori.
@@ -246,8 +359,10 @@ Applying classical trace permutation methods, we have:
 $$\mathbb{E}[Y] = \mathbb{E}\left[\frac{1}{2} Z^T V_{\theta^*} Z\right] = \frac{1}{2}\mathrm{Tr}(J_{\theta^*} V_{\theta^*}^{-1})$$
 So overall, we have:
 $$\liminf_{n \rightarrow \infty} n (CE(P_0 || p_{\hat{\theta}_n}) - CE(P_0 || p_{\theta^*})) \geq \frac{1}{2} \mathrm{Tr}(J_{\theta^*} V_{\theta^*}^{-1})$$
+The stepwise risk also gives us a bound on the cumulative risk:
+$$\liminf_{n \to \infty} \frac{1}{\log(n)} \sum_{i=1}^n (CE(P_0 || p_{\hat{\theta}_i}) - CE(P_0 || p_{\theta^*})) \geq \frac{1}{2} \mathrm{Tr}(J_{\theta^*} V_{\theta^*}^{-1})$$
 
-This means that the commonly cited $\frac{1}{2n} \mathrm{Tr}(J\_{\theta^\ast} V\_{\theta^\ast}^{-1})$ rate is the best case for maximum likelihood prediction, rather than something we are guaranteed to attain. To actually achieve this asymptotic rate, we would need *uniform integrability* of the sequence $\\{(T\_n, P\_0^n): n \in \mathcal{N}\\}$. Basically, we need $P_0$ to play nice with our model, which usually requires us to make additional assumptions on how $P_0$ interacts with our model globally, instead of just in a neighborhood of $\theta^\ast$. There is one exception where no additional assumptions are needed: The Gaussian location model $\mathcal{N}(\mu, \Sigma)$ with fixed covariance $\Sigma$.  Since the log-likelihood is perfectly quadratic, the Taylor expansion has no remainder, greatly simplifying the problem.
+This means that the commonly cited $\frac{1}{2n} \mathrm{Tr}(J\_{\theta^\ast} V\_{\theta^\ast}^{-1})$ rate is the best case for maximum likelihood prediction, rather than something we are guaranteed to attain. To actually achieve the asymptotic rate, we would need *uniform integrability* of the sequence $\\{(T\_n, P\_0^n): n \in \mathcal{N}\\}$. Basically, we need $P_0$ to play nice with our model, which usually requires us to make additional assumptions on how $P_0$ interacts with our model globally, instead of just in a neighborhood of $\theta^\ast$. There is one exception where no additional assumptions are needed: The Gaussian location model $\mathcal{N}(\mu, \Sigma)$ with fixed covariance $\Sigma$.  Since the log-likelihood is perfectly quadratic, the Taylor expansion has no remainder, greatly simplifying the problem.
 
 {{< remark >}}
 *Uniform Integrability (UI) Definitions:*
@@ -261,9 +376,40 @@ $$\sup_{t \in T} \int H(|f_t|) d\mu_t < \infty$$
 
 
 #### Bayesian Predictive Distribution
-For the Bayesian predictive distribution Clarke and Barron (1990) had a key insight: Since we are integrating over the posterior before making a prediction rather than assessing the predictive performance of the point estimator $\hat{\theta}_n$ posthoc, the order of expectations in reversed. If we can show that the neighborhood of $\theta^\ast$ is already guaranteeing a good enough prediction, this is very powerful.
+<!-- For the Bayesian predictive distribution Clarke and Barron (1990) had a key insight: Since we are integrating over the posterior before making a prediction rather than assessing the predictive performance of the point estimator $\hat{\theta}_n$ posthoc, the order of expectations in reversed. If we can show that the neighborhood of $\theta^\ast$ is already guaranteeing a good enough prediction, this is very powerful.
 Indeed, under the same assumptions of the misspecified BvM theorem, they show
-$$\limsup_{n \rightarrow \infty} n (CE(P_0 || p_{\hat{\theta}_n}) - CE(P_0 || p_{\theta^*})) \leq \frac{d}{2}$$
+$$\limsup_{n \rightarrow \infty} n (CE(P_0 || p_{\hat{\theta}_n}) - CE(P_0 || p_{\theta^*})) \leq \frac{d}{2}$$ -->
+The Bayesian predictive distribution behaves differently because prediction is made by averaging over the posterior before taking the logarithmic loss. Let $w$ be the prior density and define the Bayes mixture density (also known as the prior predictive):
+$$m_n(x^n) := \int p_\theta^n(x^n)w(\theta)\,d\theta$$ 
+The one-step posterior predictive density after observing $X^k$ is
+$$m_k(x\mid X^k) := \frac{m_{k+1}(X^k,x)}{m_k(X^k)}.$$
+The cumulative excess predictive risk of the Bayesian predictive distribution is 
+$$R_n := CE(P_0^n\|M_n)-n CE(P_0\|P_{\theta^\ast}) = \mathbb{E}_{P_0^n}\left[\log\frac{p_{\theta^\ast}^n(X^n)}{m_n(X^n)}\right]$$
+Using a telescoping sum argument on $\log m_n$, we can see $R_n$  as the cumulative sum of one-step posterior predictive excess risks:
+$$R_n = \sum_{k=0}^{n-1}\mathbb{E}_{P_0^k}\left[CE(P_0\|m_k(\cdot\mid X^k))-CE(P_0\|p_{\theta^\ast})\right].$$
+
+Clarke and Barron's Theorem 2.3 gives a direct upper bound on this cumulative quantity. Applying our more general framework, we can slightly soften their assumptions and only need to assume that 
+1. the cross-entropy $CE(P\_0 || p\_\theta)$ is lower-bounded
+2. a unique minimizer $p\_{\theta^\ast}$ exists with finite cross-entropy in its neighborhood
+3. there exists a second-order Taylor expansion with positive definite $V\_{\theta^\ast}$
+4. the prior $w(\theta)$ is positive and continuous at $\theta^\ast$
+
+to get
+$$\limsup_{n \to \infty} \frac{1}{\log(n)} \sum_{i=1}^n (CE(P_0 || p_{\hat{\theta}_i}) - CE(P_0 || p_{\theta^*})) \leq \frac{d}{2}$$
+
+**So the exact same cumulative predictive risk quantity that we can only lower-bound for maximum-likelihood estimation (under local assumptions), is upper bounded here, at the same rate in $n$!**
+
+This result is weaker than a pointwise one-step statement, but it is also much easier to obtain than the corresponding plug-in expectation. The mixture proof does not require a separate uniform-integrability assumption on the random plug-in excess risk. Instead, the expectation is controlled directly by lower-bounding the mixture integral over an $n^{-1/2}$-neighborhood of $\theta^\ast$. This is the key advantage of the Bayesian predictive mixture: the local KL geometry around $\theta^\ast$ is already enough to control the cumulative expected log-loss.
+
+
+However, Theorem 2.3 alone does not imply the sharper one-step asymptotic 
+$$\mathbb{E}_{P_0^n}\left[CE(P_0\|m_n(\cdot\mid X^n))-CE(P_0\|p_{\theta^\ast})\right] \sim \frac{d}{2n}.$$ 
+To obtain such a statement, one would need additional control of the increments 
+$$R_{n+1}^B-R_n^B,$$ 
+Monotonicity of the fixed-$P\_0$ posterior predictive risk should not be assumed: unlike prior-averaged Bayes risk, the expected predictive risk under a fixed data-generating distribution $P\_0$ need not decrease at every sample size.
+
+## Conclusion
+A lot of the asymptotic theory for both maximum-likelihood and Bayesian methods still holds up for general $P\_0$ under only local assumptions. However, checking that regularity conditions actually hold becomes more important, and sometimes we need to assume properties of $P\_0$ that we cannot check. Generally, our results show that outside the hypothetical well-specified setting, there is a clear divergence in what each philosophy excels at: Maximum-likelihood methods should be used for hypothesis testing, and Bayesian methods should be used for prediction.
 
 ## References
 
