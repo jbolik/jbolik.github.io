@@ -116,7 +116,7 @@ Additionally, we will consider the cumulative expected log-likelihood:
 $$\text{CELL}_n := \sum_{i=1}^n \text{ELL}_i$$
 
 #### Asymptotic Optimality of the Plug-in Estimator
-Let's evaluate the predictive performance of the plug-in MLE estimator, $q(x\_{n+1} \mid \hat{\theta}\_n)$. We want to evaluate its expected log-likelihood on new data. Therefore, we need convergence in $L_1$ here rather than just convergence in probability, a nuance that is handled rigorously by few authors. One of them is Cencov (1981, Theorem 27.3), who achieves this through fairly strong assumptions on the model. Assuming a number of conditions on the likelihood's derivatives (Definition 27.3), that the parameter space is compact, and that the KL divergence between any two members of the family is uniformly bounded, he is able to show that if $\hat{\theta}_n$ is a maximum-likelihood estimator there exists a $c > 0$ such that:
+Let's evaluate the predictive performance of the plug-in MLE estimator, $q(x\_{n+1} \mid \hat{\theta}\_n)$. We want to evaluate its expected log-likelihood on new data. Therefore, we need convergence in expectation here rather than just convergence in probability, a nuance that is handled rigorously by few authors. One of them is Cencov (1981, Theorem 27.3), who achieves this through fairly strong assumptions on the model. Assuming a number of conditions on the likelihood's derivatives (Definition 27.3), that the parameter space is compact, and that the KL divergence between any two members of the family is uniformly bounded, he is able to show that if $\hat{\theta}_n$ is a maximum-likelihood estimator there exists a $c > 0$ such that:
 $$\mathbb{E}_{X_1, \dots, X_{n} \sim Q_{\theta_0}}\left[D_{KL}(Q_{\theta_0} || Q_{\hat{\theta}_n})\right] \leq \frac{d}{2n} + c * n^{-3/2}$$
 Or equivalently we can formulate it in terms of ELL:
 $$\mathbb{E}_{X_1, \dots, X_{n+1} \sim Q_{\theta_0}} \left[ \log q\left(X_{n+1} \mid \hat{\theta}_n\right) \right] \geq H_0  - \frac{d}{2n} - c * n^{-3/2}$$
@@ -391,10 +391,14 @@ By Prohorov, $\\{T\_n: n \in \mathcal{N}\\}$ is uniformly tight. Assuming consis
 $$n \Delta(\hat{\theta}_n) = \frac{1}{2} T_n^T V_{\theta^*} T_n + o_{P_0}(1)$$
 By the Continuous Mapping Theorem and Slutsky's Lemma this gives:
 $$n \Delta(\hat{\theta}_n) \xrightarrow{d} \frac{1}{2} Z^T V_{\theta^*} Z$$
-Now we can apply a Fatou argument. Define $Y_n := n \Delta(\hat{\theta}\_n)$, which is non-negative since $\theta^\ast$ is the global minimizer. For any $M > 0$, Portmanteau gives:
-$$\mathbb{E}[\min(Y_n, M)] \leq \mathbb{E}[Y_n]$$
-Taking a $\liminf$ (which is just a regular limit for the bounded expectation on the left) gives:
-$$\mathbb{E}[\min(Y, M)] \leq \liminf_{n \rightarrow \infty} \mathbb{E}[Y_n]$$
+Now we can apply a Fatou argument. Define $Y_n := n \Delta(\hat{\theta}\_n)$, which is non-negative since $\theta^\ast$ is the global minimizer. For a fixed $M>0$, let $f_M(y):=\min(y,M)$. Since $f_M$ is bounded and continuous and $Y_n\xrightarrow{d}Y$, Portmanteau gives
+$$\mathbb{E}[\min(Y_n,M)]\longrightarrow\mathbb{E}[\min(Y,M)].$$
+On the other hand, $\min(Y_n,M)\leq Y_n$ pointwise, so
+$$\mathbb{E}[\min(Y_n,M)]\leq\mathbb{E}[Y_n].$$
+Combining these two facts yields
+$$\mathbb{E}[\min(Y,M)]
+=\lim_{n\to\infty}\mathbb{E}[\min(Y_n,M)]
+\leq\liminf_{n\to\infty}\mathbb{E}[Y_n].$$
 Now taking $M \rightarrow \infty$, we can apply the monotone convergence theorem to get
 $$\mathbb{E}[Y] \leq \liminf_{n \rightarrow \infty} \mathbb{E}[Y_n]$$
 Applying classical trace permutation methods, we have:
