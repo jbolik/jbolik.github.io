@@ -169,9 +169,9 @@ and define its continuous domination class by
 $$[\nu]_c := \\{e^h\nu : h \in C_b(\mathcal{X})\\}$$
 The restriction to bounded $h$ ensures that changing representatives contributes a finite additive term under every probability measure $P_0$.
 
-We call the model *continuously dominated* by $[\nu]_c$ if every $P_\theta$ is dominated by $\nu$ and its Radon-Nikodym derivative has a continuous version, denoted by $p_\theta^\nu$. This continuous version is unique. Indeed, if two continuous versions differed at some point, they would differ on a non-empty open set, contradicting the full support of $\nu$.
+We call the model *continuously dominated* by $[\nu]\_c$ if every $P\_\theta$ is dominated by $\nu$ and its Radon-Nikodym derivative has a continuous version, denoted by $p\_\theta^\nu$. This continuous version is unique. Indeed, if two continuous versions differed at some point, they would differ on a non-empty open set, contradicting the full support of $\nu$.
 
-For another representative $\nu_h=e^h\nu$ in $[\nu]_c$, the unique continuous density is
+For another representative $\nu\_h=e^h\nu$ in $[\nu]\_c$, the unique continuous density is
 $$p_\theta^{\nu_h}(x)=e^{-h(x)}p_\theta^\nu(x)$$
 Consequently,
 $$\log p_\theta^{\nu_h}(x)=\log p_\theta^\nu(x)-h(x)$$
