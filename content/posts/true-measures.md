@@ -29,9 +29,9 @@ where densities are with respect to $\mu$. $S\_{\theta\_0}(x)$ is called the sco
 $$I(\theta_0) := \int S_{\theta_0}(x) S_{\theta_0}(x)^T dP_{\theta_0}(x)$$
 are intrinsic properties of the model.
 
-This assumption is already enough to prove basic asymptotic normality: If the parameter space is an open subset of $\R^n$, and the DQM assumption holds, then for any bounded deterministic sequence $h\_n \in \R^n$:
-$$\ell_n\left(\theta_0 + \frac{h_n}{\sqrt{n}}\right) - \ell_n(\theta_0) = \frac{h_n}{\sqrt{n}}\sum_{i=1}^n S_{\theta_0}(X_i) - \frac{1}{2} h_n^T I(\theta_0) h_n \rightarrow 0$$
-in probability under $P\_{\theta\_0}$, where $\ell_n(\theta) := \log p(X_1, \dots, X_n \mid \theta)$.
+This assumption is already enough to prove basic asymptotic normality: If the parameter space is an open subset of $\R^n$, and the DQM assumption holds, then for any bounded deterministic sequence $h\_n \in \R^d$:
+$$\ell_n\left(\theta_0 + \frac{h_n}{\sqrt{n}}\right) - \ell_n(\theta_0) = \frac{h_n}{\sqrt{n}}\sum_{i=1}^n S_{\theta_0}(X_i) - \frac{1}{2} h_n^T I(\theta_0) h_n + o_{P_{\theta_0}}(1)$$
+where $\ell_n(\theta) := \log p(X_1, \dots, X_n \mid \theta)$.
 
 ### Asymptotic Normality of MLE and Bayes
 This and the following section are based on Lasse Vuursteen's lecture notes on Statistical Inference. Assuming $P_0 \in \\{P_\theta : \theta \in \Theta\\}$, under the regularity conditions detailed below, and $X_1, \dots, X_n \stackrel{iid}{\sim} P_{\theta_0}$, the MLE admits a linear expansion driven by the score function, and by the Central Limit Theorem, we achieve asymptotic normality:
@@ -76,9 +76,10 @@ Regularity conditions for the Bernstein–von Mises Theorem:
 
 2. **Differentiability in Quadratic Mean (DQM):** The model is differentiable in quadratic mean at $\theta_0$ with $\det(I(\theta_0)) > 0$
 
-3. **Existence of Consistent Tests:** There exists a compact neighborhood $\Theta_0 \subset \Theta$ of $\theta_0$ and a sequence of tests $\delta_n$ such that:
+3. **Existence of Consistent Tests:** For every $\varepsilon > 0$, there exists a sequence of tests $\delta_{n,\varepsilon}$ such that:
    $$
-   P_{\theta_0}\delta_n \to 0, \quad \sup_{\theta \notin \Theta_0} P_\theta(1 - \delta_n) \to 0
+   P_{\theta_0}\delta_{n,\varepsilon} \to 0, \quad
+   \sup_{\|\theta-\theta_0\| \geq \varepsilon} P_\theta(1 - \delta_{n,\varepsilon}) \to 0.
    $$
 
 4. **Prior:** The prior measure $\Pi$ has a density $\pi$ that is bounded, and continuous and strictly positive in a neighborhood of $\theta_0$.
