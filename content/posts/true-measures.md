@@ -212,11 +212,11 @@ A simple sufficient condition for the cross-entropy to be lower-bounded is that 
 $$CE(P_0\|q_{\mu,\sigma^2})=\frac{1}{2}\log(2\pi\sigma^2)+\frac{\mathbb{E}_{P_0}[(X-\mu)^2]}{2\sigma^2}$$
 This objective is lower-bounded unless $P_0$ is a point mass. For a non-degenerate $P_0$, the $\mathcal{O}(1/\sigma^2)$ penalty for dispersion dominates the $\mathcal{O}(\log \sigma)$ reward from the peak as $\sigma^2\to0$. For $P_0=\delta_x$, however, choosing $\mu=x$ and letting $\sigma^2\to0$ drives the cross-entropy to $-\infty$.
 
-Clearly, the tail behavior has a big impact here. Consider a Student's t-distribution $t_\nu(\mu, \sigma^2)$ for some fixed $\nu > 0$. The penalty for mass away from $\mu$ only grows logarithmically. Suppose that, for every candidate atom $x_0$, the off-atom part of $P_0$ satisfies the logarithmic integrability condition
+Clearly, the tail behavior has a big impact here. Consider a Student's t-distribution $t_\kappa(\mu, \sigma^2)$ for some fixed $\kappa > 0$. The penalty for mass away from $\mu$ only grows logarithmically. Suppose that, for every candidate atom $x_0$, the off-atom part of $P_0$ satisfies the logarithmic integrability condition
 $$\int_{x\neq x_0}\left|\log|x-x_0|\right|dP_0(x)<\infty$$
 Then collapsing the scale at $x_0$ drives the cross-entropy to $-\infty$ exactly when
-$$P_0(\{x_0\})>\frac{\nu}{\nu+1}$$
-Thus an atom above this threshold is sufficient to destroy the lower bound. Conversely, the absence of such an atom rules out collapse at any fixed point; turning that pointwise statement into a global lower bound also requires uniform control of the off-atom logarithmic terms as $\mu$ varies. Since we usually use $\nu \geq 1$ in practice, the restriction on individual atomic masses is still fairly mild.
+$$P_0(\{x_0\})>\frac{\kappa}{\kappa+1}$$
+Thus an atom above this threshold is sufficient to destroy the lower bound. Conversely, the absence of such an atom rules out collapse at any fixed point; turning that pointwise statement into a global lower bound also requires uniform control of the off-atom logarithmic terms as $\mu$ varies. Since we usually use $\kappa \geq 1$ in practice, the restriction on individual atomic masses is still fairly mild.
 
 However, the situation changes dramatically when moving from single-component distributions to mixture models. Consider a mixture of two Gaussians. In a single Gaussian, concentrating the variance to fit a point mass incurs a catastrophic penalty everywhere else. In a mixture model $w\mathcal{N}(\mu_1, \sigma_1^2) + (1-w)\mathcal{N}(\mu_2, \sigma_2^2)$, the second component can instead cover the remainder of the distribution. Assume that this remainder has finite cross-entropy under some fixed, non-collapsing Gaussian component; a finite second moment is sufficient. If $P_0$ contains a point mass at $x_0$ with probability $p>0$, the first component can center on it ($\mu_1=x_0$) and let $\sigma_1^2\to0$. The contribution from the atom then tends to $-\infty$, while the expected loss on the remainder stays bounded above by the fixed component. Under this integrability condition, any point mass in $P_0$ is sufficient to destroy the lower bound.
 
@@ -226,7 +226,7 @@ The atomic obstructions to lower-boundedness can be summarized as follows. The S
 | :--- | :--- | :--- |
 | *Fixed Scale* | $\mathcal{N}(\theta, 1)$ | True |
 | *Light-Tailed Collapsing Scale* | $\mathcal{N}(\mu, \sigma^2)$ | $\nexists x \in \mathcal{X}: P_0(\\{x\\}) = 1$ |
-| *Heavy-Tailed Collapsing Scale* | $t_\nu(\mu, \sigma^2)$ | $\nexists x \in \mathcal{X}: P_0(\\{x\\}) > \frac{\nu}{\nu+1}$ |
+| *Heavy-Tailed Collapsing Scale* | $t_\kappa(\mu, \sigma^2)$ | $\nexists x \in \mathcal{X}: P_0(\\{x\\}) > \frac{\kappa}{\kappa+1}$ |
 | *Mixture Models With Collapsing Scale ($k>1$)* | $\sum \pi_k \mathcal{N}(\mu_k, \sigma_k^2)$ | $\nexists x \in \mathcal{X}: P_0(\\{x\\}) > 0$ |
 
 The only way to fit mixture models into the cross-entropy-based theory without assuming $\nexists x \in \mathcal{X}: P_0(\\{x\\}) > 0$ is to constrain their parameter space, lower-bounding the minimum variance of each component away from zero. Apart from $P_0$ containing discrete point-masses, other true measures $P_0$ can also break the lower-boundedness assumption. Even an absolutely continuous measure can break the assumption if the density increases faster to a singularity than the tails penalize it.
