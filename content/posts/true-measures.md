@@ -10,7 +10,7 @@ When defining a parametric statistical model $(\mathcal{X}, \mathscr{X}, \\{P_\t
 This post has three parts: We will first recap the asymptotic behavior in the standard setting where a *true parameter* exists (also known as the well-specified setting), for both maximum-likelihood and Bayesian approaches. Then we will discuss the difference between allowing a *true probability density* $p_0(x)$ and a general *true probability measure* $P_0$. Finally, we will discuss the asymptotic behavior under a *true probability measure* $P_0$. 
 
 {{< remark >}}
-While we try to make as few assumptions as possible on the data-generating process $P_0$ since we usually have no control over it, we do place several regularity conditions on our statistical model when discussing asymptotic behavior in the first and third section. The second section is applicable to any statistical model with a dominating $\sigma$-finite measure. I am planning to write another blog post about the more general setting where we don't necessarily have asymptotic normality in the future.
+While we try to make as few assumptions as possible on the data-generating process $P_0$ since we usually have no control over it, we do place several regularity conditions on our statistical model when discussing asymptotic behavior in the first and third section. In the second section we introduce a continuously dominated likelihood model, in which an equivalence class of full-support $\sigma$-finite measures is part of the model specification. I am planning to write another blog post about the more general setting where we don't necessarily have asymptotic normality in the future.
 {{< /remark >}}
 
 {{< remark >}}
@@ -18,14 +18,14 @@ While we generalize to arbitrary measures, this blog post focusses on the indepe
 {{< /remark >}}
 
 {{< remark >}}
-We will assume that $\Theta$ is a Borel subset of $\mathbb{R}^d$. We further need to assume that $(\mathcal{X}, \mathscr{X})$ is a standard Borel space for everything except credible intervals in the well-specified setting.
+We will assume that $\Theta$ is a Borel subset of $\mathbb{R}^d$. For the sections involving an arbitrary $P_0$, we further equip $\mathcal{X}$ with a Polish topology $\tau$ and take $\mathscr{X}$ to be its Borel $\sigma$-algebra. The topology is part of the likelihood model because it determines what it means for a density version to be continuous. This additional topological structure is not needed for credible intervals in the well-specified setting.
 {{< /remark >}}
 
 ## Asymptotics in the Well-Specified Setting
 ### Differentiability in Quadratic Mean
-The fundamental minimal assumption that powers a lot of theory in parametric statistics is *differentiability in quadratic mean*, which is defined as the existence of a dominating $\sigma$-finite measure $\mu$ and a function $S\_{\theta\_0}(x)$ such that:
-$$\int \left( \sqrt{p_{\theta_0+h}(x)} - \sqrt{p_{\theta_0}(x)} - \frac{1}{2}h^\top S_{\theta_0}(x)\sqrt{p_{\theta_0}(x)} \right)^2 d\mu(x) = o(\|h\|^2)$$
-where densities are with respect to $\mu$. $S\_{\theta\_0}(x)$ is called the score function. If this assumption holds for one dominating $\sigma$-finite measure, it holds for any other dominating $\sigma$-finite measure, with the same score function. Hence the score and the Fisher information matrix which is defined as
+The fundamental minimal assumption that powers a lot of theory in parametric statistics is *differentiability in quadratic mean*, which is defined as the existence of a dominating $\sigma$-finite measure $\lambda$ and a function $S\_{\theta\_0}(x)$ such that:
+$$\int \left( \sqrt{p_{\theta_0+h}(x)} - \sqrt{p_{\theta_0}(x)} - \frac{1}{2}h^\top S_{\theta_0}(x)\sqrt{p_{\theta_0}(x)} \right)^2 d\lambda(x) = o(\|h\|^2)$$
+where densities are with respect to $\lambda$. $S\_{\theta\_0}(x)$ is called the score function. If this assumption holds for one dominating $\sigma$-finite measure, it holds for any other dominating $\sigma$-finite measure, with the same score function. Hence the score and the Fisher information matrix which is defined as
 $$I(\theta_0) := \int S_{\theta_0}(x) S_{\theta_0}(x)^T dP_{\theta_0}(x)$$
 are intrinsic properties of the model.
 
@@ -97,7 +97,7 @@ $$
 This is an important property that justifies the wide-spread use of credible intervals, as they allow us to incorporate prior knowledge which washes out correctly in the limit.
 
 ### Prediction
-In prediction tasks, we are interested in evaluating how well our model anticipates a new, unseen observation $X\_{n+1} \sim P\_{\theta\_0}$ given our observed sample $X^{(n)} = (X\_1, \dots, X\_n)$. If a dominating $\sigma$-finite measure exists (like the counting measure for countable spaces or Lebesgue measure), a highly intuitive and rigorous choice for scoring a predictive distribution $p\_{\text{pred}}(\cdot \mid X^{(n)})$ is the *expected log-likelihood* (or expected log-predictive density) on new data:
+In prediction tasks, we are interested in evaluating how well our model anticipates a new, unseen observation $X\_{n+1} \sim P\_{\theta\_0}$ given our observed sample $X^{(n)} = (X\_1, \dots, X\_n)$. Fixing a common dominating $\sigma$-finite measure (like the counting measure for countable spaces or Lebesgue measure), a highly intuitive and rigorous choice for scoring a predictive density $p\_{\text{pred}}(\cdot \mid X^{(n)})$ is the *expected log-likelihood* (or expected log-predictive density) on new data:
 
 $$\text{ELL}_n := \mathbb{E}_{X_1, \dots, X_{n+1} \sim P_{\theta_0}} \left[ \log p_{\text{pred}}\left(X_{n+1} \mid X^{(n)}\right) \right]$$
 <!-- $$=-\mathbb{E}_{X_1, \dots, X_n \sim P_{\theta_0}} \left[CE\left(P_{\theta_0} \| p_{\text{pred}}\right) \right]$$ -->
@@ -125,15 +125,15 @@ $$H_0 := \mathbb{E}_{X \sim P_{\theta_0}} \left[ \log p\left(X \mid \theta_0\rig
 He further shows under the same assumptions that this is the best possible asymptotic rate that can be achieved. In terms of cumulative expected log-likelihood we have
 In terms of cumulative expected log-likelihood we have
 
-$$\mathrm{CELL}_n=\sum_{i=1}^n \mathrm{ELL}_i\geq nH_0-\frac{d}{2}\sum_{i=1}^n \frac{1}{i}-c\sum_{i=1}^n i^{-3/2}.$$
+$$\mathrm{CELL}_n=\sum_{i=1}^n \mathrm{ELL}_i\geq nH_0-\frac{d}{2}\sum_{i=1}^n \frac{1}{i}-c\sum_{i=1}^n i^{-3/2}$$
 
 Since $\sum_{i=1}^n i^{-1} = \log n + O(1)$ and $\sum_{i=1}^n i^{-3/2} = O(1)$, this implies
 
-$$\mathrm{CELL}_n\geq nH_0 - \frac{d}{2}\log n - O(1).$$
+$$\mathrm{CELL}_n\geq nH_0 - \frac{d}{2}\log n - O(1)$$
 
 <!-- Equivalently, the cumulative expected excess KL divergence satisfies
 
-$$\sum_{i=1}^n\mathbb{E}_{X^{(i)} \sim P_{\theta_0}}\left[D_{\mathrm{KL}}(P_{\theta_0}\|P_{\hat{\theta}_i})\right]\leq\frac{d}{2}\log n + O(1).$$
+$$\sum_{i=1}^n\mathbb{E}_{X^{(i)} \sim P_{\theta_0}}\left[D_{\mathrm{KL}}(P_{\theta_0}\|P_{\hat{\theta}_i})\right]\leq\frac{d}{2}\log n + O(1)$$
 
 Thus, while the one-step predictive regret of the plug-in MLE is of order $1/n$, its cumulative regret over $n$ predictions is only logarithmic in $n$. -->
 
@@ -158,58 +158,75 @@ $$
 If we actually integrate over the posterior (rather than approximating it with samples), like when using conjugate priors, this makes it very easy for us to give guarantees in $L_1$ for the CELL. The integral of the likelihood over the neighborhood of $\theta_0$ already gives us enough expected log-likelihood to show that we can attain at least the same $\frac{d}{2} \log(n)$ rate. This allows us to give a guarantee while ignore the tails. Formally speaking, Clarke and Barron (1990, Theorem 2.3) show that all we need is twice continuous differentiability of the KL divergence at $\theta_0$ with a positive definite Hessian, and a positive and continuous prior density at $\theta_0$. However, it is much harder to give guarantees for the ELL.
 
 ## Fitting a Model to a Measure
-For parametric statistics in the misspecified setting it is common to still assume that there exists some measure $\nu$ that dominates not only all distributions in our model, but also the true distribution. This allows us to talk about a *true probability density* $p_0(x)$. While there exist more general notions of densities than the Radon-Nikodym derivative (e.g. in Schwartz Distribution Theory), they do not allow us to do the main operation for which we wanted to have a density in the first place: Evaluate the logarithm of the density. This allows us to define the Kullback-Leibler (KL) divergence
-$$D_{KL}(p_0 || p_\theta) := \int p_0(x) \log \frac{p_0(x)}{p_\theta(x)} d\nu(x)$$
-Statisticians love the KL divergence because it evaluates to the same value for any choice of dominating $\sigma$-finite measure $\nu$, and is non-negative, with zero divergence only if $p_0 = p_\theta$. If $\mathcal{X}$ is countable we can always choose the counting measure as $\nu$ and there is no problem. Otherwise, we unfortunately need to break up for two main reasons:
-1. **Lebesgue Decomposition:** The Lebesgue decomposition tells us that any regular Borel probability measure $P$ and $\sigma$-finite base measure $\nu$, $P$ can be decomposed as the sum $P_{ac} + P_{sc} + P_d$ where $P_{ac}$ is absolutely continuous with respect to $\nu$, $P_{sc}$ is singular continuous and $P_d$ is discrete. Under any reasonable prior distribution on $P$, it seems like a probability 0 event that both $P_{sc}$ and $P_d$ are zero.
-2. **Discreteness of Reality:** If anything, a reasonable assumption would be that $P_0$ is purely discrete rather than absolutely continuous. Our observations will be represented in finite precision rather than as real numbers. Furthermore, insights from Physics like Planck's constant tell us that reality might be best understood as fundamentally discrete.
+For parametric statistics in the misspecified setting it is common to assume that a $\sigma$-finite measure $\nu$ dominates not only every distribution in the model, but also the true distribution. This gives the truth a density $p_0$ and allows us to define the Kullback-Leibler (KL) divergence
+$$D_{KL}(P_0 || P_\theta) := \int p_0(x) \log \frac{p_0(x)}{p_\theta(x)} d\nu(x)$$
+The KL divergence is intrinsic to the two probability measures: its value does not depend on which common dominating measure is used. However, an arbitrary $P_0$ need not be dominated by the same measure as the model. The Lebesgue decomposition only guarantees a split $P_0=P_{0,ac}+P_{0,s}$ into parts that are absolutely continuous and singular with respect to $\nu$; on familiar spaces, the singular part may itself contain both atomic and atomless components. Finite-precision observations do not force the underlying $P_0$ to be discrete, but discrete and singular-continuous data-generating measures are both mathematically legitimate and should not be ruled out automatically.
 
-Fortunately, we can recover the established results for the KL divergence using the much more generally applicable cross-entropy for most models.  Cross-entropy cleanly separates the *generator* of the data from the *evaluator* of the data. The true measure $P_0$ acts purely as an integration measure, while the model $p_\theta(x)$ acts purely as an integrand. This allows us to mathematically formalize the idea of "fitting a model" even if reality is a Cantor distribution or discrete. We only need to assume the existence of a *true probability measure*.
+### Continuously Dominated Likelihood Models
+To evaluate a likelihood at observations generated by such a $P_0$, we need more structure than the measures $\\{P_\theta : \theta \in \Theta\\}$ alone. Let $C_b(\mathcal{X})$ denote the bounded continuous real-valued functions on $(\mathcal{X},\tau)$. Fix a full-support $\sigma$-finite measure $\nu$, meaning
+$$\nu(U)>0 \quad \text{for every non-empty open set } U,$$
+and define its continuous domination class by
+$$[\nu]_c := \\{e^h\nu : h \in C_b(\mathcal{X})\\}$$
+The restriction to bounded $h$ ensures that changing representatives contributes a finite additive term under every probability measure $P_0$.
 
-| Feature | Kullback-Leibler Divergence | Cross-Entropy | 
-| :--- | :--- | :--- | 
-| *Mathematical Form* | $\int p_0(x) \log \frac{p_0(x)}{p_\theta(x)} d\nu(x)$ | $-\int \log p_\theta(x) dP_0(x)$ | 
-| *Required Assumptions* | $P_0 \ll \nu$ and $\forall \theta: P_\theta \ll \nu$ | $\forall \theta: P_\theta \ll \nu$ | 
-| *Requires True Density (*$p_0$*)?* | Yes | No | 
-| *Optimal MLE Objective* | Minimize | Minimize | 
-| *Minimum* | 0 | Can be negative | 
-| $\nu$*-Invariance* | Completely invariant | Value depends on $\nu$, but argmin ($\theta^\ast$) is invariant | 
+We call the model *continuously dominated* by $[\nu]_c$ if every $P_\theta$ is dominated by $\nu$ and its Radon-Nikodym derivative has a continuous version, denoted by $p_\theta^\nu$. This continuous version is unique. Indeed, if two continuous versions differed at some point, they would differ on a non-empty open set, contradicting the full support of $\nu$.
 
-{{< remark >}}
-If $P_0$ has a dicrete component, it evaluates the density $p_\theta$ at individual points. Since Radon-Nikodym derivatives are only unique almost everywhere, we additionally want to assume that the dominating measure $\mu$ assigns positive probability mass to all non-empty open sets and that Radon-Nikodym derivatives are continuous. If such a Radon-Nikodym derivative exists, it is unique, making the cross-entropy well-defined. However, it limits which model classes $\\{P_\theta : \theta \in \Theta\\}$ can be considered, since not all admit such continuous Radon-Nikodym derivatives.
-{{< /remark >}}
+For another representative $\nu_h=e^h\nu$ in $[\nu]_c$, the unique continuous density is
+$$p_\theta^{\nu_h}(x)=e^{-h(x)}p_\theta^\nu(x)$$
+Consequently,
+$$\log p_\theta^{\nu_h}(x)=\log p_\theta^\nu(x)-h(x)$$
+The change is independent of $\theta$. For an observed sample it shifts the log-likelihood by $-\sum_{i=1}^n h(X_i)$, so the MLE is unchanged. It also multiplies every Bayesian likelihood by the same data-dependent factor, which cancels from the posterior. Thus, whenever these procedures are defined, likelihood-based inference is intrinsic to $[\nu]_c$, even though an individual density is tied to a representative.
 
-When doing parametric statistics in the misspecified setting, we cannot reach zero KL divergence anyway, so the main quantity of interest is typically
-$$D_{KL}(p_0 || p_\theta) - D_{KL}(p_0 || p_{\theta^*})$$
-where $\theta^*$ is the minimizer of the KL divergence, or equivalently, the cross-entropy. Since the logarithm of a ratio is the difference of logarithms, this is equal to
-$$CE(P_0 || p_\theta) - CE(P_0 || p_{\theta^*})$$
-if the cross-entropy is lower-bounded $\exists c \in \R: \forall \theta \in \Theta: CE(P_0 || \theta) > c$. In that case we completely recover the theory for misspecified models developed using the KL divergence, even if $\mathcal{X}$ is not countable. But how strong is this assumption?
+For any probability measure $P_0$, whether or not $P_0 \ll \nu$, define the cross-entropy whenever the integral exists by
+$$CE_\nu(P_0 || p_\theta^\nu) := -\int \log p_\theta^\nu(x) dP_0(x)$$
+Changing representatives gives
+$$CE_{\nu_h}(P_0 || p_\theta^{\nu_h})=CE_\nu(P_0 || p_\theta^\nu)+\int h(x)dP_0(x)$$
+The additive term is finite and independent of $\theta$. Hence lower-boundedness, minimizers, and excess cross-entropy are invariant across the domination class.
+
+| Feature | Kullback-Leibler Divergence | Cross-Entropy |
+| :--- | :--- | :--- |
+| *Mathematical Form* | $\int p_0(x) \log \frac{p_0(x)}{p_\theta(x)} d\nu(x)$ | $-\int \log p_\theta^\nu(x) dP_0(x)$ |
+| *Required Assumptions* | $P_0 \ll \nu$ and $P_\theta \ll \nu$ | A continuously dominated likelihood model and a well-defined integral |
+| *Requires True Density (*$p_0$*)?* | Yes | No |
+| *Optimal MLE Objective* | Minimize | Minimize |
+| *Minimum* | 0 | Can be negative |
+| *Change of Representative* | Exactly invariant | Shifts by $P_0h$; minimizers and excess risk are invariant |
+
+The representative-invariant quantity used throughout the rest of this post is the *excess cross-entropy*
+$$\Delta(\theta;\theta^*) := \mathbb{E}_{P_0}\left[\log\frac{p_{\theta^*}^\nu(X)}{p_\theta^\nu(X)}\right],$$
+whenever the log-density ratio has a well-defined expectation. The factor $e^{-h(X)}$ cancels from this ratio, so $\Delta$ does not depend on the representative $\nu \in [\nu]_c$. Whenever the two cross-entropies are finite,
+$$\Delta(\theta;\theta^*)=CE_\nu(P_0 || p_\theta^\nu)-CE_\nu(P_0 || p_{\theta^*}^\nu)$$
+If $P_0 \ll \nu$ and the relevant KL divergences are finite, it also equals
+$$\Delta(\theta;\theta^*)=D_{KL}(P_0 || P_\theta)-D_{KL}(P_0 || P_{\theta^*})$$
+This recovers the usual misspecified KL theory without requiring $P_0$ itself to have a density. To ensure that a pseudo-true parameter $\theta^*$ exists, we will assume that the cross-entropy is lower-bounded and has a unique minimizer with finite cross-entropy in a neighborhood. These properties hold for one representative of $[\nu]_c$ if and only if they hold for every representative. But how strong is the lower-boundedness assumption?
+
+From now on, we fix an arbitrary representative $\nu \in [\nu]_c$ and suppress it from the notation. The likelihood, posterior, score, Hessian, pseudo-true parameter, and excess risks discussed below do not depend on this choice.
 
 ### Lower-Boundedness of Cross-Entropy
-A simple sufficient condition for the cross-entropy to be lower-bounded is that the probability density is upper-bounded, for example $\Theta := \mathbb{R}$ and $P_\theta := \mathcal{N}(\theta, 1)$. However, a bounded density is not a necessary condition. Let $\theta = (\mu, \sigma^2)$ and $\Theta := \R \times \R_{>0}$. For a full Gaussian model $\mathcal{N}(0, \sigma^2)$, the cross-entropy approaches $+\infty$ as $\sigma^2 \to 0$ for any discrete true measure $P_0 \neq \delta_0$, remaining strictly lower-bounded because the $\mathcal{O}(1/\sigma^2)$ polynomial penalty for mass away from zero completely dominates the $\mathcal{O}(\log \sigma)$ divergence of the peak density. Clearly, the tail behavior has a big impact here. Consider a Student's t-distribution $t_\nu(0, \sigma^2)$ for some fixed $\nu > 0$. The penalty for mass away from $\mu$ only grows logarithmically. Consequently, as $\sigma^2 \to 0$, the cross-entropy for the t-distribution is only lower-bounded if $P_0$ does not concentrate too much mass in a single point. Specifically, for discrete $P_0$ the cross-entropy can diverge to $-\infty$ if and only if there exists an $x \in \mathcal{X}$ such that  $P_0(\{y\}) > \frac{\nu}{\nu+1}$. Since we usually use $\nu \geq 1$ in practice the necessary regularity assumptions on $P_0$ for lower-boundedness are still fairly mild.
+A simple sufficient condition for the cross-entropy to be lower-bounded is that the probability density is upper-bounded, for example $\Theta := \mathbb{R}$ and $P_\theta := \mathcal{N}(\theta, 1)$. However, a bounded density is not a necessary condition. Let $\theta = (\mu, \sigma^2)$ and $\Theta := \R \times \R_{>0}$. For a full Gaussian model $\mathcal{N}(\mu, \sigma^2)$, the cross-entropy approaches $+\infty$ as $\sigma^2 \to 0$ for any discrete true measure $P_0$ that is not concentrated entirely at $\mu$, remaining strictly lower-bounded because the $\mathcal{O}(1/\sigma^2)$ polynomial penalty for mass away from $\mu$ completely dominates the $\mathcal{O}(\log \sigma)$ divergence of the peak density. Clearly, the tail behavior has a big impact here. Consider a Student's t-distribution $t_\nu(\mu, \sigma^2)$ for some fixed $\nu > 0$. The penalty for mass away from $\mu$ only grows logarithmically. Consequently, as $\sigma^2 \to 0$, the cross-entropy for the t-distribution is only lower-bounded if $P_0$ does not concentrate too much mass in a single point. Specifically, for discrete $P_0$ the cross-entropy can diverge to $-\infty$ if and only if there exists an $x \in \mathcal{X}$ such that $P_0(\{x\}) > \frac{\nu}{\nu+1}$. Since we usually use $\nu \geq 1$ in practice the necessary regularity assumptions on $P_0$ for lower-boundedness are still fairly mild.
 
 However, the situation changes dramatically when moving from single-component distributions to mixture models. Consider a mixture of two Gaussians. In a single Gaussian, concentrating the variance to perfectly fit a point mass incurs a catastrophic exponential penalty everywhere else. However, in a mixture model $w\mathcal{N}(\mu_1, \sigma_1^2) + (1-w)\mathcal{N}(\mu_2, \sigma_2^2)$, this tradeoff is bypassed. If $P_0$ contains even a single point mass at $x_0$ with probability $p > 0$, the first component can center on it ($\mu_1 = x_0$) and collapse its variance ($\sigma_1^2 \to 0$), yielding an infinite logarithmic reward. Meanwhile, the second component can remain broad to cover the rest of the probability mass, ensuring the density elsewhere never drops below a finite threshold. Because the penalty for mass away from $x_0$ is now bounded by the presence of the second component, the infinite reward from the first component dominates, driving the overall cross-entropy to $-\infty$. Thus, for a Gaussian mixture model, a single point mass in $P_0$ is sufficient to destroy the lower bound. As discussed in the previous section, it is quite strong to assume that the discrete component of $P_0$ is zero. 
 
-| Model Class | Distribution Model | Characterization of Discrete $P_0$ with $\text{CE} > -\infty$ |
+| Model Class | Distribution Model | Characterization of Discrete $P_0$ with $\inf_{\theta\in\Theta}\text{CE}(P_0\|p_\theta)>-\infty$ |
 | :--- | :--- | :--- |
 | *Fixed Scale* | $\mathcal{N}(\theta, 1)$ | True |
 | *Light-Tailed Collapsing Scale* | $\mathcal{N}(\mu, \sigma^2)$ | $\nexists x \in \mathcal{X}: P_0(\\{x\\}) = 1$ |
 | *Heavy-Tailed Collapsing Scale* | $t_\nu(\mu, \sigma^2)$ | $\nexists x \in \mathcal{X}: P_0(\\{x\\}) > \frac{\nu}{\nu+1}$ |
-| *Mixture Models With Collpasing Scale ($k>1$)* | $\sum \pi_k \mathcal{N}(\mu_k, \sigma_k^2)$ | $\nexists x \in \mathcal{X}: P_0(\\{x\\}) > 0$ |
+| *Mixture Models With Collapsing Scale ($k>1$)* | $\sum \pi_k \mathcal{N}(\mu_k, \sigma_k^2)$ | $\nexists x \in \mathcal{X}: P_0(\\{x\\}) > 0$ |
 
 The only way to fit mixture models into the cross-entropy-based theory without assuming $\nexists x \in \mathcal{X}: P_0(\\{x\\}) > 0$ is to constrain their parameter space, lower-bounding the minimum variance of each component away from zero. Apart from $P_0$ containing discrete point-masses, other true measures $P_0$ can also break the lower-boundedness assumption. Even an absolutely continuous measure can break the assumption if the density increases faster to a singularity than the tails penalize it.
 
 ## Asymptotics Under True Measures
 ### Convergence in Distribution or Probability
-We follow Kleijn and van der Vaart (2012). They explicitely assume that $P_0$ is dominated by the same measure as $\\{P_\theta : \theta \in \Theta\\}$. We will apply our discussion in the previous section to generalize their results to arbitrary measures $P_0$. 
+We follow Kleijn and van der Vaart (2012). They explicitly assume that $P_0$ is dominated by the same measure as $\\{P_\theta : \theta \in \Theta\\}$. The continuous domination class lets us formulate the same likelihood-based conditions for an arbitrary $P_0$: the continuous density versions can be evaluated pointwise on the support of $P_0$, while changing representatives adds only the parameter-independent term $-h(X)$. In particular, likelihood ratios, scores, Hessians, MLEs, and posteriors are unchanged.
 
-Firstly, we need to assume that the cross-entropy $CE(P_0 || p_\theta)$ is lower-bounded and that a unique minimizer $p_{\theta^\ast}$ exists with finite cross-entropy in its neighborhood. We then need a number of regularity conditions on how the log-likelihood behaves around $\theta^\ast$:
-1. **Differentiability of Log-Likelihood:** The function $\theta \rightarrow \log p_\theta(X)$ is differentiable at $\theta^*$ in $P_0$-probability with derivative $\dot{\ell\_{\theta^\ast}}(X)$.
+Firstly, we assume that the cross-entropy is lower-bounded and that a unique minimizer $\theta^\ast$ exists with finite cross-entropy in its neighborhood. As established above, these assumptions do not depend on the representative of $[\nu]_c$. We then need a number of regularity conditions on how the log-likelihood behaves around $\theta^\ast$:
+1. **Differentiability of Log-Likelihood:** The function $\theta \rightarrow \log p_\theta(X)$ is differentiable at $\theta^*$ in $P_0$-probability with derivative $\dot{\ell\_{\theta^\ast}}(X)$. This derivative is the same for every representative of $[\nu]_c$.
 2. **Lipschitz Envelope Condition:** See regularity conditions for asymptotic normality of the MLE, but replacing $P_{\theta_0}$ with $P_0$ and considering a neighborhood of $\theta^\ast$
 3. **Second-Order Taylor Expansion:** There exists a positive definite matrix $V_{\theta^\ast}$ such that
-$$-\mathbb{E}_{P_0}\left[\log \frac{p_\theta}{p_{\theta^*}}\right] = \frac{1}{2} (\theta - \theta^*)^T V_{\theta^*} (\theta - \theta^*) + o(\|\theta - \theta^*\|^2)$$
+$$\Delta(\theta;\theta^*) = \frac{1}{2} (\theta - \theta^*)^T V_{\theta^*} (\theta - \theta^*) + o(\|\theta - \theta^*\|^2)$$
 
-as $\theta \rightarrow \theta^*$. Under these conditions, we can characterize the asymptotic convergence in both Frequentsist and Bayesian frameworks:
+as $\theta \rightarrow \theta^*$. Under these conditions, we can characterize the asymptotic convergence in both Frequentist and Bayesian frameworks:
 
 #### Maximum-Likelihood Estimator
 Assuming the maximum-likelihood estimator is consistent $\hat{\theta}\_n \xrightarrow{P\_0} \theta^\ast$ and $\mathbb{E}\_{X \sim P\_0}[\\|\dot{\ell_{\theta^\ast}}(X)\\|^2] < \infty$ we have
@@ -264,7 +281,7 @@ $$\mathbb{E}_{P_0}\left[\sup_{\theta\in U}\|\dot{\ell}_\theta(X)\|^2\right]<\inf
 These assumptions imply the local uniform laws of large numbers
 $$\sup_{\theta\in U}\left\|\frac{1}{n}\sum_{i=1}^n H_\theta(X_i)-\mathbb{E}_{P_0}[H_\theta(X)]\right\|\xrightarrow{P_0}0$$
 and
-$$\sup_{\theta\in U}\left\|\frac{1}{n}\sum_{i=1}^n \dot{\ell}_\theta(X_i)\dot{\ell}_\theta(X_i)^T-\mathbb{E}_{P_0}[\dot{\ell}_\theta(X)\dot{\ell}_\theta(X)^T]\right\|\xrightarrow{P_0}0.$$
+$$\sup_{\theta\in U}\left\|\frac{1}{n}\sum_{i=1}^n \dot{\ell}_\theta(X_i)\dot{\ell}_\theta(X_i)^T-\mathbb{E}_{P_0}[\dot{\ell}_\theta(X)\dot{\ell}_\theta(X)^T]\right\|\xrightarrow{P_0}0$$
 
 We now prove consistency of $\hat V_n$. Decompose
 $$\hat V_n - V_{\theta^\ast} = A_n + B_n,$$
@@ -295,13 +312,13 @@ If $V_{\theta^\ast}$ is nonsingular, matrix inversion is continuous at $V_{\thet
 $$\hat V_n^{-1}\xrightarrow{P_0}V_{\theta^\ast}^{-1}$$
 
 By the Continuous Mapping Theorem,
-$$\hat{\Sigma}_n = \hat V_n^{-1}\hat J_n\hat V_n^{-1}\xrightarrow{P_0}V_{\theta^\ast}^{-1}J_{\theta^\ast}V_{\theta^\ast}^{-1}.$$
+$$\hat{\Sigma}_n = \hat V_n^{-1}\hat J_n\hat V_n^{-1}\xrightarrow{P_0}V_{\theta^\ast}^{-1}J_{\theta^\ast}V_{\theta^\ast}^{-1}$$
 
 Now fix a scalar component $\theta_j^\ast$ and suppose that the corresponding asymptotic variance is positive:
 $$\Sigma_{jj} > 0$$
 
 The asymptotic normality result gives
-$$\sqrt{n}(\hat{\theta}_{n,j}-\theta_j^\ast)\xrightarrow{d}\mathcal{N}(0,\Sigma_{jj}).$$
+$$\sqrt{n}(\hat{\theta}_{n,j}-\theta_j^\ast)\xrightarrow{d}\mathcal{N}(0,\Sigma_{jj})$$
 
 Since
 $$\hat{\Sigma}_{n,jj}\xrightarrow{P_0}\Sigma_{jj},$$
@@ -323,7 +340,7 @@ $$W_n\xrightarrow{d}\chi_q^2$$
 where $q$ is the rank of $R$. Hence the corresponding sandwich Wald test has asymptotic size $\alpha$ when the rejection region is
 $$W_n>\chi^2_{q,1-\alpha}$$
 
-This proves that the empirical sandwich estimator gives asymptotically correct confidence intervals and Wald tests for $\theta^\ast$. No density for $P_0$ is required; all assumptions are imposed directly on the model score and Hessian as random functions under the true measure $P_0$.
+This proves that the empirical sandwich estimator gives asymptotically correct confidence intervals and Wald tests for $\theta^\ast$. No density for $P_0$ is required; all expectations are taken directly under the true measure $P_0$. The continuous domination class instead supplies unique pointwise likelihoods, scores, and Hessians, all of which are invariant under a change of representative.
 
 #### Bayesian Inference
 In Bayesian statistics, we are immediately faced with a major philosophical hurdle: By restricting our prior distribution $p(\theta)$ entirely to the parameter space $\Theta$, we are stating with absolute certainty that the true data-generating measure lies within our model family. Because the model is misspecified, we have essentially assigned a prior probability of exactly zero to reality. In a strict subjectivist sense, this violates Cromwell's rule: no amount of data can ever convince the posterior to converge to the absolute truth if the truth was ruled out a priori.
@@ -337,7 +354,7 @@ Since we are virtually always in the misspecified setting in practice, this lead
 ### Prediction
 #### Maximum-Likelihood Estimation
 Given that our second-order Taylor expansion exists, we have
-$$\Delta(\theta) := CE(P_0 || p_\theta) - CE(P_0 || p_{\theta^*}) = -\mathbb{E}_{P_0}\left[\log \frac{p_\theta}{p_{\theta^*}}\right]$$
+$$\Delta(\theta) := \Delta(\theta;\theta^*) = \mathbb{E}_{P_0}\left[\log \frac{p_{\theta^*}}{p_\theta}\right]$$
 $$=\frac{1}{2} (\theta - \theta^*)^T V_{\theta^*} (\theta - \theta^*) + o(\|\theta - \theta^*\|^2)$$
 Or equivalently, there exists an $r(\theta)$ with $r(\theta) \rightarrow 0$ as $\theta \rightarrow \theta^\ast$ such that:
 $$\Delta(\theta) = \frac{1}{2} (\theta - \theta^*)^T V_{\theta^*} (\theta - \theta^*) + r(\theta) \|\theta - \theta^*\|^2$$
@@ -359,11 +376,11 @@ $$\mathbb{E}[Y] \leq \liminf_{n \rightarrow \infty} \mathbb{E}[Y_n]$$
 Applying classical trace permutation methods, we have:
 $$\mathbb{E}[Y] = \mathbb{E}\left[\frac{1}{2} Z^T V_{\theta^*} Z\right] = \frac{1}{2}\mathrm{Tr}(J_{\theta^*} V_{\theta^*}^{-1})$$
 So overall, we have:
-$$\liminf_{n \rightarrow \infty} n (CE(P_0 || p_{\hat{\theta}_n}) - CE(P_0 || p_{\theta^*})) \geq \frac{1}{2} \mathrm{Tr}(J_{\theta^*} V_{\theta^*}^{-1})$$
+$$\liminf_{n \rightarrow \infty} n\,\mathbb{E}_{P_0^n}[\Delta(\hat{\theta}_n)] \geq \frac{1}{2} \mathrm{Tr}(J_{\theta^*} V_{\theta^*}^{-1})$$
 The stepwise risk also gives us a bound on the cumulative risk:
-$$\liminf_{n \to \infty} \frac{1}{\log(n)} \sum_{i=1}^n (CE(P_0 || p_{\hat{\theta}_i}) - CE(P_0 || p_{\theta^*})) \geq \frac{1}{2} \mathrm{Tr}(J_{\theta^*} V_{\theta^*}^{-1})$$
+$$\liminf_{n \to \infty} \frac{1}{\log(n)} \sum_{i=1}^n \mathbb{E}_{P_0^i}[\Delta(\hat{\theta}_i)] \geq \frac{1}{2} \mathrm{Tr}(J_{\theta^*} V_{\theta^*}^{-1})$$
 
-This means that the commonly cited $\frac{1}{2n} \mathrm{Tr}(J\_{\theta^\ast} V\_{\theta^\ast}^{-1})$ rate is the best case for maximum likelihood prediction, rather than something we are guaranteed to attain. To actually achieve the asymptotic rate, we would need *uniform integrability* of the sequence $\\{(T\_n, P\_0^n): n \in \mathcal{N}\\}$. Basically, we need $P_0$ to play nice with our model, which usually requires us to make additional assumptions on how $P_0$ interacts with our model globally, instead of just in a neighborhood of $\theta^\ast$. There is one exception where no additional assumptions are needed: The Gaussian location model $\mathcal{N}(\mu, \Sigma)$ with fixed covariance $\Sigma$.  Since the log-likelihood is perfectly quadratic, the Taylor expansion has no remainder, greatly simplifying the problem.
+This means that the commonly cited $\frac{1}{2n} \mathrm{Tr}(J\_{\theta^\ast} V\_{\theta^\ast}^{-1})$ rate is the best case for maximum likelihood prediction, rather than something we are guaranteed to attain. To upgrade convergence in distribution to convergence of the expected risk, we would need *uniform integrability* of $Y_n=n\Delta(\hat{\theta}_n)$, or stronger conditions that imply it. Basically, we need $P_0$ to play nice with our model, which usually requires us to make additional assumptions on how $P_0$ interacts with our model globally, instead of just in a neighborhood of $\theta^\ast$. There is one exception where no additional assumptions are needed: The Gaussian location model $\mathcal{N}(\mu, \Sigma)$ with fixed covariance $\Sigma$. Since the log-likelihood is perfectly quadratic, the Taylor expansion has no remainder, greatly simplifying the problem.
 
 {{< remark >}}
 *Uniform Integrability (UI) Definitions:*
@@ -377,40 +394,43 @@ $$\sup_{t \in T} \int H(|f_t|) d\mu_t < \infty$$
 
 
 #### Bayesian Predictive Distribution
-<!-- For the Bayesian predictive distribution Clarke and Barron (1990) had a key insight: Since we are integrating over the posterior before making a prediction rather than assessing the predictive performance of the point estimator $\hat{\theta}_n$ posthoc, the order of expectations in reversed. If we can show that the neighborhood of $\theta^\ast$ is already guaranteeing a good enough prediction, this is very powerful.
-Indeed, under the same assumptions of the misspecified BvM theorem, they show
-$$\limsup_{n \rightarrow \infty} n (CE(P_0 || p_{\hat{\theta}_n}) - CE(P_0 || p_{\theta^*})) \leq \frac{d}{2}$$ -->
 The Bayesian predictive distribution behaves differently because prediction is made by averaging over the posterior before taking the logarithmic loss. Let $w$ be the prior density and define the Bayes mixture density (also known as the prior predictive):
 $$m_n(x^n) := \int p_\theta^n(x^n)w(\theta)\,d\theta$$ 
 The one-step posterior predictive density after observing $X^k$ is
-$$m_k(x\mid X^k) := \frac{m_{k+1}(X^k,x)}{m_k(X^k)}.$$
-The cumulative excess predictive risk of the Bayesian predictive distribution is 
-$$R_n := CE(P_0^n\|M_n)-n CE(P_0\|P_{\theta^\ast}) = \mathbb{E}_{P_0^n}\left[\log\frac{p_{\theta^\ast}^n(X^n)}{m_n(X^n)}\right]$$
-Using a telescoping sum argument on $\log m_n$, we can see $R_n$  as the cumulative sum of one-step posterior predictive excess risks:
-$$R_n = \sum_{k=0}^{n-1}\mathbb{E}_{P_0^k}\left[CE(P_0\|m_k(\cdot\mid X^k))-CE(P_0\|p_{\theta^\ast})\right].$$
+$$m_k(x\mid X^k) := \frac{m_{k+1}(X^k,x)}{m_k(X^k)}$$
+Under a change from $\nu$ to $\nu_h=e^h\nu$, these densities transform as
+$$m_n^{\nu_h}(x^n)=e^{-\sum_{i=1}^n h(x_i)}m_n^\nu(x^n), \qquad m_k^{\nu_h}(x\mid X^k)=e^{-h(x)}m_k^\nu(x\mid X^k)$$
+They therefore transform in exactly the same way as the model density $p_{\theta^\ast}$.
+
+Define the one-step posterior-predictive excess risk by
+$$\Delta_k^B(X^k):=\mathbb{E}_{X\sim P_0}\left[\log\frac{p_{\theta^\ast}(X)}{m_k(X\mid X^k)}\right]$$
+The factors introduced by changing representatives cancel pointwise, so this risk is intrinsic to $[\nu]_c$. The cumulative excess predictive risk is
+$$R_n := \mathbb{E}_{P_0^n}\left[\log\frac{p_{\theta^\ast}^n(X^n)}{m_n(X^n)}\right]$$
+Using a telescoping sum argument on $\log m_n$, we can write it as
+$$R_n = \sum_{k=0}^{n-1}\mathbb{E}_{P_0^k}\left[\Delta_k^B(X^k)\right]$$
 
 Clarke and Barron's Theorem 2.3 gives a direct upper bound on this cumulative quantity. Applying our more general framework, we can slightly soften their assumptions and only need to assume that 
-1. the cross-entropy $CE(P\_0 || p\_\theta)$ is lower-bounded
-2. a unique minimizer $p\_{\theta^\ast}$ exists with finite cross-entropy in its neighborhood
+1. the cross-entropy is lower-bounded
+2. a unique minimizer $\theta^\ast$ exists with finite cross-entropy in its neighborhood
 3. there exists a second-order Taylor expansion with positive definite $V\_{\theta^\ast}$
 4. the prior $w(\theta)$ is positive and continuous at $\theta^\ast$
 
 to get
-$$\limsup_{n \to \infty} \frac{1}{\log(n)} \sum_{i=1}^n (CE(P_0 || p_{\hat{\theta}_i}) - CE(P_0 || p_{\theta^*})) \leq \frac{d}{2}$$
+$$\limsup_{n \to \infty} \frac{R_n}{\log(n)} \leq \frac{d}{2}$$
 
-**So the exact same cumulative predictive risk quantity that we can only lower-bound for maximum-likelihood estimation (under local assumptions), is upper bounded here, at the same rate in $n$!**
+**So the same cumulative excess-log-loss criterion that we can only lower-bound for maximum-likelihood estimation under local assumptions is upper-bounded here at the same rate in $n$!**
 
 This result is weaker than a pointwise one-step statement, but it is also much easier to obtain than the corresponding plug-in expectation. The mixture proof does not require a separate uniform-integrability assumption on the random plug-in excess risk. Instead, the expectation is controlled directly by lower-bounding the mixture integral over an $n^{-1/2}$-neighborhood of $\theta^\ast$. This is the key advantage of the Bayesian predictive mixture: the local KL geometry around $\theta^\ast$ is already enough to control the cumulative expected log-loss.
 
 
 However, Theorem 2.3 alone does not imply the sharper one-step asymptotic 
-$$\mathbb{E}_{P_0^n}\left[CE(P_0\|m_n(\cdot\mid X^n))-CE(P_0\|p_{\theta^\ast})\right] \sim \frac{d}{2n}.$$ 
+$$\mathbb{E}_{P_0^n}\left[\Delta_n^B(X^n)\right] \sim \frac{d}{2n}$$ 
 To obtain such a statement, one would need additional control of the increments 
-$$R_{n+1}^B-R_n^B,$$ 
+$$R_{n+1}-R_n$$ 
 Monotonicity of the fixed-$P\_0$ posterior predictive risk should not be assumed: unlike prior-averaged Bayes risk, the expected predictive risk under a fixed data-generating distribution $P\_0$ need not decrease at every sample size.
 
 ## Conclusion
-A lot of the asymptotic theory for both maximum-likelihood and Bayesian methods still holds up for general $P\_0$ under only local assumptions. However, checking that regularity conditions actually hold becomes more important, and sometimes we need to assume properties of $P\_0$ that we cannot check. Generally, our results show that outside the hypothetical well-specified setting, there is a clear divergence in what each philosophy excels at: Maximum-likelihood methods should be used for hypothesis testing, and Bayesian methods should be used for prediction.
+A lot of the asymptotic theory for both maximum-likelihood and Bayesian methods still holds up when an arbitrary $P\_0$ is evaluated against a continuously dominated likelihood model. The equivalence class $[\nu]_c$ and the unique continuous density versions make likelihood evaluation meaningful even when $P_0$ is singular with respect to every representative, while all inferential conclusions and excess risks remain invariant within the class. However, checking that regularity conditions actually hold becomes more important, and sometimes we need to assume properties of $P\_0$ that we cannot check. Generally, our results show that outside the hypothetical well-specified setting, there is a clear divergence in what each philosophy excels at: Maximum-likelihood methods should be used for hypothesis testing, and Bayesian methods should be used for prediction.
 
 ## References
 
