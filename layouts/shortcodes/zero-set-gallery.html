@@ -1,0 +1,330 @@
+<style>
+  .zero-set-gallery {
+    margin: 2rem 0;
+    padding: 16px;
+    border: 1px solid #d8d1c3;
+    border-radius: 18px;
+    background:
+      linear-gradient(rgba(20,40,45,.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20,40,45,.045) 1px, transparent 1px),
+      #f7f3ea;
+    background-size: 32px 32px;
+  }
+  .zero-set-control {
+    display: grid;
+    gap: 7px;
+    margin-bottom: 16px;
+    padding: 13px 15px;
+    border: 1px solid #d8d1c3;
+    border-radius: 14px;
+    background: #fffdf8;
+  }
+  .zero-set-control__header { display:flex; justify-content:space-between; gap:14px; align-items:baseline; }
+  .zero-set-control__header strong { color:#14282d; font-size:.88rem; }
+  .zero-set-control output { color:#a54b31; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.78rem; font-weight:700; }
+  .zero-set-control input { width:100%; accent-color:#287d7b; }
+  .zero-set-control__scale { display:flex; justify-content:space-between; gap:12px; color:#657176; font-size:.72rem; }
+  .zero-set-sticky-scope {
+    display:flow-root;
+    margin-bottom:-16px;
+  }
+  .zero-set-sticky-scope::after { display:block; height:16px; content:""; }
+  .zero-set-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+  .zero-set-sticky-scope + .zero-set-grid { margin-top:16px; }
+  .zero-set-card { container-type:inline-size; overflow:hidden; border:1px solid #d8d1c3; border-radius:20px; background:#fffdf8; color:#14282d; }
+  .zero-set-card__body { padding:17px 18px 0; }
+  .zero-set-card__eyebrow { margin:0 0 7px; color:#d9613f; font-size:.75rem; font-weight:700; letter-spacing:.03em; }
+  .zero-set-card__heading { display:flex; gap:11px; align-items:center; margin-bottom:11px; }
+  .zero-set-card__badge { display:grid; flex:0 0 38px; height:38px; place-items:center; border-radius:50%; background:#dceceb; color:#197371; font-weight:800; }
+  .zero-set-card h3 { margin:0; font-size:1.08rem; line-height:1.15; }
+  .zero-set-card__formula { display:flex; min-height:4.1em; margin:.35rem 0 .6rem; align-items:center; font-size:1rem; }
+  .zero-set-card__formula .katex { font-size:1em; }
+  .zero-set-card__formula-wide { display:none; white-space:nowrap; }
+  .zero-set-card__formula-compact { display:inline-block; }
+  .zero-set-card canvas { display:block; width:100%; height:auto; background:#fbfaf6; }
+  .zero-set-card__caption { min-height:4.2em; margin:0; padding:11px 18px 14px; border-top:1px solid #d8d1c3; color:#657176; font-size:.75rem; }
+  .zero-set-gallery > figcaption { margin-top:13px; color:#657176; font-size:.82rem; }
+  @media (min-width: 721px) {
+    .zero-set-control {
+      position: sticky;
+      top: .5rem;
+      z-index: 20;
+    }
+  }
+  @media (max-width: 720px) {
+    .zero-set-grid { grid-template-columns:1fr; }
+    .zero-set-control__header { align-items:flex-start; flex-direction:column; gap:2px; }
+  }
+@container (min-width: 465px) {
+  .zero-set-card__formula { min-height:2.8em; font-size:1.2rem; }
+    .zero-set-card__formula-wide { display:inline-block; }
+    .zero-set-card__formula-compact { display:none; }
+  }
+  @media (max-width: 420px) {
+    .zero-set-card__formula { font-size:.88rem; }
+  }
+</style>
+
+<figure id="zeroSetGallery" class="zero-set-gallery">
+  <div class="zero-set-sticky-scope">
+  <label class="zero-set-control" for="zeroSetEpsilon">
+    <span class="zero-set-control__header">
+      <strong>Shared sublevel threshold <span data-tex="\varepsilon"></span></strong>
+      <output id="zeroSetEpsilonOutput" for="zeroSetEpsilon" aria-live="polite">ε = 10^−1.5 ≈ 0.0316</output>
+    </span>
+    <input id="zeroSetEpsilon" type="range" min="-3.5" max="-0.7" step="0.02" value="-1.5" aria-label="Base-ten logarithm of the shared sublevel threshold">
+    <span class="zero-set-control__scale"><span>smaller neighborhoods</span><span><span data-tex="\varepsilon\asymp 1/n"></span></span><span>larger neighborhoods</span></span>
+  </label>
+
+  <div class="zero-set-grid">
+    <article class="zero-set-card">
+      <div class="zero-set-card__body">
+        <p class="zero-set-card__eyebrow">Regular</p>
+        <div class="zero-set-card__heading"><span class="zero-set-card__badge">A</span><h3 id="isolated-point">Isolated point</h3></div>
+        <p class="zero-set-card__formula"><span class="zero-set-card__formula-wide" data-tex="K(u,v):=\mathrm{KL}\!\left(\mathcal N((0,0),I)\,\middle\|\,\mathcal N((u,v),I)\right)=\frac{u^2+v^2}{2}"></span><span class="zero-set-card__formula-compact" data-tex="\begin{aligned}K(u,v)&:=\mathrm{KL}\!\left(\mathcal N((0,0),I)\,\middle\|\,\mathcal N((u,v),I)\right)\\&=\frac{u^2+v^2}{2}\end{aligned}"></span></p>
+      </div>
+      <canvas width="660" height="500" data-model="isolated" role="img" aria-label="Sublevel sets shrinking around an isolated quadratic minimum">Nested sublevel sets shrink around an isolated point.</canvas>
+      <p class="zero-set-card__caption">Sublevel sets shrink quadratically and isotropically around one point.</p>
+    </article>
+
+    <article class="zero-set-card">
+      <div class="zero-set-card__body">
+        <p class="zero-set-card__eyebrow">Semi-regular</p>
+        <div class="zero-set-card__heading"><span class="zero-set-card__badge">B</span><h3 id="smooth-zero-set">Smooth zero set</h3></div>
+        <p class="zero-set-card__formula"><span class="zero-set-card__formula-wide" data-tex="K(u,v):=\mathrm{KL}\!\left(\mathcal N(0,1)\,\middle\|\,\mathcal N(u,1)\right)=\frac{u^2}{2}"></span><span class="zero-set-card__formula-compact" data-tex="\begin{aligned}K(u,v)&:=\mathrm{KL}\!\left(\mathcal N(0,1)\,\middle\|\,\mathcal N(u,1)\right)\\&=\frac{u^2}{2}\end{aligned}"></span></p>
+      </div>
+      <canvas width="660" height="500" data-model="morse-bott" role="img" aria-label="Uniform sublevel tubes around a smooth zero manifold">Sublevel sets form uniform tubes around a smooth zero manifold.</canvas>
+      <p class="zero-set-card__caption">Sublevel sets form a uniform quadratic tube around a smooth zero manifold.</p>
+    </article>
+  </div>
+  </div>
+
+  <div class="zero-set-grid">
+
+    <article class="zero-set-card">
+      <div class="zero-set-card__body">
+        <p class="zero-set-card__eyebrow">Needs resolution</p>
+        <div class="zero-set-card__heading"><span class="zero-set-card__badge">C</span><h3 id="cusp-zero-set">Cusp zero set</h3></div>
+        <p class="zero-set-card__formula"><span class="zero-set-card__formula-wide" data-tex="K(u,v):=\mathrm{KL}\!\left(\mathcal N(0,1)\,\middle\|\,\mathcal N(v^2-u^3,1)\right)=\frac{(v^2-u^3)^2}{2}"></span><span class="zero-set-card__formula-compact" data-tex="\begin{aligned}K(u,v)&:=\mathrm{KL}\!\left(\mathcal N(0,1)\,\middle\|\,\mathcal N(v^2-u^3,1)\right)\\&=\frac{(v^2-u^3)^2}{2}\end{aligned}"></span></p>
+      </div>
+      <canvas width="660" height="500" data-model="cusp" role="img" aria-label="Sublevel sets narrowing around a nonmonomial cusp">Sublevel sets narrow around a cusp singularity.</canvas>
+      <p class="zero-set-card__caption">The zero set is singular and the loss is not yet a coordinate monomial.</p>
+    </article>
+
+    <article class="zero-set-card">
+      <div class="zero-set-card__body">
+        <p class="zero-set-card__eyebrow">Monomialized</p>
+        <div class="zero-set-card__heading"><span class="zero-set-card__badge">D</span><h3 id="monomial-crossing">Monomial crossing</h3></div>
+        <p class="zero-set-card__formula"><span class="zero-set-card__formula-wide" data-tex="K(u,v):=\mathrm{KL}\!\left(\mathcal N(0,1)\,\middle\|\,\mathcal N(uv,1)\right)=\frac{u^2v^2}{2}"></span><span class="zero-set-card__formula-compact" data-tex="\begin{aligned}K(u,v)&:=\mathrm{KL}\!\left(\mathcal N(0,1)\,\middle\|\,\mathcal N(uv,1)\right)\\&=\frac{u^2v^2}{2}\end{aligned}"></span></p>
+      </div>
+      <canvas width="660" height="500" data-model="monomial" role="img" aria-label="Horn-shaped sublevel sets around a monomialized normal crossing">Sublevel sets form horns around two normally crossing coordinate axes.</canvas>
+      <p class="zero-set-card__caption">The zero set is singular, but the loss already has normal-crossing monomial form.</p>
+    </article>
+  </div>
+
+  <figcaption>One threshold reveals four different local geometries. Monomialization turns nonmonomial singularities of the kind shown in C into local coordinate-monomial models of the kind shown in D.</figcaption>
+</figure>
+
+<script>
+(() => {
+  "use strict";
+  const root = document.getElementById("zeroSetGallery");
+  if (!root || root.dataset.initialized === "true") return;
+  root.dataset.initialized = "true";
+
+  const slider = root.querySelector("#zeroSetEpsilon");
+  const output = root.querySelector("#zeroSetEpsilonOutput");
+  const canvases = [...root.querySelectorAll("canvas[data-model]")];
+  const plot = { x: 60, y: 40, width: 540, height: 410 };
+  const vDomain = 1.5;
+  const uDomain = vDomain * (plot.width / plot.height);
+  const ink = "#52666a";
+  const grid = "#e8e0d2";
+  const axis = "#afbfbd";
+  const boundary = "rgba(40,125,123,.88)";
+  const zero = "#d9613f";
+  const modelFunctions = {
+    isolated: (u, v) => (u * u + v * v) / 2,
+    "morse-bott": (u) => (u * u) / 2,
+    cusp: (u, v) => ((v * v - u * u * u) ** 2) / 2,
+    monomial: (u, v) => (u * u * v * v) / 2,
+  };
+
+  const xFor = (u) => plot.x + ((u + uDomain) / (2 * uDomain)) * plot.width;
+  const yFor = (v) => plot.y + ((vDomain - v) / (2 * vDomain)) * plot.height;
+
+  function trace(context, points) {
+    if (points.length < 2) return;
+    context.beginPath();
+    context.moveTo(xFor(points[0][0]), yFor(points[0][1]));
+    for (let i = 1; i < points.length; i += 1) context.lineTo(xFor(points[i][0]), yFor(points[i][1]));
+    context.stroke();
+  }
+
+  function drawSublevel(context, model, epsilon) {
+    const fn = modelFunctions[model];
+    const image = context.createImageData(plot.width, plot.height);
+    const data = image.data;
+    for (let py = 0; py < plot.height; py += 1) {
+      const v = vDomain - ((py + 0.5) / plot.height) * 2 * vDomain;
+      for (let px = 0; px < plot.width; px += 1) {
+        const u = -uDomain + ((px + 0.5) / plot.width) * 2 * uDomain;
+        if (fn(u, v) > epsilon) continue;
+        const index = (py * plot.width + px) * 4;
+        data[index] = 40;
+        data[index + 1] = 125;
+        data[index + 2] = 123;
+        data[index + 3] = 62;
+      }
+    }
+    context.putImageData(image, plot.x, plot.y);
+  }
+
+  function drawFrame(context) {
+    context.strokeStyle = grid;
+    context.lineWidth = 2;
+    for (const tick of [-1, 1]) {
+      context.beginPath();
+      context.moveTo(xFor(tick), plot.y);
+      context.lineTo(xFor(tick), plot.y + plot.height);
+      context.stroke();
+      context.beginPath();
+      context.moveTo(plot.x, yFor(tick));
+      context.lineTo(plot.x + plot.width, yFor(tick));
+      context.stroke();
+    }
+    context.strokeStyle = axis;
+    context.lineWidth = 3;
+    context.beginPath();
+    context.moveTo(plot.x, yFor(0));
+    context.lineTo(plot.x + plot.width, yFor(0));
+    context.moveTo(xFor(0), plot.y);
+    context.lineTo(xFor(0), plot.y + plot.height);
+    context.stroke();
+    context.strokeStyle = "#ded6c8";
+    context.lineWidth = 2;
+    context.strokeRect(plot.x, plot.y, plot.width, plot.height);
+    context.fillStyle = ink;
+    context.font = "italic 26px Georgia, serif";
+    context.fillText("u", plot.x + plot.width + 12, yFor(0) + 8);
+    context.fillText("v", xFor(0) + 10, plot.y - 10);
+  }
+
+  function drawBoundary(context, model, delta) {
+    context.strokeStyle = boundary;
+    context.lineWidth = 4;
+    context.lineJoin = "round";
+    context.lineCap = "round";
+    if (model === "isolated") {
+      context.beginPath();
+      context.ellipse(xFor(0), yFor(0), (delta / (2 * uDomain)) * plot.width, (delta / (2 * vDomain)) * plot.height, 0, 0, Math.PI * 2);
+      context.stroke();
+      return;
+    }
+    if (model === "morse-bott") {
+      for (const u of [-delta, delta]) {
+        context.beginPath();
+        context.moveTo(xFor(u), plot.y);
+        context.lineTo(xFor(u), plot.y + plot.height);
+        context.stroke();
+      }
+      return;
+    }
+    if (model === "cusp") {
+      for (const sign of [-1, 1]) {
+        const upper = [];
+        const lower = [];
+        const meetingU = Math.cbrt(-sign * delta);
+        const startU = Math.max(-uDomain, meetingU);
+        for (let i = 0; i <= 480; i += 1) {
+          const u = startU + (i / 480) * (uDomain - startU);
+          const square = Math.max(0, u * u * u + sign * delta);
+          const v = Math.sqrt(square);
+          if (v > vDomain) continue;
+          upper.push([u, v]);
+          lower.push([u, -v]);
+        }
+        trace(context, upper);
+        trace(context, lower);
+      }
+      return;
+    }
+    for (const productSign of [-1, 1]) {
+      for (const uSign of [-1, 1]) {
+        const points = [];
+        const minimumMagnitude = delta / vDomain;
+        for (let i = 0; i <= 300; i += 1) {
+          const magnitude = minimumMagnitude + (i / 300) * (uDomain - minimumMagnitude);
+          const u = uSign * magnitude;
+          const v = (productSign * delta) / u;
+          points.push([u, v]);
+        }
+        trace(context, points);
+      }
+    }
+  }
+
+  function drawZeroSet(context, model) {
+    context.strokeStyle = zero;
+    context.fillStyle = zero;
+    context.lineWidth = 7;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    if (model === "isolated") {
+      context.beginPath();
+      context.arc(xFor(0), yFor(0), 10, 0, Math.PI * 2);
+      context.fill();
+      return;
+    }
+    if (model === "morse-bott") {
+      context.beginPath();
+      context.moveTo(xFor(0), plot.y);
+      context.lineTo(xFor(0), plot.y + plot.height);
+      context.stroke();
+      return;
+    }
+    if (model === "cusp") {
+      const points = [];
+      const limit = Math.min(Math.sqrt(uDomain), Math.cbrt(vDomain));
+      for (let i = 0; i <= 420; i += 1) {
+        const t = -limit + (i / 420) * 2 * limit;
+        points.push([t * t, t * t * t]);
+      }
+      trace(context, points);
+      return;
+    }
+    context.beginPath();
+    context.moveTo(plot.x, yFor(0));
+    context.lineTo(plot.x + plot.width, yFor(0));
+    context.moveTo(xFor(0), plot.y);
+    context.lineTo(xFor(0), plot.y + plot.height);
+    context.stroke();
+  }
+
+  function draw(canvas, epsilon) {
+    const context = canvas.getContext("2d");
+    const model = canvas.dataset.model;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "#fbfaf6";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    drawSublevel(context, model, epsilon);
+    drawFrame(context);
+    const delta = Math.sqrt(2 * epsilon);
+    drawBoundary(context, model, delta);
+    drawZeroSet(context, model);
+  }
+
+  function update() {
+    const exponent = Number(slider.value);
+    const epsilon = 10 ** exponent;
+    const exponentLabel = exponent.toFixed(2).replace(/0+$/, "").replace(/\.$/, "").replace("-", "−");
+    const epsilonLabel = epsilon < 0.001 ? epsilon.toExponential(2) : epsilon.toFixed(4).replace(/0+$/, "").replace(/\.$/, "");
+    output.textContent = `ε = 10^${exponentLabel} ≈ ${epsilonLabel}`;
+    slider.setAttribute("aria-valuetext", `epsilon approximately ${epsilonLabel}`);
+    for (const canvas of canvases) draw(canvas, epsilon);
+  }
+
+  slider.addEventListener("input", update);
+  update();
+})();
+</script>

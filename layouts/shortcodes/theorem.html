@@ -1,4 +1,4 @@
-<div class="p-4 rounded-xl" style="border:1px solid var(--theme)">
-  <strong>Theorem{{ with .Get "n" }} {{ . }}{{ end }}{{ with .Get "title" }} ({{ . }}){{ end }}.</strong>
-  <div>{{ .Inner | markdownify }}</div>
+<div class="math-block math-block--theorem">
+  <p class="math-block__heading"><strong>{{ .Get "kind" | default "Theorem" }}{{ with .Get "n" }} {{ . }}{{ end }}{{ with .Get "title" }} ({{ . }}){{ end }}.</strong></p>
+  <div class="math-block__body">{{ .Page.RenderString (dict "display" "block") .Inner }}</div>
 </div>

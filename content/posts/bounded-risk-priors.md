@@ -66,9 +66,9 @@ $$
 $$
 Solving the inner integrals and simplifying, we have
 $$
-\E_{y_1, \dots, y_n, y^* \sim \mathcal{N}(\mu, 1)}\left[\log\left(\frac{\int_0^\infty \frac{1}{(1+a)^2} \sqrt{\frac{a}{a+n+1}} \exp\left(\frac{1}{2}\frac{(S + y^*)^2}{a+n+1}\right) da}{\int_0^\infty \frac{1}{(1+a)^2} \sqrt{\frac{a}{a+n}} \exp\left(\frac{1}{2} \frac{S^2}{a+n}\right) da}\right)  - \frac{{y^\*}^2}{2} \right] - \frac{\log(2\pi)}{2}
+\E_{y_1, \dots, y_n, y^* \sim \mathcal{N}(\mu, 1)}\left[\log\left(\frac{\int_0^\infty \frac{1}{(1+a)^2} \sqrt{\frac{a}{a+n+1}} \exp\left(\frac{1}{2}\frac{(S + y^*)^2}{a+n+1}\right) da}{\int_0^\infty \frac{1}{(1+a)^2} \sqrt{\frac{a}{a+n}} \exp\left(\frac{1}{2} \frac{S^2}{a+n}\right) da}\right)  - \frac{{y^*}^2}{2} \right] - \frac{\log(2\pi)}{2}
 $$
-where $S = \sum_{i=1}^n y_i \sim \mathcal{N}(n \mu, n)$. We reparametrize the inner integral as $t = \frac{a}{1+a}$ or equivalently $a = \frac{t}{1-t}$. This gives $dt = \frac{1}{(1+a)^2} da$. Additionally we have a closed-form for $\E[{y^\*}^2]$ since it follows a non-central $\chi^2$-distribution.
+where $S = \sum_{i=1}^n y_i \sim \mathcal{N}(n \mu, n)$. We reparametrize the inner integral as $t = \frac{a}{1+a}$ or equivalently $a = \frac{t}{1-t}$. This gives $dt = \frac{1}{(1+a)^2} da$. Additionally we have a closed-form for $\E[{y^*}^2]$ since it follows a non-central $\chi^2$-distribution.
 
 $$
 \E_{y_1, \dots, y_n, y^* \sim \mathcal{N}(\mu, 1)}\left[\log\left(\frac{\int_0^1 \sqrt{\frac{t}{n+1-nt}} \exp\left(\frac{1}{2} \frac{(S + y^*)^2}{\frac{t}{1-t}+n+1}\right) dt}{\int_0^1 \sqrt{\frac{t}{n+t-nt}} \exp\left(\frac{1}{2} \frac{S^2}{\frac{t}{1-t}+n}\right) dt}\right)\right]  - \frac{\mu^2 + \log(2\pi) + 1}{2}

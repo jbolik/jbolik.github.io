@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 520" role="img" aria-labelledby="title desc">
+  <title id="title">Crossing algebraic zero set</title>
+  <desc id="desc">A toy normal mean model with K(u,v):=u^2 v^2/2. The zero set is the crossing of the two coordinate axes and the small sublevel sets have horns.</desc>
+  <defs>
+    <style>
+      .card { fill: #fffdf8; stroke: #d8d1c3; stroke-width: 2; }
+      .plot { fill: #fbfaf6; stroke: #ded6c8; stroke-width: 1.5; }
+      .grid { stroke: #e8e0d2; stroke-width: 1; }
+      .axis { stroke: #afbfbd; stroke-width: 2.5; }
+      .zero { stroke: #d9613f; stroke-width: 8; stroke-linecap: butt; fill: none; }
+      .zero-point { fill: #d9613f; stroke: #14282d; stroke-width: 2.5; }
+      .sublevel { fill: rgba(40,125,123,.25); stroke: rgba(40,125,123,.72); stroke-width: 2; }
+      .badge { fill: #dceceb; }
+      .badge-text { fill: #197371; font: 800 20px system-ui, sans-serif; text-anchor: middle; dominant-baseline: central; }
+      .title { fill: #14282d; font: 800 25px system-ui, sans-serif; }
+      .eyebrow { fill: #d9613f; font: 800 13px system-ui, sans-serif; letter-spacing: 2.3px; }
+      .text { fill: #657176; font: 16px system-ui, sans-serif; }
+      .formula { fill: #14282d; font: italic 18px Georgia, serif; }
+      .caption { fill: #657176; font: 15px system-ui, sans-serif; }
+    </style>
+  </defs>
+  <rect x="1" y="1" width="418" height="518" rx="26" class="card"/>
+  <text x="28" y="38" class="eyebrow">SINGULAR</text>
+  <circle cx="42" cy="74" r="24" class="badge"/>
+  <text x="42" y="74" class="badge-text">3</text>
+  <text x="80" y="82" class="title">crossing zero set</text>
+  <text x="28" y="122" class="text">Toy model: X ~ N(uv, 1)</text>
+  <text x="28" y="148" class="text">truth: N(0,1)</text>
+  <text x="28" y="178" class="formula">K(u,v) := u²v²/2</text>
+
+  <g transform="translate(60 216)">
+    <rect x="0" y="0" width="300" height="230" class="plot"/>
+    <path d="M75 0V230 M150 0V230 M225 0V230 M0 57.5H300 M0 115H300 M0 172.5H300" class="grid"/>
+    <line x1="0" y1="115" x2="300" y2="115" class="axis"/>
+    <line x1="150" y1="0" x2="150" y2="230" class="axis"/>
+    <path class="sublevel" d="M0,101 C56,100 103,96 126,70 L137,0 L163,0 L174,70 C197,96 244,100 300,101 L300,129 C244,130 197,134 174,160 L163,230 L137,230 L126,160 C103,134 56,130 0,129 Z"/>
+    <line x1="0" y1="115" x2="300" y2="115" class="zero"/>
+    <line x1="150" y1="0" x2="150" y2="230" class="zero"/>
+    <circle cx="150" cy="115" r="6" class="zero-point"/>
+    <text x="309" y="120" class="text">u</text>
+    <text x="156" y="-8" class="text">v</text>
+  </g>
+
+  <text x="28" y="484" class="caption">Small sublevel sets have crossing branches and horns.</text>
+</svg>

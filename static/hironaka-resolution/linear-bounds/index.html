@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Interactive logarithmic bounds</title>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="../shared.css?v=katex-math-2">
+  <link rel="stylesheet" href="style.css?v=linear-bounds-3">
+  <script defer src="/vendor/katex/katex.min.js"></script>
+  <script defer src="/vendor/katex/contrib/auto-render.min.js"></script>
+  <script defer src="../math.js"></script>
+  <script defer src="app.js?v=linear-bounds-6"></script>
+</head>
+<body>
+  <main class="figure-shell bounds-shell">
+    <header class="figure-heading">
+      <div>
+        <p class="eyebrow">Interactive figure &middot; logarithmic bounds</p>
+        <h1>Sandwich the transformed support</h1>
+      </div>
+      <p class="lede">Enlarge to a coordinatewise tail for an upper bound; restrict to a tail where the continuous factor is bounded below by a positive constant for a lower bound.</p>
+    </header>
+
+    <section class="bounds-control" aria-label="Linear optimization controls">
+      <label class="range-control">
+        <span>
+          <strong>Sublevel threshold <span class="formula" data-tex="L:=\log(1/\varepsilon)"></span></strong>
+          <output id="lOutput" class="math-value" data-tex="18"></output>
+        </span>
+        <input id="lRange" type="range" min="12" max="24" step="0.25" value="18" aria-label="Logarithmic sublevel threshold L">
+        <small>Move right to push the sublevel set farther into the logarithmic tails.</small>
+      </label>
+      <div class="model-readout">
+        <span>Linear forms</span>
+        <strong class="math-value" data-tex="A(t):=2t_1+4t_2"></strong>
+        <small class="math-value" data-tex="B(t):=t_1+t_2,\qquad \lambda:=\min(1/2,1/4)=1/4"></small>
+      </div>
+    </section>
+
+    <section class="bounds-grid">
+      <article class="visual-card bound-card">
+        <header>
+          <div><span class="number">L</span><h3>Upper bound: enlarge the support</h3></div>
+          <p><span class="formula" data-tex="t_j\ge T_j"></span></p>
+        </header>
+        <svg id="upperSvg" class="bound-svg" viewBox="0 0 680 500" role="img" aria-label="The fixed transformed support, its moving sublevel portion, and an outer logarithmic tail bound">
+          <rect width="680" height="500" class="svg-bg"></rect>
+          <g class="grid-layer"></g>
+          <path class="support-region"></path>
+          <path class="active-support-region"></path>
+          <path class="feasible-region"></path>
+          <path class="support-outline"></path>
+          <rect class="tail-box"></rect>
+          <line class="constraint-line"></line>
+          <line class="cost-line"></line>
+          <circle r="7" class="optimum-point"></circle>
+          <text class="optimum-label"></text>
+          <line x1="72" y1="440" x2="640" y2="440" class="axis"></line>
+          <line x1="72" y1="440" x2="72" y2="38" class="axis"></line>
+          <text x="632" y="468" class="axis-label">t₁</text>
+          <text x="42" y="50" class="axis-label">t₂</text>
+          <text class="box-label"></text>
+        </svg>
+        <div class="bound-readout">
+          <span>optimal cost on the outer set</span>
+          <strong id="upperFormula" class="math-value" data-tex="F_T(L):=\frac14L+0.30"></strong>
+        </div>
+      </article>
+
+      <article class="visual-card bound-card">
+        <header>
+          <div><span class="number">M</span><h3>Lower bound: keep a positive tail</h3></div>
+          <p><span class="formula" data-tex="t_j\ge T'_j"></span></p>
+        </header>
+        <svg id="lowerSvg" class="bound-svg" viewBox="0 0 680 500" role="img" aria-label="The fixed transformed support, its moving sublevel portion, and an inner logarithmic tail bound">
+          <rect width="680" height="500" class="svg-bg"></rect>
+          <g class="grid-layer"></g>
+          <path class="support-region"></path>
+          <path class="active-support-region"></path>
+          <path class="feasible-region"></path>
+          <path class="support-outline"></path>
+          <rect class="tail-box"></rect>
+          <line class="constraint-line"></line>
+          <line class="cost-line"></line>
+          <circle r="7" class="optimum-point"></circle>
+          <text class="optimum-label"></text>
+          <line x1="72" y1="440" x2="640" y2="440" class="axis"></line>
+          <line x1="72" y1="440" x2="72" y2="38" class="axis"></line>
+          <text x="632" y="468" class="axis-label">t₁</text>
+          <text x="42" y="50" class="axis-label">t₂</text>
+          <text class="box-label"></text>
+        </svg>
+        <div class="bound-readout">
+          <span>optimal cost on the inner set</span>
+          <strong id="lowerFormula" class="math-value" data-tex="F_{T'}(L):=\frac14L+1.10"></strong>
+        </div>
+      </article>
+    </section>
+
+    <div class="bounds-legend" aria-label="Figure legend">
+      <span><i class="feasible-key"></i>bounding tail with <span class="formula" data-tex="A(t)\ge L"></span></span>
+      <span><i class="active-support-key"></i>contributing support</span>
+      <span><i class="support-key"></i>full transformed support (fixed)</span>
+      <span><i class="constraint-key"></i><span class="formula" data-tex="A(t)=L"></span></span>
+      <span><i class="cost-key"></i>minimal <span class="formula" data-tex="B"></span>-level</span>
+      <span><i class="point-key"></i>optimizer</span>
+    </div>
+
+    <aside class="insight-card">
+      <strong>Different feasible sets, the same asymptotic slope</strong>
+      <p id="comparisonText">The feasible sets and optimizers differ, but both <span class="formula" data-tex="F_T(L)"></span> and <span class="formula" data-tex="F_{T'}(L)"></span> grow with slope <span class="formula" data-tex="\lambda=1/4"></span>; their displayed intercepts differ by <span class="formula" data-tex="0.80"></span>.</p>
+    </aside>
+  </main>
+</body>
+</html>

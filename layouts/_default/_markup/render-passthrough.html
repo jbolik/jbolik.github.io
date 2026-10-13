@@ -1,0 +1,6 @@
+{{- $tex := .Inner | htmlEscape | safeHTML -}}
+{{- if eq .Type "block" -}}
+<div class="math display">$${{ $tex }}$$</div>
+{{- else -}}
+<span class="math inline">${{ $tex }}$</span>
+{{- end -}}

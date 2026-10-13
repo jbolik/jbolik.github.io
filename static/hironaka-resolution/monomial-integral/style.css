@@ -1,0 +1,150 @@
+.monomial-shell { max-width: 1260px; }
+
+.monomial-control {
+  display: grid;
+  grid-template-columns: minmax(300px, 1.25fr) minmax(220px, .8fr) minmax(220px, .8fr);
+  gap: 14px;
+  align-items: stretch;
+  margin-bottom: 12px;
+}
+
+.monomial-control > * {
+  min-width: 0;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: rgba(255,253,248,.96);
+  box-shadow: 0 8px 24px rgba(42,48,42,.06);
+}
+
+.model-readout,
+.metric-readout { display: grid; align-content: center; gap: 3px; }
+.model-readout > span,
+.metric-readout > span { color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.model-readout strong,
+.metric-readout strong { font-family: Georgia, "Times New Roman", serif; font-size: 1.05rem; }
+.model-readout small,
+.metric-readout small { color: var(--muted); font-size: .75rem; }
+.preset-row button.active,
+.preset-row button[aria-pressed="true"] { border-color: var(--teal); background: var(--teal-soft); color: #185f5d; }
+
+.monomial-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.monomial-card { position: relative; }
+.geometry-canvas-wrap { position:relative; }
+#geometryCanvas { display: block; width: 100%; height: auto; background: #fbfaf6; }
+.canvas-math-label { position:absolute; z-index:2; color:#52666a; pointer-events:none; }
+.canvas-u { top:47%; right:8%; }
+.canvas-v { top:4%; left:52%; }
+.monomial-svg,
+.rate-svg { display: block; width: 100%; height: auto; background: #fbfaf6; }
+
+.mini-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  min-height: 39px;
+  padding: 8px 15px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: .72rem;
+}
+
+.mini-legend i,
+.curve-swatch { display: inline-block; margin-right: 6px; vertical-align: middle; }
+.heat-key { width: 17px; height: 10px; border-radius: 3px; background: rgba(40,125,123,.65); }
+.boundary-key { width: 18px; border-top: 3px solid var(--orange); }
+.region-key { width: 17px; height: 10px; border-radius: 3px; background: rgba(232,184,91,.34); }
+.cost-key { width: 18px; border-top: 2px dashed var(--teal); }
+
+.allowed-region { fill: rgba(232,184,91,.22); }
+.constraint-line { stroke: var(--orange); stroke-width: 4; }
+.cost-line { stroke: var(--teal); stroke-width: 2.5; stroke-dasharray: 8 6; }
+.constraint-label { fill: var(--orange); font-size: 13px; font-weight: 800; }
+.cost-label { fill: var(--teal); font-size: 12px; font-weight: 800; }
+.constraint-math > div { color:var(--orange); font-size:13px; font-weight:800; }
+.cost-math > div { color:var(--teal); font-size:12px; font-weight:800; }
+.current-n-math > div { color:#9b700e; font-size:12px; font-weight:800; }
+.svg-html-label { overflow:visible; pointer-events:none; }
+.svg-html-label > div { display:flex; align-items:baseline; gap:3px; width:100%; height:100%; color:var(--ink); font-size:12px; font-weight:800; white-space:nowrap; }
+.grid-line { stroke: #dfe6e3; stroke-width: 1; }
+.grid-label { fill: #7d898a; font-size: 10px; }
+.dominant-point { fill: var(--gold); stroke: var(--ink); stroke-width: 2.5; }
+.dominant-segment { stroke: var(--gold); stroke-width: 9; stroke-linecap: round; opacity: .9; }
+.dominant-label { fill: var(--ink); font-size: 12px; font-weight: 800; }
+
+.asymptotic-card { grid-column: 1 / -1; }
+.integral-definition {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  padding: 14px 18px 16px;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+}
+.integral-definition > span { color: var(--muted); font-size: .82rem; }
+.integral-definition > strong { max-width: 100%; font-family: Georgia, "Times New Roman", serif; font-size: 1.08rem; }
+.integral-formula-compact { display: none; }
+.asymptotic-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(265px, .5fr); }
+.rate-explanation {
+  display: grid;
+  align-content: center;
+  gap: 15px;
+  padding: 18px;
+  border-left: 1px solid var(--line);
+  background: rgba(255,253,248,.72);
+}
+.rate-explanation > div { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2px 7px; }
+.rate-explanation output,
+.rate-explanation > div > span:last-child { grid-column: 2; color: var(--muted); font-family: var(--mono); font-size: .78rem; }
+.rate-explanation p { margin: 0; color: var(--muted); font-size: .82rem; }
+.curve-swatch { width: 18px; }
+.numeric-swatch { border-top: 3px solid var(--orange); }
+.prediction-swatch { border-top: 3px dashed var(--teal); }
+.numeric-path { fill: none; stroke: var(--orange); stroke-width: 4; stroke-linecap: round; }
+.prediction-path { fill: none; stroke: var(--teal); stroke-width: 3; stroke-dasharray: 9 7; }
+.current-n-line { stroke: var(--gold); stroke-width: 2; stroke-dasharray: 5 5; }
+.current-n-hit { stroke: transparent; stroke-width: 30; cursor: ew-resize; touch-action: none; }
+.current-n-line { pointer-events: none; }
+.current-n-point { fill: var(--gold); stroke: var(--ink); stroke-width: 2; cursor: ew-resize; touch-action: none; }
+.rate-svg.dragging,
+.rate-svg.dragging .current-n-hit,
+.rate-svg.dragging .current-n-point { cursor: grabbing; }
+
+@media (max-width: 900px) {
+  .monomial-control { grid-template-columns: 1fr 1fr; }
+  .n-control { grid-column: 1 / -1; }
+  .monomial-grid { grid-template-columns: 1fr; }
+  .asymptotic-card { grid-column: auto; }
+  .asymptotic-layout { grid-template-columns: 1fr; }
+  .rate-explanation { border-top: 1px solid var(--line); border-left: 0; }
+}
+
+@media (max-width: 520px) {
+  .monomial-control { grid-template-columns: 1fr; }
+  .n-control { grid-column: auto; }
+  .model-readout,
+  .metric-readout { min-height: 82px; }
+  .monomial-svg .axis-label,
+  .rate-svg .axis-label { font-size: 18px; }
+  .monomial-svg .grid-label,
+  .rate-svg .grid-label { font-size: 15px; }
+  .constraint-label,
+  .cost-label,
+  .dominant-label { font-size: 16px; }
+  .monomial-svg .svg-math > div,
+  .rate-svg .svg-math > div { font-size:18px; }
+  .constraint-math > div,
+  .cost-math > div,
+  .current-n-math > div,
+  .svg-html-label > div { font-size:19px; }
+  .integral-definition { justify-items: start; text-align: left; }
+  .integral-definition > strong { width: 100%; font-size: .96rem; }
+  .integral-formula-wide { display: none; }
+  .integral-formula-compact { display: block; }
+}

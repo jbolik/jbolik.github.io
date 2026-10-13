@@ -36,7 +36,7 @@ enableRobotsTXT = true
         enable = true
         [markup.goldmark.extensions.passthrough.delimiters]
           block = [['\[', '\]'], ['$$', '$$']]
-          inline = [['\(', '\)']]
+          inline = [['\(', '\)'], ['$', '$']]
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]  # JSON enables search (Pagefind later)

@@ -1,0 +1,51 @@
+.post-content .math-block {
+  min-width: 0;
+  margin: 1.5rem 0;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--secondary);
+  border-radius: 8px;
+  background: var(--entry);
+}
+
+.post-content .math-block--remark {
+  background: color-mix(in srgb, var(--entry) 92%, var(--primary) 8%);
+  box-shadow: none;
+}
+
+.post-content .math-block--proof {
+  border-width: 0 0 0 3px;
+  border-radius: 0;
+  background: transparent;
+}
+
+.post-content .math-block__heading {
+  margin: 0 0 0.7rem;
+}
+
+.post-content .math-block__body > :first-child {
+  margin-top: 0;
+}
+
+.post-content .math-block__body > :last-child {
+  margin-bottom: 0;
+}
+
+.post-content .katex-display {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.15rem;
+}
+
+.math-block__qed {
+  display: block;
+  margin-top: 0.35rem;
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .post-content .math-block {
+    padding: 0.85rem;
+  }
+}

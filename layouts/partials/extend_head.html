@@ -1,0 +1,4 @@
+{{- if .Params.wide -}}
+  {{- $wide := resources.Get "css/wide-post.css" | minify | fingerprint -}}
+  <link rel="stylesheet" href="{{ $wide.RelPermalink }}" integrity="{{ $wide.Data.Integrity }}" crossorigin="anonymous">
+{{- end -}}

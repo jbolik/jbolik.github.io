@@ -1,0 +1,23 @@
+{{- $src := .Get "src" -}}
+{{- $title := .Get "title" | default "Interactive mathematical figure" -}}
+{{- $size := .Get "size" | default "large" -}}
+{{- $height := 900 -}}
+{{- if eq $size "medium" -}}{{- $height = 760 -}}{{- end -}}
+{{- if eq $size "compact" -}}{{- $height = 620 -}}{{- end -}}
+<figure class="interactive-figure" style="margin:2rem 0;">
+  <iframe data-interactive-figure src="{{ $src | relURL }}" title="{{ $title }}" width="100%" height="{{ $height }}" loading="lazy" scrolling="no" style="display:block;width:100%;border:1px solid #d8d1c3;border-radius:18px;background:#f7f3ea;overflow:hidden;"></iframe>
+  {{- with .Get "caption" }}
+  <figcaption style="margin-top:.65rem;color:#5f665f;font-size:.92rem;line-height:1.5;">{{ . }}</figcaption>
+  {{- end }}
+</figure>
+<script>
+  if (!window.__interactiveFigureResizeInstalled) {
+    window.__interactiveFigureResizeInstalled = true;
+    window.addEventListener("message", function (event) {
+      if (event.origin !== window.location.origin || !event.data || event.data.type !== "interactive-figure-height") return;
+      document.querySelectorAll("iframe[data-interactive-figure]").forEach(function (frame) {
+        if (frame.contentWindow === event.source) frame.style.height = Math.ceil(event.data.height + 2) + "px";
+      });
+    });
+  }
+</script>

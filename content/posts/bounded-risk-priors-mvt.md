@@ -66,11 +66,11 @@ $$
 $$
 Solving the inner integrals and simplifying, we have
 $$
-\E_{y_1, \dots, y_n, y^* \sim \mathcal{N}(\mu, 1)}\left[\log\left(\frac{\int_0^\infty \frac{1}{(1+a)^2} (\frac{a}{a+n+1})^{d/2} \exp\left(\frac{1}{2}\frac{\lVert S + y^* \rVert^2}{a+n+1}\right) da}{\int_0^\infty \frac{1}{(1+a)^2} (\frac{a}{a+n})^{d/2} \exp\left(\frac{1}{2} \frac{\lVert S \rVert^2}{a+n}\right) da}\right)  - \frac{\lVert y^\*\rVert^2}{2} \right] - \frac{d}{2} \log(2\pi)
+\E_{y_1, \dots, y_n, y^* \sim \mathcal{N}(\mu, 1)}\left[\log\left(\frac{\int_0^\infty \frac{1}{(1+a)^2} (\frac{a}{a+n+1})^{d/2} \exp\left(\frac{1}{2}\frac{\lVert S + y^* \rVert^2}{a+n+1}\right) da}{\int_0^\infty \frac{1}{(1+a)^2} (\frac{a}{a+n})^{d/2} \exp\left(\frac{1}{2} \frac{\lVert S \rVert^2}{a+n}\right) da}\right)  - \frac{\lVert y^*\rVert^2}{2} \right] - \frac{d}{2} \log(2\pi)
 $$
-where $S = \sum_{i=1}^n y_i \sim \mathcal{N}(n \mu, n I)$. We reparametrize the inner integral as $t = \frac{a}{1+a}$ or equivalently $a = \frac{t}{1-t}$. This gives $dt = \frac{1}{(1+a)^2} da$. Additionally we have a closed-form for $\E[{y^\*}^2]$ since it follows a non-central $\chi^2$-distribution.
+where $S = \sum_{i=1}^n y_i \sim \mathcal{N}(n \mu, n I)$. We reparametrize the inner integral as $t = \frac{a}{1+a}$ or equivalently $a = \frac{t}{1-t}$. This gives $dt = \frac{1}{(1+a)^2} da$. Additionally we have a closed-form for $\E[{y^*}^2]$ since it follows a non-central $\chi^2$-distribution.
 $$
-\E_{y_1, \dots, y_n, y^* \sim \mathcal{N}(\mu, 1)}\left[\log\left(\frac{\int_0^1 (\frac{t}{n+1-nt})^{d/2} \exp\left(\frac{1}{2} \frac{\lVert S + y^\* \rVert^2}{\frac{t}{1-t}+n+1}\right) dt}{\int_0^1 (\frac{t}{n+t-nt})^{d/2} \exp\left(\frac{1}{2} \frac{\lVert S \rVert^2}{\frac{t}{1-t}+n}\right) dt}\right)\right]  - \frac{\lVert \mu\rVert^2 + d\log(2\pi) + d}{2}
+\E_{y_1, \dots, y_n, y^* \sim \mathcal{N}(\mu, 1)}\left[\log\left(\frac{\int_0^1 (\frac{t}{n+1-nt})^{d/2} \exp\left(\frac{1}{2} \frac{\lVert S + y^* \rVert^2}{\frac{t}{1-t}+n+1}\right) dt}{\int_0^1 (\frac{t}{n+t-nt})^{d/2} \exp\left(\frac{1}{2} \frac{\lVert S \rVert^2}{\frac{t}{1-t}+n}\right) dt}\right)\right]  - \frac{\lVert \mu\rVert^2 + d\log(2\pi) + d}{2}
 $$
 
 

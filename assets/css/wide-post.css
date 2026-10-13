@@ -1,0 +1,31 @@
+/* Opt in with `wide: true`: diagrams get room while prose stays readable. */
+.main {
+  --main-width: 1040px;
+}
+
+.post-single .post-content {
+  max-width: none;
+}
+
+.post-header,
+.post-single > .toc,
+.post-footer,
+.post-content > :where(p, h2, h3, h4, ul, ol, blockquote, .math, .math-block),
+.cusp-returning-scope > :where(p, h2, h3, h4, ul, ol, blockquote, .math, .math-block) {
+  max-width: 900px;
+  margin-inline: auto;
+}
+
+.post-content > .math-block {
+  margin-inline: auto;
+}
+
+.post-content > :where(.interactive-figure, .zero-set-gallery),
+.post-content .cusp-returning-scope {
+  width: 100%;
+  min-width: 0;
+}
+
+.post-content .interactive-figure iframe {
+  max-width: 100%;
+}

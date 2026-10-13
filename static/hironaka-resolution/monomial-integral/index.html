@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Interactive monomial integral</title>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="../shared.css?v=katex-math-2">
+  <link rel="stylesheet" href="style.css?v=integral-definition-1">
+  <script defer src="/vendor/katex/katex.min.js"></script>
+  <script defer src="/vendor/katex/contrib/auto-render.min.js"></script>
+  <script defer src="../math.js"></script>
+  <script defer src="app.js?v=integral-definition-1"></script>
+</head>
+<body>
+  <main class="figure-shell monomial-shell">
+    <header class="figure-heading">
+      <div>
+        <p class="eyebrow">Interactive figure · monomial asymptotics</p>
+        <h1>Measure sublevel volume, then integrate</h1>
+      </div>
+      <p class="lede">First measure how the weighted volume of <span class="formula" data-tex="K\le\varepsilon"></span> shrinks. The exponential weight <span class="formula" data-tex="e^{-nK}"></span> then selects <span class="formula" data-tex="\varepsilon\asymp1/n"></span>.</p>
+    </header>
+
+    <section class="monomial-control" aria-label="Monomial integral controls">
+      <label class="range-control n-control">
+        <span><strong>Sample size <span class="formula" data-tex="n"></span></strong><output id="nOutput" class="math-value" data-tex="10^4"></output></span>
+        <input id="logNRange" type="range" min="1" max="8" step="0.05" value="4" aria-label="Base ten logarithm of sample size">
+        <small>Move right to shrink the region where <span class="formula" data-tex="K\lesssim1/n"></span>.</small>
+      </label>
+      <div class="model-readout" aria-live="polite">
+        <span>Current monomial</span>
+        <strong id="modelFormula" class="math-value" data-tex="K(u,v):=u^2v^2"></strong>
+        <small>volume weight: <span id="weightFormula" class="math-value" data-tex="du\,dv"></span></small>
+      </div>
+      <div class="metric-readout" aria-live="polite">
+        <span>Predicted order</span>
+        <strong id="rateFormula" class="math-value" data-tex="n^{-1/2}\log n"></strong>
+        <small><span id="lambdaFormula" class="math-value" data-tex="\lambda=1/2,\ m=2"></span><span id="flatNote"></span></small>
+      </div>
+    </section>
+
+    <div class="preset-row" aria-label="Monomial examples">
+      <span>Compare:</span>
+      <button class="active" type="button" data-ku="1" data-kv="1" data-ju="0" data-jv="0" aria-pressed="true">balanced tie</button>
+      <button type="button" data-ku="1" data-kv="2" data-ju="0" data-jv="0" aria-pressed="false">flatter v-direction</button>
+      <button type="button" data-ku="1" data-kv="0" data-ju="0" data-jv="0" aria-pressed="false">flat v-direction</button>
+      <button type="button" data-ku="1" data-kv="1" data-ju="2" data-jv="0" aria-pressed="false">Jacobian penalizes u</button>
+    </div>
+
+    <section class="monomial-grid">
+      <article class="visual-card monomial-card">
+        <header>
+          <div><span class="number">N</span><h3>Sublevel volume in <span class="formula" data-tex="(u,v)"></span></h3></div>
+          <p><span class="formula" data-tex="K\le1/n"></span></p>
+        </header>
+        <div class="geometry-canvas-wrap">
+          <canvas id="geometryCanvas" width="720" height="560" role="img" aria-label="Weighted sublevel set of the monomial"></canvas>
+          <span class="canvas-math-label canvas-u" data-tex="u"></span>
+          <span class="canvas-math-label canvas-v" data-tex="v"></span>
+        </div>
+        <div class="mini-legend"><span><i class="heat-key"></i>sublevel <span class="formula" data-tex="K\le1/n"></span></span><span><i class="boundary-key"></i><span class="formula" data-tex="K=1/n"></span></span></div>
+        <p id="geometryCaption" class="visual-caption">Teal shows the sublevel set whose weighted area is <span class="formula" data-tex="V(1/n)"></span>; the shading is uniform because the Jacobian factor is <span data-tex="1"></span>.</p>
+      </article>
+
+      <article class="visual-card monomial-card">
+        <header>
+          <div><span class="number">O</span><h3>Sublevel volume after logarithms</h3></div>
+          <p>Minimize <span class="formula" data-tex="B"></span> over <span class="formula" data-tex="A\ge\log n"></span></p>
+        </header>
+        <svg id="logSvg" class="monomial-svg" viewBox="0 0 720 560" role="img" aria-label="The monomial sublevel set as a half-plane in logarithmic coordinates">
+          <rect width="720" height="560" class="svg-bg"></rect>
+          <g id="logGrid"></g>
+          <polygon id="allowedRegion" class="allowed-region"></polygon>
+          <line id="constraintLine" class="constraint-line"></line>
+          <line id="costLine" class="cost-line"></line>
+          <line x1="82" y1="490" x2="672" y2="490" class="axis"></line>
+          <line x1="82" y1="490" x2="82" y2="42" class="axis"></line>
+          <foreignObject x="510" y="494" width="195" height="36" class="svg-math end"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="t_u:=-\log\lvert u\rvert"></div></foreignObject>
+          <foreignObject x="0" y="18" width="145" height="36" class="svg-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="t_v:=-\log\lvert v\rvert"></div></foreignObject>
+          <foreignObject id="constraintLabel" x="97" y="48" width="330" height="34" class="svg-math constraint-math"><div xmlns="http://www.w3.org/1999/xhtml"></div></foreignObject>
+          <foreignObject id="costLabel" x="430" y="48" width="235" height="34" class="svg-math cost-math end"><div xmlns="http://www.w3.org/1999/xhtml"></div></foreignObject>
+          <g id="dominantMark"></g>
+        </svg>
+        <div class="mini-legend"><span><i class="region-key"></i><span class="formula" data-tex="A(t)\ge\log n"></span></span><span><i class="cost-key"></i>equal <span class="formula" data-tex="B(t)"></span></span></div>
+        <p id="logCaption" class="visual-caption">The gold segment minimizes <span data-tex="B(t)"></span> subject to <span data-tex="A(t)=\log n"></span>.</p>
+      </article>
+
+      <article class="visual-card asymptotic-card">
+        <header>
+          <div><span class="number">P</span><h3>The weighted integral inherits the rate</h3></div>
+          <p>Drag the gold line or dot</p>
+        </header>
+        <div class="integral-definition" aria-live="polite">
+          <span>The numerical curve evaluates this integral with amplitude <span class="formula" data-tex="\psi\equiv1"></span>:</span>
+          <strong id="integralFormula" class="math-value integral-formula-wide" data-tex="I_n:=\int_{[-1,1]^2}\exp\!\left(-n\lvert u\rvert^2\lvert v\rvert^2\right)\,du\,dv"></strong>
+          <strong id="integralFormulaCompact" class="math-value integral-formula-compact" data-tex="\begin{aligned} I_n&amp;:=\int_{[-1,1]^2}\exp\!\left(-n\lvert u\rvert^2\lvert v\rvert^2\right)\\ &amp;\qquad{}du\,dv \end{aligned}"></strong>
+        </div>
+        <div class="asymptotic-layout">
+          <svg id="rateSvg" class="rate-svg" viewBox="0 0 820 410" role="img" aria-label="Numerical monomial integral and its predicted asymptotic rate">
+            <rect width="820" height="410" class="svg-bg"></rect>
+            <g id="rateGrid"></g>
+            <line x1="78" y1="342" x2="775" y2="342" class="axis"></line>
+            <line x1="78" y1="342" x2="78" y2="42" class="axis"></line>
+            <path id="numericPath" class="numeric-path"></path>
+            <path id="predictionPath" class="prediction-path"></path>
+            <line id="currentNHit" class="current-n-hit"></line>
+            <line id="currentNLine" class="current-n-line"></line>
+            <circle id="currentNPoint" r="7" class="current-n-point"></circle>
+            <foreignObject id="currentNLabel" x="90" y="45" width="135" height="32" class="svg-math current-n-math"><div xmlns="http://www.w3.org/1999/xhtml"></div></foreignObject>
+            <foreignObject x="650" y="348" width="130" height="34" class="svg-math end"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="\log_{10}n"></div></foreignObject>
+            <foreignObject x="0" y="15" width="108" height="34" class="svg-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="\log_{10}I_n"></div></foreignObject>
+          </svg>
+          <aside class="rate-explanation">
+            <div><span class="curve-swatch numeric-swatch"></span><strong>Numerical integral</strong><output id="integralOutput" class="math-value" data-tex="I_n\approx0"></output></div>
+            <div><span class="curve-swatch prediction-swatch"></span><strong>Fitted asymptotic order</strong><span id="predictionOutput" class="math-value" data-tex="C\,n^{-1/2}\log n"></span></div>
+            <p id="costExplanation">Both coordinates have the same volume cost per unit reduction in K, so a one-dimensional family of equally efficient allocations creates the logarithm.</p>
+          </aside>
+        </div>
+        <p class="visual-caption">The dashed curve is <span class="formula" data-tex="C\,n^{-\lambda}(\log n)^{m-1}"></span>, with <span class="formula" data-tex="C"></span> fitted to the numerical curve at the largest displayed <span class="formula" data-tex="n"></span>. Its power and logarithmic correction come only from the monomial and Jacobian exponents.</p>
+      </article>
+    </section>
+
+    <aside class="insight-card">
+      <strong>The geometric calculation</strong>
+      <p>Figure N shows <span class="formula" data-tex="V(1/n)"></span>. Figure O obtains <span class="formula" data-tex="\lambda"></span> from the decay of this weighted volume. Figure P shows that the integral weighted by <span class="formula" data-tex="e^{-nK}"></span> inherits the same power and logarithmic multiplicity.</p>
+    </aside>
+  </main>
+</body>
+</html>

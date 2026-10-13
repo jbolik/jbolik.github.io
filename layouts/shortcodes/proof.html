@@ -1,5 +1,5 @@
-<div class="p-4" style="border-left:3px solid var(--theme); background:var(--entry)">
-  <em>Proof.</em>
-  <div>{{ .Inner | markdownify }}</div>
-  <span>▢</span>
+<div class="math-block math-block--proof">
+  <p class="math-block__heading"><em>Proof{{ with .Get "title" }} ({{ . }}){{ end }}.</em></p>
+  <div class="math-block__body">{{ .Page.RenderString (dict "display" "block") .Inner }}</div>
+  <span class="math-block__qed" aria-label="End of proof">□</span>
 </div>

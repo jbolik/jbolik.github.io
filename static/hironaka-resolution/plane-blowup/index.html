@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Interactive point blow-up</title>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="../shared.css?v=radius-label-20260710">
+  <script defer src="/vendor/katex/katex.min.js"></script>
+  <script defer src="/vendor/katex/contrib/auto-render.min.js"></script>
+  <script defer src="../math.js"></script>
+  <script defer src="app.js?v=animation-latency-20260719"></script>
+</head>
+<body>
+  <main class="figure-shell">
+    <header class="figure-heading">
+      <div>
+        <p class="eyebrow">Interactive figure · point blow-up</p>
+        <h1>One point, one line, three compatible views</h1>
+      </div>
+      <p class="lede">A point of <span class="formula" data-tex="\operatorname{Bl}_0\mathbb R^2"></span> consists of a line through the origin and a vector on that line. Its blow-down is <span class="formula" data-tex="(x,y)=\rho(\cos\theta,\sin\theta)"></span>.</p>
+    </header>
+
+    <section class="control-panel" aria-label="Blow-up controls">
+      <label class="range-control">
+        <span><strong>Projective direction</strong><output id="directionOutput" class="math-value" data-tex="28.0^\circ"></output></span>
+        <input id="directionRange" type="range" min="0" max="180" step="0.5" value="28" aria-label="Projective direction in degrees">
+        <small>Angles differing by <span class="formula" data-tex="180^\circ"></span> describe the same line.</small>
+      </label>
+      <label class="range-control">
+        <span><strong>Signed magnitude</strong><output id="radiusOutput" class="math-value" data-tex="1.15"></output></span>
+        <input id="radiusRange" type="range" min="-2" max="2" step="0.01" value="1.15" aria-label="Signed magnitude">
+        <small>At <span class="formula" data-tex="\rho=0"></span> the point lies on the exceptional locus.</small>
+      </label>
+      <div class="control-actions">
+        <button id="approachButton" class="button primary" type="button">Animate <span class="formula" data-tex="\rho\to0"></span></button>
+        <button id="resetButton" class="button" type="button">Reset</button>
+      </div>
+    </section>
+
+    <div class="preset-row" aria-label="Example states">
+      <span>Try:</span>
+      <button type="button" data-theta="0" data-radius="1.45">horizontal</button>
+      <button type="button" data-theta="45" data-radius="1.35">diagonal</button>
+      <button type="button" data-theta="90" data-radius="1.25">vertical chart seam</button>
+      <button type="button" data-theta="128" data-radius="0"><span class="formula" data-tex="\rho=0"></span>, line retained</button>
+    </div>
+
+    <section class="visual-grid">
+      <article class="visual-card">
+        <header>
+          <div><span class="number">E</span><h3>Magnitude and projective direction</h3></div>
+          <p>Click or drag the point.</p>
+        </header>
+        <svg id="planeSvg" class="plane" viewBox="0 0 520 420" role="img" aria-label="Interactive projective polar coordinates">
+          <defs>
+            <filter id="pointShadow" x="-80%" y="-80%" width="260%" height="260%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-opacity="0.22"></feDropShadow></filter>
+            <marker id="directionArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="direction-arrowhead"></path></marker>
+            <marker id="radiusArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="radius-arrowhead"></path></marker>
+          </defs>
+          <rect width="520" height="420" class="svg-bg"></rect>
+          <path d="M 80 210 A 180 180 0 0 1 440 210" class="angle-guide"></path>
+          <line x1="65" y1="210" x2="455" y2="210" class="projective-baseline"></line>
+          <g class="angle-ticks" aria-hidden="true">
+            <line x1="440" y1="210" x2="426" y2="210"></line><line x1="387.3" y1="82.7" x2="377.4" y2="92.6"></line><line x1="260" y1="30" x2="260" y2="44"></line><line x1="132.7" y1="82.7" x2="142.6" y2="92.6"></line><line x1="80" y1="210" x2="94" y2="210"></line>
+          </g>
+          <g aria-hidden="true">
+            <foreignObject x="440" y="216" width="48" height="28" class="svg-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="0^\circ"></div></foreignObject>
+            <foreignObject x="379" y="57" width="58" height="28" class="svg-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="45^\circ"></div></foreignObject>
+            <foreignObject x="226" y="1" width="68" height="28" class="svg-math center"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="90^\circ"></div></foreignObject>
+            <foreignObject x="74" y="57" width="72" height="28" class="svg-math end"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="135^\circ"></div></foreignObject>
+            <foreignObject x="22" y="216" width="58" height="28" class="svg-math end"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="180^\circ"></div></foreignObject>
+          </g>
+          <line id="directionLine" class="direction-line"></line>
+          <line id="upperDirectionRay" class="upper-direction-ray" marker-end="url(#directionArrow)"></line>
+          <path id="angleArc" class="selected-angle"></path>
+          <foreignObject id="angleLabel" x="340" y="132" width="150" height="32" class="svg-math coordinate-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="\theta=28.0^\circ"></div></foreignObject>
+          <circle id="originHalo" cx="260" cy="210" r="17" class="origin-halo"></circle>
+          <circle cx="260" cy="210" r="5" class="origin-dot"></circle>
+          <line id="radiusSegment" class="radius-segment" marker-end="url(#radiusArrow)"></line>
+          <foreignObject id="radiusLabel" x="215" y="166" width="130" height="32" class="svg-math point-math radius-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="\rho=1.15"></div></foreignObject>
+          <circle id="planePoint" r="10" class="plane-point" filter="url(#pointShadow)"></circle>
+          <foreignObject id="planePointLabel" x="382" y="147" width="34" height="30" class="svg-math point-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="z"></div></foreignObject>
+          <foreignObject x="272" y="214" width="26" height="28" class="svg-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="0"></div></foreignObject>
+        </svg>
+        <p class="visual-caption">The upper angle chooses an unoriented line. The sign of <span class="formula" data-tex="\rho"></span> selects a vector on either side of the origin.</p>
+      </article>
+
+      <article class="visual-card">
+        <header>
+          <div><span class="number">F</span><h3>The blown-up manifold</h3></div>
+          <p>Drag to rotate.</p>
+        </header>
+        <div class="canvas-wrap">
+          <canvas id="mobiusCanvas" width="900" height="620" aria-label="Open Möbius strip model of the blow-up"></canvas>
+          <div class="canvas-legend"><span><i class="legend-line"></i> exceptional locus</span><span><i class="legend-dot"></i> lifted point</span></div>
+        </div>
+        <p class="visual-caption">The open Möbius strip is homeomorphic to <span class="formula" data-tex="\operatorname{Bl}_0\mathbb R^2"></span>. Its central circle is the exceptional locus.</p>
+      </article>
+
+      <article class="visual-card atlas-visual-card">
+        <header>
+          <div><span class="number">G</span><h3>Two analytic coordinate charts</h3></div>
+          <p>Drag the dashed line or any large dot.</p>
+        </header>
+        <div class="atlas-visual-body">
+          <svg id="atlasSvg" class="atlas-svg" viewBox="0 0 640 370" role="img" aria-label="Coordinate chart coverage of the real projective line">
+            <rect width="640" height="370" class="svg-bg"></rect>
+            <foreignObject x="170" y="9" width="300" height="32" class="svg-math atlas-math center"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="[s:t]=[\cos\theta:\sin\theta]"></div></foreignObject>
+            <path d="M 185 285 A 135 135 0 0 1 455 285" class="representative-arc"></path>
+            <path d="M 100 285 A 220 220 0 0 1 297 66.2" class="chart-band ux-band"></path>
+            <path d="M 343 66.2 A 220 220 0 0 1 540 285" class="chart-band ux-band"></path>
+            <path d="M 141 266.2 A 180 180 0 0 1 499 266.2" class="chart-band uy-band"></path>
+            <foreignObject x="106" y="227" width="120" height="30" class="svg-math ux-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="U_s:\ s\ne0"></div></foreignObject>
+            <foreignObject x="152" y="204" width="120" height="30" class="svg-math uy-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="U_t:\ t\ne0"></div></foreignObject>
+            <line id="atlasDirectionHit" x1="320" y1="285" class="atlas-direction-hit"></line>
+            <line id="atlasDirectionRay" x1="320" y1="285" class="atlas-direction-ray"></line>
+            <circle id="atlasRepresentativePoint" r="8" class="atlas-representative-point"></circle>
+            <circle id="uxAtlasPoint" r="8" class="atlas-chart-point ux-point"></circle>
+            <circle id="uyAtlasPoint" r="8" class="atlas-chart-point uy-point"></circle>
+            <circle cx="320" cy="285" r="5" class="origin-dot"></circle>
+            <circle cx="185" cy="285" r="5" class="identified-endpoint"></circle><circle cx="455" cy="285" r="5" class="identified-endpoint"></circle>
+            <path d="M 185 329 C 235 355, 405 355, 455 329" class="identification-curve"></path>
+            <path d="M 185 329 l 9 -3 l -3 9" class="identification-curve"></path><path d="M 455 329 l -9 -3 l 3 9" class="identification-curve"></path>
+            <foreignObject x="150" y="289" width="70" height="28" class="svg-math center"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="180^\circ"></div></foreignObject>
+            <foreignObject x="425" y="289" width="60" height="28" class="svg-math center"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="0^\circ"></div></foreignObject>
+            <text x="320" y="359" text-anchor="middle" class="identification-label">these endpoints are the same projective direction</text>
+            <foreignObject x="238" y="38" width="190" height="28" class="svg-math"><div xmlns="http://www.w3.org/1999/xhtml" class="svg-mixed-label"><span data-tex="U_s"></span> excludes <span data-tex="[0:1]"></span></div></foreignObject>
+            <foreignObject x="492" y="292" width="145" height="28" class="svg-math"><div xmlns="http://www.w3.org/1999/xhtml" class="svg-mixed-label"><span data-tex="U_t"></span> excludes <span data-tex="[1:0]"></span></div></foreignObject>
+          </svg>
+          <aside class="atlas-live" aria-live="polite">
+            <div id="uxAtlasStatusCard" class="atlas-status-card">
+              <div><span class="atlas-swatch"></span><strong class="math-value" data-tex="U_s:\ s\ne0"></strong></div>
+              <span id="uxAtlasStatus" class="atlas-availability">available</span>
+              <span class="atlas-chart-map math-value" data-tex="(a,v):=(\rho\cos\theta,t/s)=(\rho\cos\theta,\tan\theta)"></span>
+              <span id="uxAtlasCoordinate" class="atlas-coordinate math-value" data-tex="(a,v)=(1.02,0.53)"></span>
+              <small id="uxAtlasLocus">exceptional locus: <span data-tex="a=0"></span></small>
+            </div>
+            <div id="uyAtlasStatusCard" class="atlas-status-card uy-status-card">
+              <div><span class="atlas-swatch uy-swatch"></span><strong class="math-value" data-tex="U_t:\ t\ne0"></strong></div>
+              <span id="uyAtlasStatus" class="atlas-availability">available</span>
+              <span class="atlas-chart-map math-value" data-tex="(u,b):=(s/t,\rho\sin\theta)=(\cot\theta,\rho\sin\theta)"></span>
+              <span id="uyAtlasCoordinate" class="atlas-coordinate math-value" data-tex="(u,b)=(1.88,0.54)"></span>
+              <small id="uyAtlasLocus">exceptional locus: <span data-tex="b=0"></span></small>
+            </div>
+            <p class="atlas-live-note">The colored gaps are enlarged only to make a single excluded direction visible.</p>
+          </aside>
+        </div>
+        <p class="visual-caption"><span class="formula" data-tex="v:=t/s"></span> and <span class="formula" data-tex="u:=s/t"></span> are ordinary ratios, each defined on only one chart. On the overlap, <span class="formula" data-tex="u=1/v"></span> and <span class="formula" data-tex="b=av"></span>.</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

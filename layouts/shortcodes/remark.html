@@ -1,3 +1,4 @@
-<div class="remark">
-  <strong>Remark.</strong> {{ .Inner | markdownify }}
+<div class="remark math-block math-block--remark">
+  <p class="math-block__heading"><strong>Remark{{ with .Get "title" }} ({{ . }}){{ end }}.</strong></p>
+  <div class="math-block__body">{{ .Page.RenderString (dict "display" "block") .Inner }}</div>
 </div>

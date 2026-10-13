@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Blowing up an axis in three dimensions</title>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="../shared.css">
+  <link rel="stylesheet" href="style.css?v=glued-slices-4">
+  <script defer src="/vendor/katex/katex.min.js"></script>
+  <script defer src="/vendor/katex/contrib/auto-render.min.js"></script>
+  <script defer src="../math.js"></script>
+  <script defer src="geometry.js"></script>
+  <script defer src="app.js?v=glued-slices-4"></script>
+</head>
+<body>
+<main class="figure-shell">
+  <header class="figure-heading">
+    <div><p class="eyebrow">Interactive figure · a smooth center</p><h1>One Möbius strip at every point of the axis</h1></div>
+    <p class="lede">Cut the full space open to display it as a thick cylinder. Select a slice, then see how gluing its ends with a flip makes a Möbius strip.</p>
+  </header>
+  <section class="control-panel axis-controls" aria-label="Axis blow-up controls">
+    <label class="range-control"><span><strong>Location along the axis · s</strong><output id="locationOutput" for="locationRange">0.50</output></span><input id="locationRange" aria-label="Location along the axis" type="range" min="-2" max="2" step="0.01" value="0.5"></label>
+    <label class="range-control"><span><strong>Normal direction · θ</strong><output id="directionOutput" for="directionRange">35°</output></span><input id="directionRange" aria-label="Normal direction in degrees" type="range" min="0" max="180" step="1" value="35"></label>
+    <label class="range-control"><span><strong>Signed displacement · ρ</strong><output id="radiusOutput" for="radiusRange">1.10</output></span><input id="radiusRange" aria-label="Signed normal displacement" type="range" min="-1.5" max="1.5" step="0.01" value="1.1"></label>
+  </section>
+  <div class="experiment-row"><button id="approachButton" class="button primary" type="button">Approach the axis</button><button id="circuitButton" class="button" type="button">Follow one circuit</button><button id="resetButton" class="button" type="button">Reset</button><p id="stateNote" role="status">Follow one circuit to see the twist.</p></div>
+  <section class="visual-grid">
+    <article class="visual-card original-card">
+      <header><div><span class="number">1</span><h3>The original three-dimensional space</h3></div></header>
+      <svg id="spaceSvg" class="axis-diagram" viewBox="0 0 520 370" role="img" aria-labelledby="spaceTitle spaceDescription"><title id="spaceTitle">An axis, a normal slice, and the selected point</title><desc id="spaceDescription">The normal slice moves with s. A line within that slice records θ, and the point moves along it with ρ.</desc><g id="spaceDrawing"></g></svg>
+      <div class="coordinate-readout"><span class="readout-label">Blow-down point</span><span id="pointReadout" class="math-value"></span></div>
+      <p class="visual-caption">The shaded slice fixes <span data-tex="s"></span>. Inside it, the construction is the plane blow-up from Section 3. The orange point has displacement <span data-tex="\rho(\cos\theta,\sin\theta)"></span>.</p>
+    </article>
+    <article class="visual-card">
+      <header><div><span class="number">2</span><h3>The full space, cut open</h3></div></header>
+      <svg id="cylinderSvg" class="axis-diagram" viewBox="0 0 520 370" role="img" aria-labelledby="cylinderTitle cylinderDescription"><title id="cylinderTitle">A thick cylinder cut along two faces that must be glued with a flip</title><desc id="cylinderDescription">The highlighted cross-section moves along the cylinder with s. At the cut, matching gold and purple dots identify opposite radial displacements at the same s. Gluing these ends turns the selected cross-section into the Möbius strip in panel 3.</desc><g id="cylinderDrawing"></g></svg>
+      <div class="coordinate-readout"><span class="readout-label">Glue at the same axis location</span><span class="math-value" data-tex="(s,180^\circ,\rho)\sim(s,0^\circ,-\rho)"></span></div>
+      <p class="visual-caption">The highlighted slice moves with <span data-tex="s"></span>. Glue the two cut faces by matching the colored dots: outer edge to inner edge. The orange dot is the same point in all three panels.</p>
+    </article>
+    <article class="visual-card">
+      <header><div><span class="number">3</span><h3>The selected slice, glued</h3></div><p>Drag to rotate</p></header>
+      <canvas id="mobiusSlice" width="1040" height="740" tabindex="0" role="img" aria-label="Rotatable Möbius strip for the selected axis location. Drag or use arrow keys to rotate. The orange dot is the lifted point; the central teal circle is the exceptional fiber."></canvas>
+      <div class="coordinate-readout"><span class="readout-label">Lifted point · three coordinates</span><span id="directionReadout" class="math-value"></span></div>
+      <p class="visual-caption">The gold slice after gluing: each matching pair of dots is now one point. The teal central circle is <span data-tex="\rho=0"></span>; it blows down to the selected axis point. Drag to inspect the twist.</p>
+    </article>
+  </section>
+  <div class="axis-explanation">
+    <p><strong>The gluing is part of the picture.</strong> The cut cylinder represents coordinates before identification; the full blow-up is obtained only after gluing its faces with <span data-tex="\rho\mapsto-\rho"></span>, keeping <span data-tex="s"></span> fixed. Each cross-section becomes an open Möbius strip <span data-tex="M"></span>, so the full space is <span data-tex="\mathbb R_s\times M"></span>. Its central circles form the exceptional cylinder <span data-tex="E\cong\mathbb R\times\mathbb{RP}^1"></span>.</p>
+    <p><strong>Follow the twist.</strong> One circuit returns to the same normal line with the opposite displacement; two circuits return to the original point. At the cut, the dot changes faces in the cylinder while moving continuously on the Möbius strip. Both views compress displacement with <span data-tex="\tanh\rho"></span>; their width limits represent <span data-tex="|\rho|\to\infty"></span>. Only a finite interval of the unbounded axis is shown.</p>
+  </div>
+</main>
+</body>
+</html>

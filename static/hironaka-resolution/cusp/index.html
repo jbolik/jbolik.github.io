@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Interactive cusp blow-up</title>
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="../shared.css?v=cusp-restored-1">
+  <script defer src="/vendor/katex/katex.min.js"></script>
+  <script defer src="/vendor/katex/contrib/auto-render.min.js"></script>
+  <script defer src="../math.js"></script>
+  <script defer src="app.js?v=exceptional-locus-20260719"></script>
+</head>
+<body>
+  <main class="figure-shell">
+    <header class="figure-heading">
+      <div>
+        <p class="eyebrow">Interactive figure · embedded resolution</p>
+        <h1>Follow the cusp through three blow-ups</h1>
+      </div>
+      <p class="lede">The first blow-up smooths the cusp, the second removes its tangency, and the third replaces the resulting triple point by three distinct transverse intersections.</p>
+    </header>
+
+    <section class="cusp-control" aria-label="Cusp controls">
+      <label class="range-control">
+        <span><strong>Cusp parameter <span class="formula" data-tex="t"></span></strong><output id="cuspOutput" class="math-value" data-tex="0.72"></output></span>
+        <input id="cuspRange" type="range" min="-1.25" max="1.25" step="0.01" value="0.72" aria-label="Cusp parameter">
+        <small><span class="formula" data-tex="(x,y):=(t^2,t^3)"></span> lifts successively to <span class="formula" data-tex="(a,v)=(t^2,t)"></span>, <span class="formula" data-tex="(u,b)=(t,t)"></span>, and <span class="formula" data-tex="(\rho,[u:b])=(t,[1:1])"></span>.</small>
+      </label>
+      <div class="cusp-order-controls">
+        <div class="order-switch-row">
+          <span class="order-switch-title">Show vanishing orders for</span>
+          <label class="order-switch" for="orderPowerToggle">
+            <span>F</span>
+            <input id="orderPowerToggle" type="checkbox" role="switch" aria-label="Show vanishing orders for F squared">
+            <i aria-hidden="true"></i>
+            <span>F<sup>2</sup></span>
+          </label>
+        </div>
+        <div class="order-legend" aria-label="Color legend for vanishing orders">
+          <span id="orderLegendTitle">Vanishing order of F</span>
+          <span class="order-legend-values">
+            <b class="order-swatch mult-1-bg" data-base-order="1">1</b>
+            <b class="order-swatch mult-2-bg" data-base-order="2">2</b>
+            <b class="order-swatch mult-3-bg" data-base-order="3">3</b>
+            <b class="order-swatch mult-6-bg" data-base-order="6">6</b>
+          </span>
+        </div>
+        <label class="check-control"><input id="totalTransformToggle" type="checkbox" checked><span>Show exceptional components</span></label>
+      </div>
+      <p id="uniqueLiftStatus" class="lift-status">For <span class="formula" data-tex="t\ne0"></span>, each point is outside the blow-up center and therefore has a unique lift.</p>
+      <p id="centerFiberStatus" class="lift-status center-fiber-status" hidden>Snapped to <span class="formula" data-tex="t=0"></span>: the colored lines show the full exceptional fibers over the centers, and the red center circle is the third exceptional component. The blue point is the limiting lift selected by the cusp’s strict transform.</p>
+    </section>
+
+    <section class="visual-grid">
+      <article class="visual-card">
+        <header><div><span class="number">H</span><h3>Original cusp</h3></div><p>Both arcs share one tangent.</p></header>
+        <svg id="cuspOriginalSvg" class="plane" viewBox="0 0 520 380" role="img" aria-label="Cusp y squared equals x cubed">
+          <rect width="520" height="380" class="svg-bg"></rect>
+          <line x1="38" y1="190" x2="490" y2="190" class="axis"></line>
+          <line x1="72" y1="28" x2="72" y2="352" class="axis"></line>
+          <foreignObject x="486" y="166" width="30" height="30" class="svg-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="x"></div></foreignObject>
+          <foreignObject x="80" y="15" width="30" height="30" class="svg-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="y"></div></foreignObject>
+          <line x1="72" y1="190" x2="474" y2="190" class="tangent-line"></line>
+          <circle cx="72" cy="190" r="5" class="intersection-dot"></circle>
+          <path id="cuspOriginalPath" class="curve cusp-curve"></path>
+          <circle id="cuspOriginalPoint" r="9" class="plane-point"></circle>
+          <foreignObject id="cuspOriginalLabel" x="340" y="98" width="34" height="30" class="svg-math point-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="t"></div></foreignObject>
+        </svg>
+        <div class="equation-readout math-value" id="cuspOriginalReadout" data-tex="(x,y)=(0.52,0.37)"></div>
+      </article>
+
+      <article class="visual-card">
+        <header><div><span class="number">I</span><h3>First blow-up chart</h3></div><p>The limiting slope is now <span class="formula" data-tex="v"></span>.</p></header>
+        <svg id="cuspLiftSvg" class="plane" viewBox="0 0 520 380" role="img" aria-label="Strict transform of the cusp after one blow-up">
+          <rect width="520" height="380" class="svg-bg"></rect>
+          <line x1="72" y1="28" x2="72" y2="352" class="exceptional-axis mult-2 center-fiber"></line>
+          <line x1="38" y1="190" x2="490" y2="190" class="axis"></line>
+          <foreignObject x="486" y="166" width="30" height="30" class="svg-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="a"></div></foreignObject>
+          <foreignObject x="80" y="15" width="30" height="30" class="svg-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="v"></div></foreignObject>
+          <text x="94" y="66" class="order-number mult-2-fill exceptional-annotation" data-base-order="2">2</text>
+          <circle cx="72" cy="190" r="5" class="intersection-dot"></circle>
+          <path id="cuspLiftPath" class="curve strict-curve"></path>
+          <text x="244" y="92" class="order-number mult-1-fill" data-base-order="1">1</text>
+          <circle id="cuspLiftPoint" r="9" class="lift-point selected-lift"></circle>
+          <text id="cuspLiftLabel" class="point-label">lift</text>
+        </svg>
+        <div class="equation-readout math-value" id="cuspLiftReadout" data-tex="(a,v)=(0.52,0.72)"></div>
+      </article>
+
+      <article class="visual-card">
+        <header><div><span class="number">J</span><h3>Second blow-up chart</h3></div><p>Tangency becomes a triple point.</p></header>
+        <svg id="cuspSecondSvg" class="plane" viewBox="0 0 520 380" role="img" aria-label="Second blow-up of the cusp with three curves meeting at one point">
+          <rect width="520" height="380" class="svg-bg"></rect>
+          <line x1="260" y1="28" x2="260" y2="352" class="exceptional-axis mult-2"></line>
+          <line x1="38" y1="190" x2="490" y2="190" class="exceptional-axis mult-3 center-fiber"></line>
+          <foreignObject x="486" y="166" width="30" height="30" class="svg-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="u"></div></foreignObject>
+          <foreignObject x="270" y="15" width="30" height="30" class="svg-math"><div xmlns="http://www.w3.org/1999/xhtml" data-tex="b"></div></foreignObject>
+          <text x="278" y="66" class="order-number mult-2-fill exceptional-annotation" data-base-order="2">2</text>
+          <text x="448" y="176" class="order-number mult-3-fill exceptional-annotation" data-base-order="3">3</text>
+          <circle cx="260" cy="190" r="6" class="intersection-dot"></circle>
+          <path id="cuspSecondPath" class="curve strict-curve"></path>
+          <text x="382" y="94" class="order-number mult-1-fill" data-base-order="1">1</text>
+          <circle id="cuspSecondPoint" r="9" class="lift-point selected-lift"></circle>
+          <text id="cuspSecondLabel" class="point-label">lift</text>
+        </svg>
+        <div class="equation-readout math-value" id="cuspSecondReadout" data-tex="(u,b)=(0.72,0.72)"></div>
+      </article>
+
+      <article class="visual-card">
+        <header><div><span class="number">K</span><h3>Third blow-up</h3></div><p>Drag to rotate the Möbius neighborhood.</p></header>
+        <div class="canvas-wrap">
+          <canvas id="cuspMobiusCanvas" width="900" height="620" role="img" aria-label="Light-gray Möbius-band neighborhood with the strict transform dashed blue and exceptional components colored and numbered by the vanishing order of F">Schematic final blown-up ambient surface with the strict transform and exceptional components.</canvas>
+          <div class="canvas-legend">
+            <span><i class="legend-surface"></i> ambient surface</span>
+            <span><i class="legend-line mult-1"></i> strict transform</span>
+            <span><i class="legend-line mult-2"></i> first exceptional transform</span>
+            <span><i class="legend-line mult-3"></i> second exceptional transform</span>
+            <span><i class="legend-line mult-6"></i> third exceptional component</span>
+            <span><i class="legend-dot cusp-lift-dot"></i> curve lift</span>
+          </div>
+        </div>
+        <div class="equation-readout math-value" id="cuspThirdReadout" data-tex="(\rho,[u:b])=(0.72,[1:1])"></div>
+        <p class="visual-caption">The light-gray Möbius band is a neighborhood in the blown-up ambient surface—not the transformed cusp. Color and the large numbers encode the vanishing order of <span id="captionOrderFunction" class="formula" data-tex="F"></span>. The dashed blue curve distinguishes the cusp’s strict transform from the solid exceptional curves.</p>
+      </article>
+    </section>
+
+    <aside class="insight-card">
+      <strong>What changes at each step?</strong>
+      <p>The first blow-up gives the smooth strict transform <span class="formula" data-tex="a=v^2"></span>, still tangent to <span class="formula" data-tex="E_1"></span>. The second gives <span class="formula" data-tex="u^2b^3(b-u)"></span>: the smooth strict transform and two exceptional components meet at one triple point. The third replaces that point by <span class="formula" data-tex="E_3\cong\mathbb{RP}^1"></span>, along which <span class="formula" data-tex="\operatorname{ord}_{E_3}F=2+3+1=6"></span>; the three crossing directions are now distinct.</p>
+    </aside>
+  </main>
+</body>
+</html>

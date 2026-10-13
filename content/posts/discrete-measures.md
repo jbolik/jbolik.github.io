@@ -5,13 +5,13 @@ tags: ["Measure Theory"]
 draft: false
 ---
 
-A probability space $(X, \Sigma, \mu)$ is defined as discrete if there exists a countable set of points $S = \\{x_1, x_2, \dots\\}$ with $x_i \in X$ and real weights $\alpha_i > 0$ such that $\mu$ can be expressed for all $A \in \Sigma$ as $\mu(A) = \sum_{i=1}^\infty \alpha_i 1_{x_i \in A}$. In this post we will show an interesting characterization of discreteness. Let $N := \\{A \in \Sigma | \mu(A) = 0\\}$ be the set of probability zero events. Then $(X, \Sigma, \mu)$ is discrete *if and only if* $\forall A \in \Sigma: A \subseteq \cup N \Rightarrow \mu(A) = 0$. This holds very generally, without requiring additional assumptions like that the probability space is Borel.
+A probability space $(X, \Sigma, \mu)$ is defined as discrete if there exists a countable set of points $S = \{x_1, x_2, \dots\}$ with $x_i \in X$ and real weights $\alpha_i > 0$ such that $\mu$ can be expressed for all $A \in \Sigma$ as $\mu(A) = \sum_{i=1}^\infty \alpha_i 1_{x_i \in A}$. In this post we will show an interesting characterization of discreteness. Let $N := \{A \in \Sigma | \mu(A) = 0\}$ be the set of probability zero events. Then $(X, \Sigma, \mu)$ is discrete *if and only if* $\forall A \in \Sigma: A \subseteq \cup N \Rightarrow \mu(A) = 0$. This holds very generally, without requiring additional assumptions like that the probability space is Borel.
 
 ## Forward Direction
 The forward direction is pretty straightforward: First for every $A \in N$ we must have $\sum_{i=1}^\infty \alpha_i 1_{x_i \in A} = 0$. Since $\alpha_i > 0$, $\mu(A) = 0$ implies $\forall x_i: x_i \notin A$, or put differently, $A \subseteq S^c$. Therefore $\cup N \subseteq S^c$. Consequently, for any measurable set $A \in \Sigma$, if $A \subseteq \cup N$, then $A \subseteq S^c$. By the definition of our discrete measure, this implies $\mu(A) = 0$.
 
 ## Reverse Direction
-For the backward direction, it might be tempting to use the familiar pure point / absolutely continuous / singular continuous decomposition (e.g. for Borel measures on $\mathbb{R}$). But it relies on extra structure (a topology and a reference measure). In our fully general measurable-space setting, the intrinsic tool is the notion of atoms. A set $A \in \Sigma$ is called an atom if $\mu(A) > 0$ and $\forall B \in \Sigma: B \subseteq A \Rightarrow \mu(B) \in \\{0, \mu(A)\\}$. Consider the following theorem due to Saks:
+For the backward direction, it might be tempting to use the familiar pure point / absolutely continuous / singular continuous decomposition (e.g. for Borel measures on $\mathbb{R}$). But it relies on extra structure (a topology and a reference measure). In our fully general measurable-space setting, the intrinsic tool is the notion of atoms. A set $A \in \Sigma$ is called an atom if $\mu(A) > 0$ and $\forall B \in \Sigma: B \subseteq A \Rightarrow \mu(B) \in \{0, \mu(A)\}$. Consider the following theorem due to Saks:
 
 {{< theorem n="1" >}}
 > **Saks' Lemma (1933)**: Given a probability space $(X, \Sigma, \mu)$ and an arbitrary real number $\epsilon > 0$, $X$ may be partitioned into a finite number of sets $E_1, \dots, E_p \in \Sigma$ such that every $E_i$ is an atom or has measure $\leq \epsilon$. 
@@ -22,7 +22,7 @@ As a corollary we get Saks' decomposition:
 > **Saks' Decomposition**: Every probability space $(X, \Sigma, \mu)$ can be decomposed as $(X_1 \cup X_2, \Sigma, \mu_1 + \mu_2)$ such that 
 > 1. $X_1 \cap X_2 = \emptyset$ and $\mu_1(X_2) = \mu_2(X_1) = 0$
 > 2. $X_1$ is the union of a countable set of disjoint atoms
-> 3. $X_2 \subseteq \cup N$ where $N := \\{A \in \Sigma | \mu(A) = 0\\}$
+> 3. $X_2 \subseteq \cup N$ where $N := \{A \in \Sigma | \mu(A) = 0\}$
 > 4. $(X, \Sigma, \mu_2)$ contains no atoms
 {{< /theorem >}}
 {{< proof >}}

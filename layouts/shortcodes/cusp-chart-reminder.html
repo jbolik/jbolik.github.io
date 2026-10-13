@@ -1,0 +1,234 @@
+<style>
+  .cusp-chart-reminder {
+    --cusp-blue:#3b82c4;
+    --cusp-yellow:#d2a11d;
+    --cusp-orange:#e56b1f;
+    --cusp-red:#cf3545;
+    margin:1.25rem 0 1.6rem;
+    padding:14px;
+    border:1px solid #d8d1c3;
+    border-radius:16px;
+    background:#fffdf8;
+    color:#17282c;
+  }
+  .cusp-chart-reminder__header { display:flex; flex-wrap:wrap; justify-content:space-between; gap:6px 18px; align-items:baseline; margin-bottom:10px; }
+  .cusp-chart-reminder__header strong { font-size:1.14rem; }
+  .cusp-chart-reminder__legend { display:flex; flex-wrap:wrap; gap:6px 14px; color:#647175; font-size:.91rem; }
+  .cusp-chart-reminder__legend span { display:inline-flex; gap:5px; align-items:center; }
+  .cusp-chart-reminder__legend i { width:18px; border-top:3px solid var(--cusp-yellow); }
+  .cusp-chart-reminder__legend .strict { border-color:var(--cusp-blue); border-top-style:dashed; }
+  .cusp-chart-reminder__grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  .cusp-chart-reminder__stage { min-width:0; overflow:hidden; border:1px solid #e3dccf; border-radius:11px; background:#fbfaf6; }
+  .cusp-chart-reminder__stage header { display:flex; height:3.15rem; justify-content:space-between; gap:6px; align-items:baseline; margin:0; padding:7px 9px 5px; border:0; }
+  .cusp-chart-reminder__stage header strong { font-size:.96rem; line-height:1.2; }
+  .cusp-chart-reminder__stage header span { color:#647175; font-size:.83rem; }
+  .cusp-chart-reminder__stage svg { display:block; width:100%; height:auto; }
+  .cusp-chart-reminder__axis { stroke:#9ba7a7; stroke-width:1.2; }
+  .cusp-chart-reminder__axis-label { fill:#647175; font-family:Georgia,serif; font-size:11.7px; font-style:italic; }
+  .cusp-chart-reminder__curve { fill:none; stroke:var(--cusp-blue); stroke-width:3; stroke-linecap:round; }
+  .cusp-chart-reminder__strict { stroke-dasharray:6 4; }
+  .cusp-chart-reminder__e1 { stroke:var(--cusp-yellow); }
+  .cusp-chart-reminder__e2 { stroke:var(--cusp-orange); }
+  .cusp-chart-reminder__e3 { stroke:var(--cusp-red); }
+  .cusp-chart-reminder__exceptional { fill:none; stroke-width:3; stroke-linecap:round; }
+  .cusp-chart-reminder__origin { fill:#17282c; }
+  .cusp-chart-reminder__component-label { font-family:Inter,ui-sans-serif,system-ui,sans-serif; font-size:9.75px; font-weight:700; paint-order:stroke; stroke:#fbfaf6; stroke-width:3px; stroke-linejoin:round; }
+  .cusp-chart-reminder__component-label.strict { fill:var(--cusp-blue); }
+  .cusp-chart-reminder__component-label.e1 { fill:var(--cusp-yellow); }
+  .cusp-chart-reminder__component-label.e2 { fill:var(--cusp-orange); }
+  .cusp-chart-reminder__component-label.e3 { fill:var(--cusp-red); }
+  .cusp-chart-reminder__formula { min-height:5.5rem; padding:6px 8px 7px; border-top:1px solid #e3dccf; color:#435156; font-size:1.07rem; line-height:1.45; text-align:center; }
+  .cusp-chart-reminder__formula > span { display:block; white-space:nowrap; }
+  .cusp-chart-reminder__formula .katex { font-size:1em; white-space:nowrap; }
+  .cusp-chart-reminder__formula .map-name .katex { font-size:.92em; }
+  .cusp-chart-reminder__third { grid-column:1 / -1; }
+  .cusp-chart-reminder__third-body { display:grid; grid-template-columns:minmax(0,1fr) 5rem minmax(0,1fr); align-items:stretch; }
+  .cusp-chart-reminder__third-chart { min-width:0; }
+  .cusp-chart-reminder__third-chart + .cusp-chart-reminder__third-chart { border-left:1px solid #e3dccf; }
+  .cusp-chart-reminder__overlap { display:grid; place-content:center; gap:3px; padding:8px 4px; border-right:1px solid #e3dccf; border-left:1px solid #e3dccf; color:#647175; font-size:.83rem; text-align:center; }
+  .cusp-chart-reminder__overlap strong { color:#435156; font-size:.87rem; font-weight:600; }
+  .cusp-chart-reminder figcaption { margin-top:9px; color:#647175; font-size:.8rem; line-height:1.45; }
+  .cusp-chart-reminder__caption-spacer { height:0; }
+  @media (min-width:960px) {
+    .cusp-returning-scope { padding-bottom:2rem; margin-bottom:-2rem; }
+    .cusp-returning-scope .cusp-sticky-tail { height:2rem; }
+    .cusp-returning-scope + .interactive-figure { margin-top:0 !important; }
+    .cusp-returning-scope .cusp-chart-reminder {
+      position:sticky;
+      top:.5rem;
+      z-index:20;
+    }
+    .cusp-returning-scope .cusp-chart-reminder.is-stuck { box-shadow:0 8px 22px rgba(23,40,44,.12); }
+    .cusp-returning-scope .cusp-chart-reminder.is-stuck figcaption { display:none; }
+    .cusp-returning-scope .cusp-chart-reminder.is-stuck + .cusp-chart-reminder__caption-spacer {
+      height:var(--cusp-caption-space,3rem);
+    }
+  }
+  @media (min-width:1100px) {
+    .cusp-returning-scope > p,
+    .cusp-returning-scope > h2,
+    .cusp-returning-scope > ul,
+    .cusp-returning-scope > ol,
+    .cusp-returning-scope > blockquote {
+      max-width:820px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+  }
+  @media (min-width:960px) {
+    .cusp-chart-reminder__grid { grid-template-columns:repeat(3,minmax(0,.82fr)) minmax(0,2fr); }
+    .cusp-chart-reminder__third { grid-column:auto; }
+  }
+  @media (max-width:620px) {
+    .cusp-chart-reminder { padding:11px; }
+    .cusp-chart-reminder__grid { grid-template-columns:1fr; }
+    .cusp-chart-reminder__third { grid-column:auto; }
+    .cusp-chart-reminder__third-body { grid-template-columns:1fr; }
+    .cusp-chart-reminder__overlap { grid-template-columns:auto auto; border:0; border-top:1px solid #e3dccf; border-bottom:1px solid #e3dccf; }
+    .cusp-chart-reminder__overlap span { grid-column:1 / -1; }
+    .cusp-chart-reminder__third-chart + .cusp-chart-reminder__third-chart { border-left:0; }
+  }
+</style>
+
+<figure class="cusp-chart-reminder" aria-labelledby="cuspChartReminderTitle">
+  <div class="cusp-chart-reminder__header">
+    <strong id="cuspChartReminderTitle">Chart reminder</strong>
+    <span class="cusp-chart-reminder__legend" aria-label="Line-style legend">
+      <span><i class="strict"></i> strict transform</span>
+      <span><i></i> exceptional component</span>
+    </span>
+  </div>
+
+  <div class="cusp-chart-reminder__grid">
+    <section class="cusp-chart-reminder__stage">
+      <header><strong>Original cusp</strong><span data-tex="X_0=\mathbb R^2"></span></header>
+      <svg viewBox="0 0 170 104" role="img" aria-label="The original cusp in x y coordinates">
+        <title>Original cusp in x and y coordinates</title>
+        <line x1="18" y1="54" x2="160" y2="54" class="cusp-chart-reminder__axis"></line>
+        <line x1="38" y1="9" x2="38" y2="96" class="cusp-chart-reminder__axis"></line>
+        <path d="M38 54 C50 54 64 45 88 31 C111 18 134 14 156 12 M38 54 C50 54 64 63 88 77 C111 90 134 94 156 96" class="cusp-chart-reminder__curve"></path>
+        <circle cx="38" cy="54" r="3.2" class="cusp-chart-reminder__origin"></circle>
+        <text x="160" y="50" class="cusp-chart-reminder__axis-label">x</text>
+        <text x="43" y="12" class="cusp-chart-reminder__axis-label">y</text>
+      </svg>
+      <div class="cusp-chart-reminder__formula"><span data-tex="F(x,y)=y^2-x^3"></span><span data-tex="\text{cusp: }(x,y)=(t^2,t^3)"></span></div>
+    </section>
+
+    <section class="cusp-chart-reminder__stage">
+      <header><strong>First blow-up chart</strong><span data-tex="\pi_1"></span></header>
+      <svg viewBox="0 0 170 104" role="img" aria-label="First blow-up chart with exceptional locus and smooth strict transform">
+        <title>First blow-up chart in a and v coordinates</title>
+        <line x1="18" y1="54" x2="160" y2="54" class="cusp-chart-reminder__axis"></line>
+        <line x1="38" y1="9" x2="38" y2="96" class="cusp-chart-reminder__exceptional cusp-chart-reminder__e1"></line>
+        <path d="M158 12 C96 12 38 33 38 54 C38 75 96 96 158 96" class="cusp-chart-reminder__curve cusp-chart-reminder__strict"></path>
+        <circle cx="38" cy="54" r="3.2" class="cusp-chart-reminder__origin"></circle>
+        <text x="160" y="50" class="cusp-chart-reminder__axis-label">a</text>
+        <text x="43" y="12" class="cusp-chart-reminder__axis-label">v</text>
+        <text x="43" y="25" class="cusp-chart-reminder__component-label e1">E₁</text>
+        <text x="119" y="24" class="cusp-chart-reminder__component-label strict">S′</text>
+      </svg>
+      <div class="cusp-chart-reminder__formula"><span class="map-name" data-tex="\pi_1\circ\kappa_1"></span><span data-tex="(a,v)\mapsto(a,av)"></span><span data-tex="\text{lift: }(a,v)=(t^2,t)"></span></div>
+    </section>
+
+    <section class="cusp-chart-reminder__stage">
+      <header><strong>Second blow-up chart</strong><span data-tex="\pi_2"></span></header>
+      <svg viewBox="0 0 170 104" role="img" aria-label="Second blow-up chart with a triple point">
+        <title>Second blow-up chart in u and b coordinates</title>
+        <line x1="79" y1="9" x2="79" y2="96" class="cusp-chart-reminder__exceptional cusp-chart-reminder__e1"></line>
+        <line x1="15" y1="55" x2="160" y2="55" class="cusp-chart-reminder__exceptional cusp-chart-reminder__e2"></line>
+        <line x1="35" y1="91" x2="130" y2="12" class="cusp-chart-reminder__curve cusp-chart-reminder__strict"></line>
+        <circle cx="79" cy="55" r="3.2" class="cusp-chart-reminder__origin"></circle>
+        <text x="160" y="51" class="cusp-chart-reminder__axis-label">u</text>
+        <text x="84" y="12" class="cusp-chart-reminder__axis-label">b</text>
+        <text x="84" y="25" class="cusp-chart-reminder__component-label e1">E₁′</text>
+        <text x="139" y="50" class="cusp-chart-reminder__component-label e2">E₂</text>
+        <text x="112" y="23" class="cusp-chart-reminder__component-label strict">S″</text>
+      </svg>
+      <div class="cusp-chart-reminder__formula"><span class="map-name" data-tex="\kappa_1^{-1}\circ\pi_2\circ\kappa_2"></span><span data-tex="(u,b)\mapsto(ub,b)"></span><span data-tex="\text{lift: }(u,b)=(t,t)"></span></div>
+    </section>
+
+    <section class="cusp-chart-reminder__stage cusp-chart-reminder__third">
+      <header><strong>Third blow-up: two charts</strong><span data-tex="\pi_3"></span></header>
+      <div class="cusp-chart-reminder__third-body">
+        <div class="cusp-chart-reminder__third-chart">
+          <svg viewBox="0 0 170 104" role="img" aria-label="Third blow-up chart c d with E3, E2 prime, and the strict transform">
+            <title>Third blow-up chart in c and d coordinates</title>
+            <line x1="72" y1="8" x2="72" y2="97" class="cusp-chart-reminder__exceptional cusp-chart-reminder__e3"></line>
+            <line x1="17" y1="78" x2="160" y2="78" class="cusp-chart-reminder__exceptional cusp-chart-reminder__e2"></line>
+            <line x1="17" y1="35" x2="160" y2="35" class="cusp-chart-reminder__curve cusp-chart-reminder__strict"></line>
+            <circle cx="72" cy="35" r="3.2" class="cusp-chart-reminder__origin"></circle>
+            <text x="160" y="74" class="cusp-chart-reminder__axis-label">c</text>
+            <text x="77" y="11" class="cusp-chart-reminder__axis-label">d</text>
+            <text x="77" y="24" class="cusp-chart-reminder__component-label e3">E₃</text>
+            <text x="135" y="73" class="cusp-chart-reminder__component-label e2">E₂′</text>
+            <text x="135" y="30" class="cusp-chart-reminder__component-label strict">S‴</text>
+          </svg>
+          <div class="cusp-chart-reminder__formula"><span class="map-name" data-tex="\kappa_2^{-1}\circ\pi_3\circ\kappa_{3,c}"></span><span data-tex="(c,d)\mapsto(c,cd)"></span><span data-tex="\text{lift: }(c,d)=(t,1)"></span></div>
+        </div>
+
+        <div class="cusp-chart-reminder__overlap" aria-label="Coordinate transition on the overlap">
+          <span>on the overlap</span>
+          <strong data-tex="r=1/d"></strong>
+          <strong data-tex="e=cd"></strong>
+        </div>
+
+        <div class="cusp-chart-reminder__third-chart">
+          <svg viewBox="0 0 170 104" role="img" aria-label="Companion third blow-up chart r e with E3, E1 double prime, and the strict transform">
+            <title>Companion third blow-up chart in r and e coordinates</title>
+            <line x1="48" y1="8" x2="48" y2="97" class="cusp-chart-reminder__exceptional cusp-chart-reminder__e1"></line>
+            <line x1="17" y1="64" x2="160" y2="64" class="cusp-chart-reminder__exceptional cusp-chart-reminder__e3"></line>
+            <line x1="137" y1="8" x2="137" y2="97" class="cusp-chart-reminder__curve cusp-chart-reminder__strict"></line>
+            <circle cx="137" cy="64" r="3.2" class="cusp-chart-reminder__origin"></circle>
+            <text x="160" y="60" class="cusp-chart-reminder__axis-label">r</text>
+            <text x="53" y="11" class="cusp-chart-reminder__axis-label">e</text>
+            <text x="53" y="24" class="cusp-chart-reminder__component-label e1">E₁″</text>
+            <text x="143" y="59" class="cusp-chart-reminder__component-label e3">E₃</text>
+            <text x="142" y="24" class="cusp-chart-reminder__component-label strict">S‴</text>
+          </svg>
+          <div class="cusp-chart-reminder__formula"><span class="map-name" data-tex="\kappa_2^{-1}\circ\pi_3\circ\kappa_{3,r}"></span><span data-tex="(r,e)\mapsto(re,e)"></span><span data-tex="\text{lift: }(r,e)=(1,t)"></span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <figcaption>Each <span data-tex="\kappa"></span> parametrizes part of a blown-up surface by an open subset of <span data-tex="\mathbb R^2"></span>. The displayed compositions are maps between Euclidean coordinate domains; the last two are coordinate representations of the same global map <span data-tex="\pi_3"></span>.</figcaption>
+</figure>
+<div class="cusp-chart-reminder__caption-spacer" aria-hidden="true"></div>
+
+<script>
+  (() => {
+    const breakpoint = window.matchMedia("(min-width: 960px)");
+    document.querySelectorAll(".cusp-returning-scope .cusp-chart-reminder").forEach((reminder) => {
+      if (reminder.dataset.stickyReady === "true") return;
+      reminder.dataset.stickyReady = "true";
+      const caption = reminder.querySelector("figcaption");
+      const spacer = reminder.nextElementSibling;
+      const measureCaption = () => {
+        if (reminder.classList.contains("is-stuck")) return;
+        const captionStyle = getComputedStyle(caption);
+        const captionSpace = caption.getBoundingClientRect().height
+          + Number.parseFloat(captionStyle.marginTop)
+          + Number.parseFloat(captionStyle.marginBottom);
+        spacer.style.setProperty("--cusp-caption-space", `${captionSpace}px`);
+      };
+      const update = () => {
+        const top = Number.parseFloat(getComputedStyle(reminder).top) || 0;
+        const scopeRect = reminder.closest(".cusp-returning-scope").getBoundingClientRect();
+        const reminderRect = reminder.getBoundingClientRect();
+        const insideSection = scopeRect.top <= top && scopeRect.bottom > top;
+        const reachedTop = reminderRect.top <= top + 1;
+        const stuck = breakpoint.matches && insideSection
+          && (reminder.classList.contains("is-stuck") || reachedTop);
+        reminder.classList.toggle("is-stuck", stuck);
+      };
+      window.addEventListener("scroll", update, { passive: true });
+      window.addEventListener("resize", () => {
+        update();
+        measureCaption();
+      });
+      if (breakpoint.addEventListener) breakpoint.addEventListener("change", update);
+      measureCaption();
+      update();
+    });
+  })();
+</script>
