@@ -10,7 +10,7 @@ wide: true
 
 Much of asymptotic statistics rests on a reassuring picture: near its minimum, the loss looks like a quadratic bowl. Its curvature tells us how uncertainty shrinks and how quickly we learn. But what happens when the bowl has flat directions, or its bottom branches and forms a cusp?
 
-**Losing the quadratic approximation does not mean losing precise statistical predictions.** Tools from algebraic geometry let us analyze these more intricate landscapes. This post develops one of the most powerful: *resolution of singularities*. Through concrete examples and interactive figures, you will see how blow-ups separate tangled directions, turn analytic losses into monomials, and make their asymptotics calculable.
+**Losing the quadratic approximation does not mean losing precise asymptotic theory.** Tools from algebraic geometry let us analyze these more intricate landscapes. This post develops one of the most powerful: *resolution of singularities*. Through concrete examples and interactive figures, you will see how blow-ups separate tangled directions, turn analytic losses into monomials, and make their asymptotics calculable.
 
 One statistical payoff is a common form for **cumulative Bayesian predictive risk**—the expected sum of Kullback–Leibler (KL) errors incurred as Bayes predicts each new observation:
 
