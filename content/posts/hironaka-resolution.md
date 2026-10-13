@@ -1,7 +1,7 @@
 ---
 title: "Singular Asymptotics: Turning Directions into Locations"
 subtitle: "How blow-ups reduce real-analytic losses to monomials"
-date: 2026-07-03
+date: 2026-10-12
 tags: ["Singular Learning Theory", "Real Analysis", "Geometry"]
 draft: false
 toc: true
